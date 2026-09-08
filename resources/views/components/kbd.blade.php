@@ -1,0 +1,1 @@
+<kbd {{ $attributes->class('rounded-radius border border-outline bg-surface-alt px-1.5 py-0.5 font-mono text-xs text-on-surface-strong dark:border-outline-dark dark:bg-surface-dark-alt dark:text-on-surface-dark-strong') }}>{{ $slot }}</kbd>

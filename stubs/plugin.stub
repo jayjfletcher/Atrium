@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Atrium\Atrium\Navigation\NavItem;
+use Atrium\Atrium\Plugins\Plugin;
+use Atrium\Atrium\Widgets\WidgetDefinition;
+
+class {{ class }} extends Plugin
+{
+    /**
+     * Navigation entries added to the Atrium sidebar.
+     */
+    public function navigation(): array
+    {
+        return [
+            // NavItem::make('Reports')->route('atrium.reports.index')->group('Insights'),
+        ];
+    }
+
+    /**
+     * Routes registered inside Atrium's route group, so the dashboard
+     * prefix, middleware, and route name prefix already apply.
+     */
+    public function routes(): void
+    {
+        // Route::get('reports', ReportController::class)->name('reports.index');
+    }
+
+    /**
+     * Widget types this plugin makes available.
+     *
+     * Returning a definition offers the widget in the picker. It does not
+     * place it on anyone's dashboard; only a user can do that.
+     */
+    public function widgets(): array
+    {
+        return [
+            // WidgetDefinition::make('reports.summary')
+            //     ->label('Report summary')
+            //     ->view('reports::widgets.summary'),
+        ];
+    }
+}

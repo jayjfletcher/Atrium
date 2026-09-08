@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Atrium\Atrium\Console\Commands;
+
+use Illuminate\Console\Command;
+
+class InstallCommand extends Command
+{
+    protected $signature = 'atrium:install {--force : Overwrite any existing published files}';
+
+    protected $description = 'Publish the Atrium config and assets, and print the authorization gate stub.';
+
+    public function handle(): int
+    {
+        $this->components->info('Installing Atrium.');
+
+        $this->callSilently('vendor:publish', [
+            '--tag' => 'atrium-config',
+            '--force' => (bool) $this->option('force'),
+        ]);
+        $this->components->task('Published config/atrium.php');
+
+        $this->callSilently('vendor:publish', [
+            '--tag' => 'atrium-assets',
+            '--force' => (bool) $this->option('force'),
+        ]);
+        $this->components->task('Published public/vendor/atrium');
+
+        $this->newLine();
+        $this->components->warn('Atrium denies access outside the local environment until you define its gate.');
+        $this->newLine();
+
+        $this->line('Add this to a service provider:');
+        $this->newLine();
+        $this->line('    Gate::define(\'viewAtrium\', function ($user) {');
+        $this->line('        return $user->is_admin;');
+        $this->line('    });');
+        $this->newLine();
+
+        $this->components->info('Atrium installed. Visit /'.config('atrium.path', 'atrium').'.');
+
+        return self::SUCCESS;
+    }
+}

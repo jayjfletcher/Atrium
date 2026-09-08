@@ -1,0 +1,11 @@
+# Agent OS Standards Index
+
+architecture:
+  actions-events:
+    description: "Action execute()/handle() split; DB::transaction + DB::afterCommit events; concrete return types; no model constructor DI; {Entity}{Verb}ActionEvent naming"
+  request-persist:
+    description: "FormRequests own validation, authorization and work via abstract persist(); controllers collapse to return $request->persist(); actions do the writing, never controllers"
+
+models:
+  lifecycle-events:
+    description: "Every Eloquent hook mapped to a typed {Model}{Hook}Event via $dispatchesEvents; lifecycle events for data concerns, ActionEvents for business logic"
