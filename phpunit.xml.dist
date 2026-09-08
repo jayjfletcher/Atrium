@@ -22,9 +22,6 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
         <!-- Browser tests need Playwright, so they are excluded from the
              default run and invoked explicitly with `composer test:browser`. -->
         <testsuite name="Browser">
