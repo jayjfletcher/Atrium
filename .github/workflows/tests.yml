@@ -69,6 +69,8 @@ jobs:
         if: runner.os != 'Windows'
         run: composer test:unit
 
+      # Bare `pest` would pick up the Browser suite, which needs Playwright.
+      # That is installed and run by the browser-tests workflow instead.
       - name: Test Suite (Windows)
         if: runner.os == 'Windows'
-        run: vendor/bin/pest
+        run: vendor/bin/pest --exclude-testsuite=Browser
