@@ -68,7 +68,7 @@ Wrap a page in the shell with `<x-atrium::layout>`, which exposes `brand`, `topb
 
 ### 5. Theme without rebuilding assets
 
-Atrium ships one compiled stylesheet whose values are all CSS custom properties. Anything under `config('atrium.theme')` is emitted as `--atrium-{key}`. No Tailwind build is required in the host application.
+Atrium ships one compiled stylesheet whose values are all CSS custom properties. Anything under `config('atrium.theme')` is emitted as `--color-{key}`, overriding the matching design token in `resources/css/atrium.css`. No Tailwind build is required in the host application.
 
 ### 6. Customize who may change dashboards
 
@@ -97,7 +97,7 @@ In tests, fake only the events being asserted: `Event::fake([DashboardCreatedAct
 
 Read before executing:
 
-- `config/atrium.php` for `path`, `domain`, `middleware`, `gate`, `policies`, `discover`, `plugins`, `disabled`, and `theme`
+- `config/atrium.php` for `path`, `domain`, `middleware`, `gate`, `policies`, `discover`, `plugins`, `disabled`, `alpine`, and `theme`
 - the package README for the full plugin and component reference
 
 ## Key Behaviors
@@ -120,4 +120,4 @@ Read before executing:
 - do not register plugin routes outside the plugin's `routes()` method, which would skip Atrium's middleware and prefix
 - do not require a Tailwind build in the host app; the shipped stylesheet is self-contained
 - do not bypass the policies by writing dashboards directly in a controller; call the actions, and check `$user->can(...)` first
-- do not import the old `JayI\Atrium\Events\Dashboard\*`, `Events\DashboardWidget\*` or `Events\Actions\*` classes; they were moved to `Events\Model` and `Events\Action`
+- do not use the pre-release `Atrium\Atrium` namespace or its `Events\Dashboard\*`, `Events\DashboardWidget\*` and `Events\Actions\*` classes; they are now `JayI\Atrium\Events\Model\*` and `JayI\Atrium\Events\Action\*`

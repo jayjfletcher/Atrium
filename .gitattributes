@@ -1,17 +1,22 @@
 * text=auto eol=lf
 
-/.github            export-ignore
-/.gitattributes     export-ignore
-/.gitignore         export-ignore
-/.editorconfig      export-ignore
-/tests              export-ignore
-/phpunit.xml.dist   export-ignore
-/phpstan.neon.dist  export-ignore
-/pint.json          export-ignore
-/testbench.yaml     export-ignore
-/workbench          export-ignore
-/.claude            export-ignore
-/.agents            export-ignore
-/CLAUDE.md          export-ignore
-/AGENTS.md          export-ignore
-/AGENTS_PACKAGE.md  export-ignore
+/.github                export-ignore
+/.gitattributes         export-ignore
+/.gitignore             export-ignore
+/.editorconfig          export-ignore
+/tests                  export-ignore
+/phpunit.xml.dist       export-ignore
+/phpstan.neon.dist      export-ignore
+/pint.json              export-ignore
+/testbench.yaml         export-ignore
+/workbench              export-ignore
+/.claude                export-ignore
+/.agents                export-ignore
+/CLAUDE.md              export-ignore
+/AGENTS.md              export-ignore
+/.mcp.json              export-ignore
+/agent-os               export-ignore
+/bin                    export-ignore
+/package.json           export-ignore
+/package-lock.json      export-ignore
+/phpstan.windows.neon   export-ignore

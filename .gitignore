@@ -10,4 +10,4 @@ composer.lock
 .idea
 .vscode
 /node_modules
-/tests/Browser/screenshots
+/tests/Browser/Screenshots

@@ -302,6 +302,7 @@ Actions expose `execute()` and keep `handle()` protected, so there is one entry 
 | `discover` | Whether to discover plugins from installed packages. |
 | `plugins` | Plugin classes registered manually. |
 | `disabled` | Plugin keys to hide. |
+| `alpine` | Whether the layout loads Atrium's bundled Alpine.js. Set to `false` when the application already loads Alpine. |
 | `theme` | Values emitted as CSS custom properties. |
 
 ## Commands

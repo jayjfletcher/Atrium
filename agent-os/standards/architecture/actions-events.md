@@ -1,6 +1,6 @@
 # Actions & Events
 
-Actions hold mutating business logic; Events announce what happened after the data is committed.
+Actions hold mutating business logic; each announces with an event pair when it starts and, once the data is committed, when it finished.
 
 Adapted from the `mono` standard of the same name, minus its Pennant feature-gating tier: Atrium is a package and cannot require Pennant of its consumers.
 

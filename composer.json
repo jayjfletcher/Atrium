@@ -1,7 +1,7 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "jayi/atrium",
-    "description": "Cenratlized UI",
+    "description": "A plug-and-play dashboard for Laravel that other packages can extend.",
     "keywords": [
         "laravel",
         "jayi",
@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "illuminate/support": "^13.0"
+        "laravel/framework": "^13.0"
     },
     "require-dev": {
         "larastan/larastan": "^3.12",

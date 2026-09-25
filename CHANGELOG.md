@@ -17,6 +17,10 @@
 - The `DispatchesModelEvents` trait, so an application's subclass of `Dashboard` fires the package's `Dashboard*` events.
 - `DashboardPolicy` and `DashboardWidgetPolicy`, registered from the new `atrium.policies` config key. The owner of a dashboard may do anything, everyone may view a shared dashboard, and widget placements defer to their dashboard through the Gate. Every dashboard request, and the dashboard's edit controls, check them on top of the `atrium.gate` gate.
 
+### Changed
+
+- Requires `laravel/framework` instead of `illuminate/support`, since the package uses form requests, events, queues and views from the framework.
+
 
 ## [v0.1.0](https://github.com/jayi/atrium/compare/...v0.1.0) - 202x-xx-xx
 
