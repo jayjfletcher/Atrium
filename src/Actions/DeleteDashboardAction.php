@@ -2,20 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Actions;
+namespace JayI\Atrium\Actions;
 
-use Atrium\Atrium\Events\Actions\DashboardDeletedActionEvent;
-use Atrium\Atrium\Models\Dashboard;
 use Illuminate\Support\Facades\DB;
+use JayI\Atrium\Events\Action\DashboardDeletedActionEvent;
+use JayI\Atrium\Events\Action\DashboardDeletingActionEvent;
+use JayI\Atrium\Models\Dashboard;
 
 class DeleteDashboardAction extends Action
 {
     protected function handle(Dashboard $dashboard): void
     {
+        DashboardDeletingActionEvent::dispatch($dashboard);
+
+        $this->perform($dashboard);
+
+        DashboardDeletedActionEvent::dispatch($dashboard);
+    }
+
+    private function perform(Dashboard $dashboard): void
+    {
         DB::transaction(function () use ($dashboard): void {
             $dashboard->delete();
-
-            DB::afterCommit(fn () => DashboardDeletedActionEvent::dispatch($dashboard));
         });
     }
 }

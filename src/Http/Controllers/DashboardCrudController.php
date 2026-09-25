@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Controllers;
+namespace JayI\Atrium\Http\Controllers;
 
-use Atrium\Atrium\Http\Requests\DeleteDashboardRequest;
-use Atrium\Atrium\Http\Requests\StoreDashboardRequest;
-use Atrium\Atrium\Http\Requests\UpdateDashboardRequest;
 use Illuminate\Http\RedirectResponse;
+use JayI\Atrium\Http\Requests\DeleteDashboardRequest;
+use JayI\Atrium\Http\Requests\StoreDashboardRequest;
+use JayI\Atrium\Http\Requests\UpdateDashboardRequest;
 
 class DashboardCrudController
 {

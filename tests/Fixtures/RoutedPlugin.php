@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Tests\Fixtures;
+namespace JayI\Atrium\Tests\Fixtures;
 
-use Atrium\Atrium\Plugins\Plugin;
 use Illuminate\Support\Facades\Route;
+use JayI\Atrium\Plugins\Plugin;
 
 class RoutedPlugin extends Plugin
 {

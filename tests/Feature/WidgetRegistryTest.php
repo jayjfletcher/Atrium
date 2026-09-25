@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Exceptions\DuplicateWidgetException;
-use Atrium\Atrium\Models\Dashboard;
-use Atrium\Atrium\Plugins\Plugin;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
-use Atrium\Atrium\Tests\Fixtures\BetaPlugin;
-use Atrium\Atrium\Tests\Fixtures\UnauthorizedPlugin;
-use Atrium\Atrium\Widgets\WidgetDefinition;
-use Atrium\Atrium\Widgets\WidgetRegistry;
 use Illuminate\Http\Request;
+use JayI\Atrium\Exceptions\DuplicateWidgetException;
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use JayI\Atrium\Tests\Fixtures\BetaPlugin;
+use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
+use JayI\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Widgets\WidgetRegistry;
 
 function widgets(): WidgetRegistry
 {

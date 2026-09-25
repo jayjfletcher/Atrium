@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Requests;
+namespace JayI\Atrium\Http\Requests;
 
-use Atrium\Atrium\Actions\UpdateDashboardAction;
-use Atrium\Atrium\Dashboards\DashboardManager;
-use Atrium\Atrium\Models\Dashboard;
 use Illuminate\Http\RedirectResponse;
+use JayI\Atrium\Actions\UpdateDashboardAction;
+use JayI\Atrium\Models\Dashboard;
 
 class UpdateDashboardRequest extends Request
 {
     public function authorize(): bool
     {
-        return app(DashboardManager::class)->canModify($this, $this->dashboard());
+        return $this->allows('update', $this->dashboard());
     }
 
     /**

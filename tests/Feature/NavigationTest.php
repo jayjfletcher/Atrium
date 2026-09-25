@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Navigation\NavigationRegistry;
-use Atrium\Atrium\Navigation\NavItem;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
-use Atrium\Atrium\Tests\Fixtures\BetaPlugin;
-use Atrium\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 use Illuminate\Http\Request;
+use JayI\Atrium\Navigation\NavigationRegistry;
+use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use JayI\Atrium\Tests\Fixtures\BetaPlugin;
+use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 function nav(): NavigationRegistry
 {

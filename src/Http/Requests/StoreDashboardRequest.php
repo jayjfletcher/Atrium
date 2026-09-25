@@ -2,14 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Requests;
+namespace JayI\Atrium\Http\Requests;
 
-use Atrium\Atrium\Actions\CreateDashboardAction;
-use Atrium\Atrium\Dashboards\DashboardManager;
 use Illuminate\Http\RedirectResponse;
+use JayI\Atrium\Actions\CreateDashboardAction;
+use JayI\Atrium\Dashboards\DashboardManager;
+use JayI\Atrium\Models\Dashboard;
 
 class StoreDashboardRequest extends Request
 {
+    public function authorize(): bool
+    {
+        return $this->allows('create', Dashboard::class);
+    }
+
     /**
      * @return array<string, mixed>
      */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Middleware;
+namespace JayI\Atrium\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

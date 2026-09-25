@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Settings\SettingsPanel;
-use Atrium\Atrium\Settings\SettingsRegistry;
-use Atrium\Atrium\Tests\Fixtures\FullPlugin;
-use Atrium\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 use Illuminate\Http\Request;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Settings\SettingsPanel;
+use JayI\Atrium\Settings\SettingsRegistry;
+use JayI\Atrium\Tests\Fixtures\FullPlugin;
+use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Search;
+namespace JayI\Atrium\Search;
 
-use Atrium\Atrium\Plugins\PluginRegistry;
 use Illuminate\Http\Request;
+use JayI\Atrium\Plugins\PluginRegistry;
 
 class SearchRegistry
 {

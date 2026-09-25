@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Plugins;
+namespace JayI\Atrium\Plugins;
 
-use Atrium\Atrium\Contracts\Plugin as PluginContract;
-use Atrium\Atrium\Search\SearchSource;
-use Atrium\Atrium\Settings\SettingsPanel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use JayI\Atrium\Contracts\Plugin as PluginContract;
+use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Settings\SettingsPanel;
 
 /**
  * Convenience base class providing no-op defaults for every optional

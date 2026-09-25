@@ -2,23 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Models;
+namespace JayI\Atrium\Models;
 
-use Atrium\Atrium\Events\Dashboard\DashboardCreatedEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardCreatingEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardDeletedEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardDeletingEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardReplicatingEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardRetrievedEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardSavedEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardSavingEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardUpdatedEvent;
-use Atrium\Atrium\Events\Dashboard\DashboardUpdatingEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
+use JayI\Atrium\Models\Concerns\DispatchesModelEvents;
 
 /**
  * @property int $id
@@ -32,6 +23,8 @@ use Illuminate\Support\Str;
  */
 class Dashboard extends Model
 {
+    use DispatchesModelEvents;
+
     protected $table = 'atrium_dashboards';
 
     protected $guarded = [];
@@ -40,28 +33,6 @@ class Dashboard extends Model
         'is_default' => 'boolean',
         'is_shared' => 'boolean',
         'sort' => 'integer',
-    ];
-
-    /**
-     * Every Eloquent lifecycle hook maps to a typed event, so host apps and
-     * plugins can listen for data-level concerns without patching the model.
-     *
-     * These are distinct from Atrium's action events: lifecycle events fire on
-     * any write, action events carry business context.
-     *
-     * @var array<string, class-string>
-     */
-    protected $dispatchesEvents = [
-        'retrieved' => DashboardRetrievedEvent::class,
-        'creating' => DashboardCreatingEvent::class,
-        'created' => DashboardCreatedEvent::class,
-        'updating' => DashboardUpdatingEvent::class,
-        'updated' => DashboardUpdatedEvent::class,
-        'saving' => DashboardSavingEvent::class,
-        'saved' => DashboardSavedEvent::class,
-        'deleting' => DashboardDeletingEvent::class,
-        'deleted' => DashboardDeletedEvent::class,
-        'replicating' => DashboardReplicatingEvent::class,
     ];
 
     protected static function booted(): void

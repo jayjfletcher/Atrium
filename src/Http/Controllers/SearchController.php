@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Controllers;
+namespace JayI\Atrium\Http\Controllers;
 
-use Atrium\Atrium\Search\SearchRegistry;
-use Atrium\Atrium\Search\SearchResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use JayI\Atrium\Search\SearchRegistry;
+use JayI\Atrium\Search\SearchResult;
 
 class SearchController
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Http\Controllers\DashboardController;
-use Atrium\Atrium\Http\Controllers\DashboardCrudController;
-use Atrium\Atrium\Http\Controllers\DashboardLayoutController;
-use Atrium\Atrium\Http\Controllers\SearchController;
-use Atrium\Atrium\Http\Controllers\SettingsController;
-use Atrium\Atrium\Plugins\PluginRegistry;
 use Illuminate\Support\Facades\Route;
+use JayI\Atrium\Http\Controllers\DashboardController;
+use JayI\Atrium\Http\Controllers\DashboardCrudController;
+use JayI\Atrium\Http\Controllers\DashboardLayoutController;
+use JayI\Atrium\Http\Controllers\SearchController;
+use JayI\Atrium\Http\Controllers\SettingsController;
+use JayI\Atrium\Plugins\PluginRegistry;
 
 $config = app('config');
 

@@ -2,25 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium;
+namespace JayI\Atrium;
 
-use Atrium\Atrium\Console\Commands\InstallCommand;
-use Atrium\Atrium\Console\Commands\MakePluginCommand;
-use Atrium\Atrium\Console\Commands\PluginListCommand;
-use Atrium\Atrium\Dashboards\DashboardManager;
-use Atrium\Atrium\Models\Dashboard;
-use Atrium\Atrium\Navigation\NavigationRegistry;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Search\SearchRegistry;
-use Atrium\Atrium\Settings\SettingsRegistry;
-use Atrium\Atrium\Support\Discovery\ComposerPluginDiscovery;
-use Atrium\Atrium\Widgets\WidgetRegistry;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use JayI\Atrium\Console\Commands\InstallCommand;
+use JayI\Atrium\Console\Commands\MakePluginCommand;
+use JayI\Atrium\Console\Commands\PluginListCommand;
+use JayI\Atrium\Dashboards\DashboardManager;
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Navigation\NavigationRegistry;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Search\SearchRegistry;
+use JayI\Atrium\Settings\SettingsRegistry;
+use JayI\Atrium\Support\Discovery\ComposerPluginDiscovery;
+use JayI\Atrium\Widgets\WidgetRegistry;
 
 class AtriumServiceProvider extends ServiceProvider
 {
@@ -57,6 +58,8 @@ class AtriumServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPlugins();
+
+        $this->registerPolicies();
 
         Route::model('dashboard', Dashboard::class);
 
@@ -105,6 +108,19 @@ class AtriumServiceProvider extends ServiceProvider
             MakePluginCommand::class,
             PluginListCommand::class,
         ]);
+    }
+
+    /**
+     * Register the model policies from `atrium.policies` with the Gate.
+     */
+    protected function registerPolicies(): void
+    {
+        /** @var array<class-string, class-string> $policies */
+        $policies = $this->app->make(Repository::class)->get('atrium.policies', []);
+
+        foreach ($policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
     }
 
     /**

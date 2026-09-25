@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Dashboards;
+namespace JayI\Atrium\Dashboards;
 
-use Atrium\Atrium\Models\Dashboard;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use JayI\Atrium\Models\Dashboard;
 
 class DashboardManager
 {
@@ -40,11 +41,12 @@ class DashboardManager
     }
 
     /**
-     * Whether the request's user may modify the given dashboard.
+     * Whether the request's user may modify the given dashboard, as the
+     * dashboard policy from `atrium.policies` decides.
      */
     public function canModify(Request $request, Dashboard $dashboard): bool
     {
-        return $dashboard->isOwnedBy($this->owner($request));
+        return Gate::forUser($request->user())->allows('update', $dashboard);
     }
 
     /**

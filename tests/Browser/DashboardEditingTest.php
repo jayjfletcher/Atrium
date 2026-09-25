@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Models\Dashboard;
-use Atrium\Atrium\Models\DashboardWidget;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
-use Atrium\Atrium\Tests\Fixtures\BrowserPlugin;
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Models\DashboardWidget;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use JayI\Atrium\Tests\Fixtures\BrowserPlugin;
 use Workbench\App\Models\User;
 
 /**

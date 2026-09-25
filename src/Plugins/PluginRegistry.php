@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Plugins;
+namespace JayI\Atrium\Plugins;
 
-use Atrium\Atrium\Contracts\Plugin as PluginContract;
-use Atrium\Atrium\Exceptions\InvalidPluginException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
+use JayI\Atrium\Contracts\Plugin as PluginContract;
+use JayI\Atrium\Exceptions\InvalidPluginException;
 
 class PluginRegistry
 {

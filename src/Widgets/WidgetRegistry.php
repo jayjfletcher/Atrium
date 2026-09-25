@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Widgets;
+namespace JayI\Atrium\Widgets;
 
-use Atrium\Atrium\Exceptions\DuplicateWidgetException;
-use Atrium\Atrium\Plugins\PluginRegistry;
 use Illuminate\Http\Request;
+use JayI\Atrium\Exceptions\DuplicateWidgetException;
+use JayI\Atrium\Plugins\PluginRegistry;
 
 /**
  * Holds the widget types plugins have made available.

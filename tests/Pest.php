@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Tests\BrowserTestCase;
-use Atrium\Atrium\Tests\TestCase;
+use JayI\Atrium\Tests\BrowserTestCase;
+use JayI\Atrium\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__.'/Feature');
 

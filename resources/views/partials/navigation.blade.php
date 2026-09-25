@@ -1,4 +1,4 @@
-@php($groups = \Atrium\Atrium\Facades\Atrium::navigationGroups(request()))
+@php($groups = \JayI\Atrium\Facades\Atrium::navigationGroups(request()))
 
 <nav class="flex-1 overflow-y-auto p-2" aria-label="{{ __('atrium::atrium.primary_navigation') }}">
     @foreach ($groups as $group => $items)

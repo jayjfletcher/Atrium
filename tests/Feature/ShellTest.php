@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Atrium;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
+use JayI\Atrium\Atrium;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

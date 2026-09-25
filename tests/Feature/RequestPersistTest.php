@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Http\Requests\Request;
-use Atrium\Atrium\Models\Dashboard;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use JayI\Atrium\Http\Requests\Request;
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use Workbench\App\Models\User;
 
 beforeEach(function (): void {
@@ -76,7 +76,7 @@ it('every atrium request declares how it persists', function (): void {
     expect($requests)->not->toBeEmpty();
 
     foreach ($requests as $file) {
-        $class = 'Atrium\\Atrium\\Http\\Requests\\'.basename($file, '.php');
+        $class = 'JayI\\Atrium\\Http\\Requests\\'.basename($file, '.php');
 
         if ($class === Request::class) {
             continue;

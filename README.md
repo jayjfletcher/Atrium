@@ -36,9 +36,9 @@ php artisan atrium:plugin BillingPlugin
 Every method is optional. A plugin that only adds one sidebar link implements one method.
 
 ```php
-use Atrium\Atrium\Navigation\NavItem;
-use Atrium\Atrium\Plugins\Plugin;
-use Atrium\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Widgets\WidgetDefinition;
 use Illuminate\Support\Facades\Route;
 
 class BillingPlugin extends Plugin
@@ -183,27 +183,106 @@ npm run build:css
 
 ## Events
 
-Atrium announces everything it does, so a host application can react without patching the package.
+Atrium announces everything it does, so a host application can react without patching the package. It fires two families of events, and every event uses `Dispatchable` and `SerializesModels`, so queued listeners work.
 
-**Action events** carry business context and fire only after the write commits:
+### Model events
+
+`Dashboard` and `DashboardWidget` fire a class-based event for every Eloquent hook: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, and `replicating`. They live in `JayI\Atrium\Events\Model` and are named `{Model}{Hook}Event`, such as `DashboardCreatingEvent` or `DashboardWidgetDeletedEvent`. The model is a typed property (`$event->dashboard`, `$event->widget`) and is also available as `$event->model()`, alongside `$event->hook()`.
 
 ```php
-use Atrium\Atrium\Events\Actions\DashboardLayoutSavedActionEvent;
+use JayI\Atrium\Events\Model\DashboardSavingEvent;
 
-Event::listen(DashboardLayoutSavedActionEvent::class, function ($event) {
+Event::listen(DashboardSavingEvent::class, function (DashboardSavingEvent $event) {
+    $event->dashboard->name = trim($event->dashboard->name);
+});
+```
+
+They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends Dashboard`, fires the `Dashboard*` events. The mapping comes from the `JayI\Atrium\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
+
+### Action events
+
+Every action dispatches a start event before it does any work, carrying the input, and a finish event once it succeeds, carrying the result:
+
+| Action | Start event (carries) | Finish event (carries) |
+| --- | --- | --- |
+| `CreateDashboardAction` | `DashboardCreatingActionEvent` (`data`, `owner`) | `DashboardCreatedActionEvent` (`dashboard`) |
+| `UpdateDashboardAction` | `DashboardUpdatingActionEvent` (`dashboard`, `data`) | `DashboardUpdatedActionEvent` (`dashboard`) |
+| `DeleteDashboardAction` | `DashboardDeletingActionEvent` (`dashboard`) | `DashboardDeletedActionEvent` (`dashboard`) |
+| `SaveDashboardLayoutAction` | `DashboardLayoutSavingActionEvent` (`dashboard`, `widgets`) | `DashboardLayoutSavedActionEvent` (`dashboard`, `widgetKeys`) |
+
+```php
+use JayI\Atrium\Events\Action\DashboardLayoutSavedActionEvent;
+
+Event::listen(DashboardLayoutSavedActionEvent::class, function (DashboardLayoutSavedActionEvent $event) {
     // $event->dashboard, $event->widgetKeys
 });
 ```
 
-Available: `DashboardCreatedActionEvent`, `DashboardUpdatedActionEvent`, `DashboardDeletedActionEvent`, and `DashboardLayoutSavedActionEvent`.
+Start events fire immediately. Finish events wait for the surrounding transaction to commit (`ShouldDispatchAfterCommit`), and do not fire at all when it rolls back or the action throws.
 
-**Lifecycle events** fire on every database operation and carry just the model. Each Eloquent hook maps to its own class under `Atrium\Atrium\Events\Dashboard` and `Atrium\Atrium\Events\DashboardWidget`, covering `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, and `replicating`.
+### Listening to a whole family
 
-Reach for action events for business side effects such as notifications and integrations. Use lifecycle events for data concerns such as auditing and derived columns.
+Each family implements an interface in `JayI\Atrium\Contracts`, and Laravel delivers an event to listeners of the interfaces it implements:
+
+| Interface | Receives |
+| --- | --- |
+| `ModelLifecycleEvent` | every model event |
+| `ActionStartingEvent` | every action start |
+| `ActionFinishedEvent` | every action finish |
+
+```php
+use JayI\Atrium\Contracts\ActionFinishedEvent;
+
+Event::listen(ActionFinishedEvent::class, fn (ActionFinishedEvent $event) => Log::info(class_basename($event)));
+```
+
+Reach for action events for business side effects such as notifications and integrations. Use model events for data concerns such as auditing and derived columns. When testing, fake only the events you assert on: a bare `Event::fake()` also stops the model hook that slugs a new dashboard.
+
+## Authorization
+
+Access is checked in two layers:
+
+1. **The dashboard gate.** The `Authorize` middleware checks `config('atrium.gate')` (`viewAtrium` by default) on every Atrium and plugin route.
+2. **Model policies.** Every dashboard request is then checked against the policy registered for the model it touches, from `config('atrium.policies')`:
+
+| Endpoint | Request | Ability |
+| --- | --- | --- |
+| `POST dashboards` | `StoreDashboardRequest` | `create` on `Dashboard::class` |
+| `PUT dashboards/{dashboard}` | `UpdateDashboardRequest` | `update` on the dashboard |
+| `DELETE dashboards/{dashboard}` | `DeleteDashboardRequest` | `delete` on the dashboard |
+| `PUT dashboards/{dashboard}/layout` | `SaveDashboardLayoutRequest` | `update` on the dashboard, `delete` on each placement it replaces, and `create` on `DashboardWidget::class` when it places any |
+
+The dashboard's edit controls follow the same `update` check.
+
+The bundled `DashboardPolicy` lets a dashboard's owner do anything, lets everyone view a shared dashboard, and refuses everything else, including guests. `DashboardWidgetPolicy` defers to the dashboard through the Gate: reading a placement needs `view` on its dashboard, changing one needs `update`. So a replacement dashboard policy governs its widgets too.
+
+Swap a policy by pointing the model at your own class, typically one extending the bundled policy:
+
+```php
+// config/atrium.php
+'policies' => [
+    Dashboard::class => App\Policies\AtriumDashboardPolicy::class,
+    DashboardWidget::class => DashboardWidgetPolicy::class,
+],
+```
+
+```php
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Policies\DashboardPolicy;
+use Illuminate\Database\Eloquent\Model;
+
+class AtriumDashboardPolicy extends DashboardPolicy
+{
+    public function update(Model $user, Dashboard $dashboard): bool
+    {
+        return parent::update($user, $dashboard) || ($dashboard->is_shared && $user->is_admin);
+    }
+}
+```
 
 ## Extending Atrium's own behavior
 
-Atrium's writes follow the same pattern its plugins should. Requests own validation and authorization and expose their work through `persist()`; controllers only pass through. The work itself lives in an action, which wraps the write in a transaction and dispatches its event after commit.
+Atrium's writes follow the same pattern its plugins should. Requests own validation and authorization and expose their work through `persist()`; controllers only pass through. The work itself lives in an action, which announces that it is starting, wraps the write in a transaction, and announces that it finished once the write commits.
 
 ```php
 $dashboard = app(CreateDashboardAction::class)->execute(['name' => 'Operations'], $user);
@@ -219,6 +298,7 @@ Actions expose `execute()` and keep `handle()` protected, so there is one entry 
 | `domain` | Serve the dashboard from a dedicated subdomain. |
 | `middleware` | The middleware stack applied to all Atrium and plugin routes. |
 | `gate` | The gate ability checked before the dashboard is shown. |
+| `policies` | The policy class the Gate uses for `Dashboard` and `DashboardWidget`. |
 | `discover` | Whether to discover plugins from installed packages. |
 | `plugins` | Plugin classes registered manually. |
 | `disabled` | Plugin keys to hide. |

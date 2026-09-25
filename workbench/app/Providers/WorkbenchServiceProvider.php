@@ -2,9 +2,9 @@
 
 namespace Workbench\App\Providers;
 
-use Atrium\Atrium\Facades\Atrium;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use JayI\Atrium\Facades\Atrium;
 use Workbench\App\Atrium\DemoPlugin;
 
 class WorkbenchServiceProvider extends ServiceProvider

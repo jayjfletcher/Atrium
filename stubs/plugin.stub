@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use Atrium\Atrium\Navigation\NavItem;
-use Atrium\Atrium\Plugins\Plugin;
-use Atrium\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Widgets\WidgetDefinition;
 
 class {{ class }} extends Plugin
 {

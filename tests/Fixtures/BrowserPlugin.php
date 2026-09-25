@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Tests\Fixtures;
+namespace JayI\Atrium\Tests\Fixtures;
 
-use Atrium\Atrium\Navigation\NavItem;
-use Atrium\Atrium\Plugins\Plugin;
-use Atrium\Atrium\Search\SearchResult;
-use Atrium\Atrium\Search\SearchSource;
-use Atrium\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Search\SearchResult;
+use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Widgets\WidgetDefinition;
 
 class BrowserPlugin extends Plugin
 {

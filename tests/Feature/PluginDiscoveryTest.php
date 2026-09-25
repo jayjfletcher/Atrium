@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\AtriumServiceProvider;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Support\Discovery\ComposerPluginDiscovery;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
-use Atrium\Atrium\Tests\Fixtures\BetaPlugin;
 use Illuminate\Filesystem\Filesystem;
+use JayI\Atrium\AtriumServiceProvider;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Support\Discovery\ComposerPluginDiscovery;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use JayI\Atrium\Tests\Fixtures\BetaPlugin;
 
 function fakeVendor(array $packages): string
 {

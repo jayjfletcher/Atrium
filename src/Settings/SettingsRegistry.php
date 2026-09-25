@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Settings;
+namespace JayI\Atrium\Settings;
 
-use Atrium\Atrium\Plugins\PluginRegistry;
 use Illuminate\Http\Request;
+use JayI\Atrium\Plugins\PluginRegistry;
 
 class SettingsRegistry
 {

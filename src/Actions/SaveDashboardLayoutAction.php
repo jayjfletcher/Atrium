@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Actions;
+namespace JayI\Atrium\Actions;
 
-use Atrium\Atrium\Events\Actions\DashboardLayoutSavedActionEvent;
-use Atrium\Atrium\Models\Dashboard;
 use Illuminate\Support\Facades\DB;
+use JayI\Atrium\Events\Action\DashboardLayoutSavedActionEvent;
+use JayI\Atrium\Events\Action\DashboardLayoutSavingActionEvent;
+use JayI\Atrium\Models\Dashboard;
 
 class SaveDashboardLayoutAction extends Action
 {
@@ -19,6 +20,23 @@ class SaveDashboardLayoutAction extends Action
      * @param  array<int, array<string, mixed>>  $widgets
      */
     protected function handle(Dashboard $dashboard, array $widgets): Dashboard
+    {
+        DashboardLayoutSavingActionEvent::dispatch($dashboard, $widgets);
+
+        $result = $this->perform($dashboard, $widgets);
+
+        DashboardLayoutSavedActionEvent::dispatch($result, array_map(
+            fn (array $widget): string => (string) $widget['widget_key'],
+            array_values($widgets),
+        ));
+
+        return $result;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $widgets
+     */
+    private function perform(Dashboard $dashboard, array $widgets): Dashboard
     {
         DB::transaction(function () use ($dashboard, $widgets): void {
             $dashboard->widgets()->delete();
@@ -34,13 +52,6 @@ class SaveDashboardLayoutAction extends Action
                     'sort' => $index,
                 ]);
             }
-
-            $keys = array_map(
-                fn (array $widget): string => (string) $widget['widget_key'],
-                array_values($widgets),
-            );
-
-            DB::afterCommit(fn () => DashboardLayoutSavedActionEvent::dispatch($dashboard, $keys));
         });
 
         return $dashboard->refresh();

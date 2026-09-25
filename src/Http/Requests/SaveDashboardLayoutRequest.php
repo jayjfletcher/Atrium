@@ -2,19 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Requests;
+namespace JayI\Atrium\Http\Requests;
 
-use Atrium\Atrium\Actions\SaveDashboardLayoutAction;
-use Atrium\Atrium\Dashboards\DashboardManager;
-use Atrium\Atrium\Models\Dashboard;
-use Atrium\Atrium\Widgets\WidgetRegistry;
 use Illuminate\Http\JsonResponse;
+use JayI\Atrium\Actions\SaveDashboardLayoutAction;
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Models\DashboardWidget;
+use JayI\Atrium\Widgets\WidgetRegistry;
 
 class SaveDashboardLayoutRequest extends Request
 {
+    /**
+     * Saving replaces every placement: it needs `update` on the dashboard,
+     * `delete` on each placement it removes, and `create` on placements when
+     * it adds any.
+     */
     public function authorize(): bool
     {
-        return app(DashboardManager::class)->canModify($this, $this->dashboard());
+        $dashboard = $this->dashboard();
+        $submitted = $this->input('widgets');
+
+        return $this->allows('update', $dashboard)
+            && $this->allowsEach('delete', $dashboard->widgets()->get())
+            && (! is_array($submitted) || $submitted === [] || $this->allows('create', DashboardWidget::class, [$dashboard]));
     }
 
     /**

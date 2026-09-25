@@ -4,20 +4,10 @@ Every Atrium model maps its Eloquent hooks to typed event classes via `$dispatch
 
 ## Convention
 
-- Map each hook to a `{Model}{Hook}Event` in `Atrium\Atrium\Events\{Model}\`; the event carries just the model and extends the package's `Event` base, so it dispatches after commit.
-
-```php
-protected $dispatchesEvents = [
-    'retrieved' => DashboardRetrievedEvent::class,
-    'creating'  => DashboardCreatingEvent::class,
-    'created'   => DashboardCreatedEvent::class,
-    'updating'  => DashboardUpdatingEvent::class,
-    // updated, saving, saved, deleting, deleted, replicating
-];
-```
-
-- Cover the full lifecycle the model actually has. Atrium's models do not use soft deletes, so they omit `restoring`, `restored`, `trashed`, `forceDeleting`, and `forceDeleted`; a model that adds soft deletes must add those five.
-- A test asserts the map is complete and that every class it names exists, so a renamed event fails the suite rather than silently going unheard.
+- Every model `use DispatchesModelEvents;` (`Models\Concerns`). The trait maps each Eloquent hook to `Events\Model\{Model}{Hook}Event` by convention and skips hooks with no class, so no `$dispatchesEvents` array is written by hand. A subclass of a package model fires the package model's events.
+- Each event is a `final` class using `Dispatchable` and `SerializesModels`, implementing `Contracts\ModelLifecycleEvent` (`model()`, `hook()`), with the model as a typed public property (`$dashboard`, `$widget`). They fire synchronously, not after commit, so a `creating`/`saving`/... listener can cancel the write.
+- Cover the full lifecycle the model actually has. Atrium's models do not use soft deletes, so they have no `restoring`, `restored`, `trashed`, `forceDeleting`, or `forceDeleted` classes; a model that adds soft deletes must add those five.
+- A test listens on `ModelLifecycleEvent` and asserts every hook fires for each model, so a missing class fails the suite rather than silently going unheard.
 
 ## Lifecycle vs domain ActionEvents
 

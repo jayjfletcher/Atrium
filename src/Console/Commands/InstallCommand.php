@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Console\Commands;
+namespace JayI\Atrium\Console\Commands;
 
 use Illuminate\Console\Command;
 

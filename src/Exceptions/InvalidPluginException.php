@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Exceptions;
+namespace JayI\Atrium\Exceptions;
 
-use Atrium\Atrium\Contracts\Plugin;
 use InvalidArgumentException;
+use JayI\Atrium\Contracts\Plugin;
 
 class InvalidPluginException extends InvalidArgumentException
 {

@@ -4,8 +4,8 @@ Controllers are thin. Each request action is a FormRequest that owns validation 
 
 ## Base
 
-- Requests extend `Atrium\Atrium\Http\Requests\Request`, which declares `abstract public function persist(): Response`.
-- `authorize()` defaults to `true`; `rules()` defaults to `[]`. Override as needed.
+- Requests extend `JayI\Atrium\Http\Requests\Request`, which declares `abstract public function persist(): Response`.
+- `authorize()` defaults to `true`; every concrete request overrides it with a policy check. `rules()` defaults to `[]`.
 
 > Why abstract `persist()`: the compiler forces every request to own its work, so controllers cannot drift into holding logic, and every controller collapses to the same shape.
 
@@ -45,7 +45,7 @@ class StoreDashboardRequest extends Request
 - Naming: `Index`, `Store`, `Show`, `Update`, `Delete` + `{Entity}Request`.
 - `persist()` calls an Action via `app(XAction::class)->execute(...)`, passing `$this->validated()` and/or the route-bound model. **Never put database writes in a controller.**
 - Read-only requests omit `rules()`; the base defaults it to `[]`.
-- Authorize in `authorize()`, not in the controller. Ownership checks go through `DashboardManager::canModify()`.
+- Authorize in `authorize()`, not in the controller, through the policies in `atrium.policies`: `$this->allows('create', Dashboard::class)`, `$this->allows('update', $this->dashboard())`, `$this->allowsEach('delete', $placements)`. The route middleware's gate still runs first.
 - Route-bound models are resolved in a `protected` helper that aborts 404 when the binding is missing, so both `authorize()` and `persist()` share one resolution path.
 
 Two tests enforce this: one asserts every request declares its own `persist()`, and one asserts no controller contains database calls.

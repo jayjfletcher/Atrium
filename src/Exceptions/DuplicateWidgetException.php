@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Exceptions;
+namespace JayI\Atrium\Exceptions;
 
 use InvalidArgumentException;
 

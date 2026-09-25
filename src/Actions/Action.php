@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Actions;
+namespace JayI\Atrium\Actions;
 
 /**
  * Base class for Atrium's mutating business logic.
@@ -12,9 +12,16 @@ namespace Atrium\Atrium\Actions;
  * entry point and keeps a place to hook cross-cutting behavior without
  * touching each action.
  *
+ * Every action announces itself with a pair of events: `handle()` dispatches
+ * a starting event (`DashboardCreatingActionEvent`, carrying the input)
+ * before any work, and a finished event (`DashboardCreatedActionEvent`,
+ * carrying the result) once the work succeeds. Finished events implement
+ * `ActionFinishedEvent`, so they wait for the surrounding transaction to
+ * commit and never fire for a write that was rolled back.
+ *
  * Resolve and invoke through the container rather than a static constructor:
  *
- *     app(CreateDashboardAction::class)->execute($user, $data);
+ *     app(CreateDashboardAction::class)->execute($data, $user);
  */
 abstract class Action
 {

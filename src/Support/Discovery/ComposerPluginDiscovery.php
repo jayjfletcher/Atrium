@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Support\Discovery;
+namespace JayI\Atrium\Support\Discovery;
 
 use Illuminate\Filesystem\Filesystem;
 

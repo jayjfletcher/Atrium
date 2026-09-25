@@ -32,7 +32,7 @@ Atrium (singleton, src/Atrium.php)
 └── SearchRegistry      — search sources for the command palette
 ```
 
-A plugin is a class implementing `Atrium\Atrium\Contracts\Plugin`:
+A plugin is a class implementing `JayI\Atrium\Contracts\Plugin`:
 
 ```php
 interface Plugin
@@ -48,7 +48,7 @@ interface Plugin
 }
 ```
 
-An abstract `Atrium\Atrium\Plugins\Plugin` base class provides no-op defaults for every optional method, so a plugin that only adds one nav item implements two methods.
+An abstract `JayI\Atrium\Plugins\Plugin` base class provides no-op defaults for every optional method, so a plugin that only adds one nav item implements two methods.
 
 **Discovery:** plugin packages declare their plugin class in `composer.json` under `extra.atrium.plugins`. Atrium reads the Composer installed-packages manifest at boot, caches the resolved list, and merges with `config('atrium.plugins')`. Host apps can add, remove, or reorder there. A `atrium:cache` / `atrium:clear` command pair mirrors Laravel's own caching conventions.
 
@@ -177,7 +177,7 @@ These placeholder files from the skeleton go away:
 
 From `AGENTS.md` and the `package-scaffold` skill:
 
-- Namespace stays `Atrium\Atrium\`; publish tags stay `atrium-*`
+- Namespace stays `JayI\Atrium\`; publish tags stay `atrium-*`
 - Container bindings and `mergeConfigFrom` in `register()`; resource loading in `boot()`
 - Keep `publishes`, `publishesMigrations`, and `commands` inside the existing `runningInConsole()` guard
 - No `env()` outside config files; `declare(strict_types=1)` everywhere (enforced by `tests/ArchTest.php`)

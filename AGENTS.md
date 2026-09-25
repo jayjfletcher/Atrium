@@ -14,9 +14,10 @@ This repository is a Laravel package. Keep the package focused, idiomatic, and e
 
 These are recorded in full under `agent-os/standards/`; the short form:
 
-- **Actions own mutating logic.** Extend `Atrium\Atrium\Actions\Action`, implement a `protected handle()` with a concrete return type, and let callers use `execute()`. Wrap mutations in `DB::transaction()` and dispatch events through `DB::afterCommit()` inside the closure.
-- **Requests own validation, authorization, and the call into an action.** Extend `Atrium\Atrium\Http\Requests\Request` and implement `persist()`. Controllers only `return $request->persist();` and never contain database calls.
-- **Events extend `Atrium\Atrium\Events\Event`.** Business events are named `{Entity}{Verb}ActionEvent`; model lifecycle hooks map to `{Model}{Hook}Event` via `$dispatchesEvents`.
+- **Actions own mutating logic.** Extend `JayI\Atrium\Actions\Action`, implement a `protected handle()` with a concrete return type, and let callers use `execute()`. `handle()` dispatches a starting `{Subject}{Verb-ing}ActionEvent` with the input, runs the work in a private `perform()` wrapped in `DB::transaction()`, then dispatches the finished `{Subject}{Verb-ed}ActionEvent` with the result.
+- **Requests own validation, authorization, and the call into an action.** Extend `JayI\Atrium\Http\Requests\Request` and implement `persist()`. Controllers only `return $request->persist();` and never contain database calls.
+- **Events are final classes using `Dispatchable` and `SerializesModels`.** Action events live in `Events\Action` and implement `Contracts\ActionStartingEvent` or `Contracts\ActionFinishedEvent` (after commit); every action has one of each. Model events live in `Events\Model`, are named `{Model}{Hook}Event`, implement `Contracts\ModelLifecycleEvent`, and are mapped by the `Models\Concerns\DispatchesModelEvents` trait every model uses.
+- **Requests authorize through policies.** `authorize()` calls `$this->allows()` / `allowsEach()`: `viewAny`/`create` on the model class, `view`/`update`/`delete` on the instance. Policies extend `Policies\Policy`, are registered from `atrium.policies`, and child-model policies defer to the dashboard through the Gate.
 - Do not add a feature-flag dependency such as Pennant to the package; gating is the host application's concern.
 
 ## PHP Conventions

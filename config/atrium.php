@@ -1,7 +1,11 @@
 <?php
 
 declare(strict_types=1);
-use Atrium\Atrium\Http\Middleware\Authorize;
+use JayI\Atrium\Http\Middleware\Authorize;
+use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Models\DashboardWidget;
+use JayI\Atrium\Policies\DashboardPolicy;
+use JayI\Atrium\Policies\DashboardWidgetPolicy;
 
 return [
 
@@ -56,6 +60,24 @@ return [
     */
 
     'gate' => 'viewAtrium',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Policies
+    |--------------------------------------------------------------------------
+    |
+    | The policy the Gate uses for each model. Every dashboard request is
+    | checked against these, on top of the gate above. By default a
+    | dashboard's owner may do anything, everyone may view a shared
+    | dashboard, and widget placements follow their dashboard. Point a model
+    | at your own class to replace its policy.
+    |
+    */
+
+    'policies' => [
+        Dashboard::class => DashboardPolicy::class,
+        DashboardWidget::class => DashboardWidgetPolicy::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------

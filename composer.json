@@ -33,12 +33,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Atrium\\Atrium\\": "src/"
+            "JayI\\Atrium\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Atrium\\Atrium\\Tests\\": "tests/",
+            "JayI\\Atrium\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
@@ -91,10 +91,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Atrium\\Atrium\\AtriumServiceProvider"
+                "JayI\\Atrium\\AtriumServiceProvider"
             ],
             "aliases": {
-                "Atrium": "Atrium\\Atrium\\Facades\\Atrium"
+                "Atrium": "JayI\\Atrium\\Facades\\Atrium"
             }
         }
     },

@@ -2,22 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Models;
+namespace JayI\Atrium\Models;
 
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetCreatedEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetCreatingEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetDeletedEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetDeletingEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetReplicatingEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetRetrievedEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetSavedEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetSavingEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetUpdatedEvent;
-use Atrium\Atrium\Events\DashboardWidget\DashboardWidgetUpdatingEvent;
-use Atrium\Atrium\Facades\Atrium;
-use Atrium\Atrium\Widgets\WidgetDefinition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use JayI\Atrium\Facades\Atrium;
+use JayI\Atrium\Models\Concerns\DispatchesModelEvents;
+use JayI\Atrium\Widgets\WidgetDefinition;
 
 /**
  * @property int $id
@@ -32,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class DashboardWidget extends Model
 {
+    use DispatchesModelEvents;
+
     protected $table = 'atrium_dashboard_widgets';
 
     protected $guarded = [];
@@ -43,28 +36,6 @@ class DashboardWidget extends Model
         'grid_width' => 'integer',
         'grid_height' => 'integer',
         'sort' => 'integer',
-    ];
-
-    /**
-     * Every Eloquent lifecycle hook maps to a typed event, so host apps and
-     * plugins can listen for data-level concerns without patching the model.
-     *
-     * These are distinct from Atrium's action events: lifecycle events fire on
-     * any write, action events carry business context.
-     *
-     * @var array<string, class-string>
-     */
-    protected $dispatchesEvents = [
-        'retrieved' => DashboardWidgetRetrievedEvent::class,
-        'creating' => DashboardWidgetCreatingEvent::class,
-        'created' => DashboardWidgetCreatedEvent::class,
-        'updating' => DashboardWidgetUpdatingEvent::class,
-        'updated' => DashboardWidgetUpdatedEvent::class,
-        'saving' => DashboardWidgetSavingEvent::class,
-        'saved' => DashboardWidgetSavedEvent::class,
-        'deleting' => DashboardWidgetDeletingEvent::class,
-        'deleted' => DashboardWidgetDeletedEvent::class,
-        'replicating' => DashboardWidgetReplicatingEvent::class,
     ];
 
     /**

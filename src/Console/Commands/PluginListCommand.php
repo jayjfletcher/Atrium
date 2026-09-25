@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Console\Commands;
+namespace JayI\Atrium\Console\Commands;
 
-use Atrium\Atrium\Contracts\Plugin;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Widgets\WidgetRegistry;
 use Illuminate\Console\Command;
+use JayI\Atrium\Contracts\Plugin;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Widgets\WidgetRegistry;
 
 class PluginListCommand extends Command
 {

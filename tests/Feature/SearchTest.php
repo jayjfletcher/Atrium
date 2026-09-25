@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Search\SearchRegistry;
-use Atrium\Atrium\Search\SearchResult;
-use Atrium\Atrium\Search\SearchSource;
-use Atrium\Atrium\Tests\Fixtures\FullPlugin;
 use Illuminate\Http\Request;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Search\SearchRegistry;
+use JayI\Atrium\Search\SearchResult;
+use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Tests\Fixtures\FullPlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

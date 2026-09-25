@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use Atrium\Atrium\Exceptions\InvalidPluginException;
-use Atrium\Atrium\Plugins\Plugin;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Tests\Fixtures\AlphaPlugin;
-use Atrium\Atrium\Tests\Fixtures\BetaPlugin;
-use Atrium\Atrium\Tests\Fixtures\NotAPlugin;
-use Atrium\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 use Illuminate\Http\Request;
+use JayI\Atrium\Exceptions\InvalidPluginException;
+use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use JayI\Atrium\Tests\Fixtures\BetaPlugin;
+use JayI\Atrium\Tests\Fixtures\NotAPlugin;
+use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 function registry(): PluginRegistry
 {

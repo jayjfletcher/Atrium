@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Tests\Fixtures;
+namespace JayI\Atrium\Tests\Fixtures;
 
-use Atrium\Atrium\Plugins\Plugin;
-use Atrium\Atrium\Search\SearchResult;
-use Atrium\Atrium\Search\SearchSource;
-use Atrium\Atrium\Settings\SettingsPanel;
+use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Search\SearchResult;
+use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Settings\SettingsPanel;
 
 class FullPlugin extends Plugin
 {

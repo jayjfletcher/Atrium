@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Http\Controllers;
+namespace JayI\Atrium\Http\Controllers;
 
-use Atrium\Atrium\Settings\SettingsRegistry;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use JayI\Atrium\Settings\SettingsRegistry;
 
 class SettingsController
 {

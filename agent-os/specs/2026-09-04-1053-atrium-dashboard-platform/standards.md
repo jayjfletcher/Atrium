@@ -37,7 +37,7 @@ Package conventions come from `AGENTS.md` and the repository's local skills. The
 
 ### Enforced automatically
 
-- `tests/ArchTest.php` requires `declare(strict_types=1)` across `Atrium\Atrium` and forbids `dd()`, `ddd()`, `env()`, and `exit()`.
+- `tests/ArchTest.php` requires `declare(strict_types=1)` across `JayI\Atrium` and forbids `dd()`, `ddd()`, `env()`, and `exit()`.
 - `composer test:types` requires 100% type coverage.
 - `composer analyse` runs Larastan; `composer lint:check` runs Pint.
 

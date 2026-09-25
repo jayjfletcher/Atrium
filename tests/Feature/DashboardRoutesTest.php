@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Tests\Feature;
+namespace JayI\Atrium\Tests\Feature;
 
-use Atrium\Atrium\Tests\TestCase;
 use Illuminate\Support\Facades\Gate;
+use JayI\Atrium\Tests\TestCase;
 
 class DashboardRoutesTest extends TestCase
 {

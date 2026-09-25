@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Navigation;
+namespace JayI\Atrium\Navigation;
 
-use Atrium\Atrium\Contracts\Plugin;
-use Atrium\Atrium\Plugins\PluginRegistry;
 use Illuminate\Http\Request;
+use JayI\Atrium\Contracts\Plugin;
+use JayI\Atrium\Plugins\PluginRegistry;
 
 class NavigationRegistry
 {

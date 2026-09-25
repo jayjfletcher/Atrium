@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium;
+namespace JayI\Atrium;
 
-use Atrium\Atrium\Contracts\Plugin;
-use Atrium\Atrium\Navigation\NavigationRegistry;
-use Atrium\Atrium\Navigation\NavItem;
-use Atrium\Atrium\Plugins\PluginRegistry;
-use Atrium\Atrium\Search\SearchRegistry;
-use Atrium\Atrium\Search\SearchResult;
-use Atrium\Atrium\Search\SearchSource;
-use Atrium\Atrium\Settings\SettingsPanel;
-use Atrium\Atrium\Settings\SettingsRegistry;
-use Atrium\Atrium\Widgets\WidgetDefinition;
-use Atrium\Atrium\Widgets\WidgetRegistry;
 use Illuminate\Http\Request;
+use JayI\Atrium\Contracts\Plugin;
+use JayI\Atrium\Navigation\NavigationRegistry;
+use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Search\SearchRegistry;
+use JayI\Atrium\Search\SearchResult;
+use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Settings\SettingsPanel;
+use JayI\Atrium\Settings\SettingsRegistry;
+use JayI\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Widgets\WidgetRegistry;
 
 class Atrium
 {

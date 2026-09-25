@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Settings;
+namespace JayI\Atrium\Settings;
 
 use Closure;
 use Illuminate\Http\Request;

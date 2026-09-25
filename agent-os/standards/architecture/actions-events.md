@@ -6,7 +6,7 @@ Adapted from the `mono` standard of the same name, minus its Pennant feature-gat
 
 ## Base class — `execute()` is the entry point, `handle()` does the work
 
-- Actions extend `Atrium\Atrium\Actions\Action`.
+- Actions extend `JayI\Atrium\Actions\Action`.
 - `Action::execute(mixed ...$args)` delegates to your **`protected handle(...)`**. You implement `handle()`, callers call `execute()`.
 - Never make `handle()` public — one entry point keeps a place to add cross-cutting behavior later.
 - No static constructors (`::run()`/`::make()`). Resolve and invoke via `app(XAction::class)->execute(...)`.
@@ -17,13 +17,18 @@ class CreateDashboardAction extends Action
     /** @param array{name: string, is_shared?: bool} $data */
     protected function handle(array $data, ?Model $owner = null): Dashboard
     {
-        return DB::transaction(function () use ($data, $owner): Dashboard {
-            $dashboard = Dashboard::query()->create([...]);
+        DashboardCreatingActionEvent::dispatch($data, $owner);
 
-            DB::afterCommit(fn () => DashboardCreatedActionEvent::dispatch($dashboard));
+        $dashboard = $this->perform($data, $owner);
 
-            return $dashboard;
-        });
+        DashboardCreatedActionEvent::dispatch($dashboard);
+
+        return $dashboard;
+    }
+
+    private function perform(array $data, ?Model $owner): Dashboard
+    {
+        return DB::transaction(fn (): Dashboard => Dashboard::query()->create([...]));
     }
 }
 ```
@@ -36,8 +41,9 @@ class CreateDashboardAction extends Action
 
 ## Transactions & events
 
-- Wrap every **mutating** action body in `DB::transaction()`.
-- Dispatch events via **`DB::afterCommit()` inside the transaction closure**, so registration sits next to the write but firing only happens after commit, never on rollback.
+- `handle()` dispatches the **starting** event with the input, calls a private `perform()`, dispatches the **finished** event with the result, and returns it.
+- Wrap every **mutating** `perform()` body in `DB::transaction()`.
+- Finished events implement `ActionFinishedEvent`, which extends `ShouldDispatchAfterCommit`, so they wait for the outermost transaction to commit and never fire on rollback. An action that throws fires its starting event and no finished event.
 - When a caller needs post-commit column values, `return $model->refresh();` **outside** the transaction.
 
 ## Dependency injection
@@ -46,10 +52,8 @@ class CreateDashboardAction extends Action
 
 ## Event
 
-- Extend `Atrium\Atrium\Events\Event`, which implements `ShouldDispatchAfterCommit`.
+- `final` classes in `Events\Action` using `Dispatchable` and `SerializesModels`; no base class.
 - A plain data carrier using constructor property promotion; it may carry more than one value.
-- Naming: `{Entity}{Verb}ActionEvent` — `DashboardCreatedActionEvent`, `DashboardLayoutSavedActionEvent`.
-
-> Why `afterCommit`: listeners (jobs, notifications, integrations) never fire for a rolled-back write. The explicit `DB::afterCommit()` is belt-and-suspenders, since the base event already defers; keep the wrapper everywhere for a uniform, visible signal at the dispatch site.
+- Every action has exactly one pair: `{Subject}{Verb-ing}ActionEvent` implementing `Contracts\ActionStartingEvent` (carries the input) and `{Subject}{Verb-ed}ActionEvent` implementing `Contracts\ActionFinishedEvent` (carries the result) — `DashboardLayoutSavingActionEvent` / `DashboardLayoutSavedActionEvent`. A test enforces the pairing.
 
 These are distinct from model **lifecycle events**. Default to ActionEvents for business logic; see [[lifecycle-events]].

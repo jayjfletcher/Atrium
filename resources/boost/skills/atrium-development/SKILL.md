@@ -2,8 +2,8 @@
 name: atrium-development
 description: >
   Configure and apply the Atrium dashboard package in Laravel applications,
-  including the authorization gate, plugins, widgets, dashboards, and the
-  shared Blade component library.
+  including the authorization gate, dashboard policies, events, plugins,
+  widgets, dashboards, and the shared Blade component library.
 license: MIT
 metadata:
   author: Jay Fletcher
@@ -41,7 +41,7 @@ The dashboard serves from `config('atrium.path')`, which defaults to `/atrium`.
 
 ### 3. Add a plugin
 
-A plugin is how anything appears in the dashboard. Generate one with `php artisan atrium:plugin BillingPlugin`, then extend `Atrium\Atrium\Plugins\Plugin` and implement only the methods needed:
+A plugin is how anything appears in the dashboard. Generate one with `php artisan atrium:plugin BillingPlugin`, then extend `JayI\Atrium\Plugins\Plugin` and implement only the methods needed:
 
 - `navigation()` returns `NavItem` objects for the sidebar
 - `routes()` registers routes inside Atrium's group, so the prefix, middleware, and route name prefix already apply
@@ -70,17 +70,40 @@ Wrap a page in the shell with `<x-atrium::layout>`, which exposes `brand`, `topb
 
 Atrium ships one compiled stylesheet whose values are all CSS custom properties. Anything under `config('atrium.theme')` is emitted as `--atrium-{key}`. No Tailwind build is required in the host application.
 
+### 6. Customize who may change dashboards
+
+The gate decides who reaches Atrium at all. Each dashboard request is then checked against the policy in `config('atrium.policies')`: `create` on `Dashboard::class` to store, `update`/`delete` on the dashboard to rename or remove it, and for a layout save `update` on the dashboard, `delete` on each placement it replaces, and `create` on `DashboardWidget::class`. By default the owner may do anything, everyone may view a shared dashboard, and `DashboardWidgetPolicy` defers to the dashboard. To change the rules, extend `JayI\Atrium\Policies\DashboardPolicy` and point `atrium.policies` at it:
+
+```php
+'policies' => [
+    Dashboard::class => App\Policies\AtriumDashboardPolicy::class,
+    DashboardWidget::class => DashboardWidgetPolicy::class,
+],
+```
+
+### 7. React to dashboard changes
+
+- Model events: `JayI\Atrium\Events\Model\{Model}{Hook}Event` (e.g. `DashboardCreatedEvent`, `DashboardWidgetDeletedEvent`), synchronous, with `$event->dashboard` / `$event->widget`, `model()` and `hook()`.
+- Action events: `JayI\Atrium\Events\Action\` pairs per action, a start event carrying the input (`DashboardLayoutSavingActionEvent`) and a finish event carrying the result (`DashboardLayoutSavedActionEvent`), which fires only after commit.
+- Listen to a whole family through `JayI\Atrium\Contracts\ModelLifecycleEvent`, `ActionStartingEvent` or `ActionFinishedEvent`.
+
+```php
+Event::listen(DashboardCreatedActionEvent::class, fn ($event) => Log::info('Dashboard created', ['id' => $event->dashboard->id]));
+```
+
+In tests, fake only the events being asserted: `Event::fake([DashboardCreatedActionEvent::class])`.
+
 ## Rules, References, and Templates
 
 Read before executing:
 
-- `config/atrium.php` for `path`, `domain`, `middleware`, `gate`, `discover`, `plugins`, `disabled`, and `theme`
+- `config/atrium.php` for `path`, `domain`, `middleware`, `gate`, `policies`, `discover`, `plugins`, `disabled`, and `theme`
 - the package README for the full plugin and component reference
 
 ## Key Behaviors
 
 - **Widgets are offered, not placed.** Returning a `WidgetDefinition` makes a widget available in the picker. Only a user adding it puts it on a dashboard. Never tell a user a widget will appear automatically.
-- **Users keep multiple dashboards.** Each belongs to one user; a dashboard can be marked shared so everyone sees it. Only the owner can modify one.
+- **Users keep multiple dashboards.** Each belongs to one user; a dashboard can be marked shared so everyone sees it. Only the owner can modify one, unless the application swaps in its own `DashboardPolicy`.
 - **Uninstalled plugins degrade gracefully.** A placement whose definition is gone is skipped rather than breaking the page.
 - **Host applications stay in control.** `plugins` adds, `disabled` hides by key, and `discover: false` turns discovery off.
 
@@ -96,3 +119,5 @@ Read before executing:
 - do not place widgets on a user's dashboard programmatically as a convenience
 - do not register plugin routes outside the plugin's `routes()` method, which would skip Atrium's middleware and prefix
 - do not require a Tailwind build in the host app; the shipped stylesheet is self-contained
+- do not bypass the policies by writing dashboards directly in a controller; call the actions, and check `$user->can(...)` first
+- do not import the old `JayI\Atrium\Events\Dashboard\*`, `Events\DashboardWidget\*` or `Events\Actions\*` classes; they were moved to `Events\Model` and `Events\Action`

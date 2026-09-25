@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Atrium\Atrium\Contracts;
+namespace JayI\Atrium\Contracts;
 
-use Atrium\Atrium\Navigation\NavItem;
-use Atrium\Atrium\Search\SearchSource;
-use Atrium\Atrium\Settings\SettingsPanel;
-use Atrium\Atrium\Widgets\WidgetDefinition;
 use Illuminate\Http\Request;
+use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Settings\SettingsPanel;
+use JayI\Atrium\Widgets\WidgetDefinition;
 
 interface Plugin
 {
