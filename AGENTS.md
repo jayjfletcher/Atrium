@@ -18,7 +18,7 @@ These are recorded in full under `agent-os/standards/`; the short form:
 - **Requests own validation, authorization, and the call into an action.** Extend `JayI\Atrium\Http\Requests\Request` and implement `persist()`. Controllers only `return $request->persist();` and never contain database calls.
 - **Events are final classes using `Dispatchable` and `SerializesModels`.** Action events live in `Events\Action` and implement `Contracts\ActionStartingEvent` or `Contracts\ActionFinishedEvent` (after commit); every action has one of each. Model events live in `Events\Model`, are named `{Model}{Hook}Event`, implement `Contracts\ModelLifecycleEvent`, and are mapped by the `Models\Concerns\DispatchesModelEvents` trait every model uses.
 - **Requests authorize through policies.** `authorize()` calls `$this->allows()` / `allowsEach()`: `viewAny`/`create` on the model class, `view`/`update`/`delete` on the instance. Policies extend `Policies\Policy`, are registered from `atrium.policies`, and child-model policies defer to the dashboard through the Gate.
-- Do not add a feature-flag dependency such as Pennant to the package; gating is the host application's concern.
+- Do not require a feature-flag package such as Pennant; gating is the host application's concern. The bundled `PennantPlugin` is optional: Pennant is only a dev dependency and a `suggest`, and the plugin registers only when Pennant's `FeatureManager` is bound and `atrium.pennant.enabled` is true.
 
 ## PHP Conventions
 

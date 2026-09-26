@@ -23,6 +23,7 @@
     "require-dev": {
         "larastan/larastan": "^3.12",
         "laravel/pao": "^1.0",
+        "laravel/pennant": "^1.26",
         "laravel/pint": "^1.29",
         "orchestra/testbench": "^11.0",
         "pestphp/pest": "^5.0",
@@ -30,6 +31,9 @@
         "pestphp/pest-plugin-laravel": "^5.0",
         "pestphp/pest-plugin-type-coverage": "^5.0",
         "phpstan/extension-installer": "^1.4"
+    },
+    "suggest": {
+        "laravel/pennant": "Manage Pennant feature flag values from the dashboard (^1.26)."
     },
     "autoload": {
         "psr-4": {

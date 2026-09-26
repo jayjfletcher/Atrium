@@ -17,11 +17,14 @@ use JayI\Atrium\Console\Commands\PluginListCommand;
 use JayI\Atrium\Dashboards\DashboardManager;
 use JayI\Atrium\Models\Dashboard;
 use JayI\Atrium\Navigation\NavigationRegistry;
+use JayI\Atrium\Pennant\FeatureFlagManager;
+use JayI\Atrium\Plugins\PennantPlugin;
 use JayI\Atrium\Plugins\PluginRegistry;
 use JayI\Atrium\Search\SearchRegistry;
 use JayI\Atrium\Settings\SettingsRegistry;
 use JayI\Atrium\Support\Discovery\ComposerPluginDiscovery;
 use JayI\Atrium\Widgets\WidgetRegistry;
+use Laravel\Pennant\FeatureManager;
 
 class AtriumServiceProvider extends ServiceProvider
 {
@@ -48,6 +51,7 @@ class AtriumServiceProvider extends ServiceProvider
         $this->app->singleton(SettingsRegistry::class);
         $this->app->singleton(SearchRegistry::class);
         $this->app->singleton(DashboardManager::class);
+        $this->app->singleton(FeatureFlagManager::class);
 
         $this->app->singleton(Atrium::class);
     }
@@ -124,13 +128,21 @@ class AtriumServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register discovered and configured plugins.
+     * Register the bundled, discovered, and configured plugins.
+     *
+     * The Pennant plugin registers itself only when laravel/pennant is
+     * installed and its provider has registered, so the package never
+     * requires it of its consumers.
      */
     protected function registerPlugins(): void
     {
         $registry = $this->app->make(PluginRegistry::class);
 
         $config = $this->app->make(Repository::class);
+
+        if ($config->get('atrium.pennant.enabled', true) === true && $this->app->bound(FeatureManager::class)) {
+            $registry->register(PennantPlugin::class);
+        }
 
         if ($config->get('atrium.discover', true) === true) {
             $registry->registerMany(

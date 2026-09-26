@@ -96,6 +96,22 @@ Atrium::plugin(BillingPlugin::class);
 
 Host applications stay in control. Add plugin classes to `plugins` in `config/atrium.php`, list keys under `disabled` to hide a discovered plugin, or set `discover` to `false` to turn discovery off entirely.
 
+## Managing Pennant feature flags
+
+When [laravel/pennant](https://laravel.com/docs/pennant) is installed, Atrium registers a bundled `pennant` plugin with a **Feature flags** page. It lists the values Pennant has stored, filtered by feature and by scope: **Global** (Pennant's null scope), a model type (optionally one model key), or other string scopes. From there you can activate or deactivate a stored value, set a value for any scope (JSON, so rich values work), forget a value so Pennant resolves it afresh, or purge a feature for every scope. Writes go through Pennant, so its cache and events stay in step.
+
+Listing reads the database driver's table, so the managed store must use the `database` driver. Configure it under `pennant` in `config/atrium.php`:
+
+```php
+'pennant' => [
+    'enabled' => true,          // set false to leave the plugin out
+    'store' => null,            // the Pennant store to manage, null for the default
+    'gate' => 'manageFeatures', // optional ability checked on top of the dashboard gate
+],
+```
+
+Every write fires an action event pair: `FeatureValueUpdating`/`FeatureValueUpdated`, `FeatureValueDeleting`/`FeatureValueDeleted`, and `FeaturePurging`/`FeaturePurged` (each suffixed `ActionEvent`).
+
 ## Widgets are offered, never placed
 
 Returning a `WidgetDefinition` makes a widget *available* in the widget picker. It does not put it on anyone's dashboard. Only a user adding it does that.
@@ -302,6 +318,7 @@ Actions expose `execute()` and keep `handle()` protected, so there is one entry 
 | `discover` | Whether to discover plugins from installed packages. |
 | `plugins` | Plugin classes registered manually. |
 | `disabled` | Plugin keys to hide. |
+| `pennant` | Whether the bundled Pennant plugin registers (when Pennant is installed), the store it manages, and an optional extra gate. |
 | `alpine` | Whether the layout loads Atrium's bundled Alpine.js. Set to `false` when the application already loads Alpine. |
 | `theme` | Values emitted as CSS custom properties. |
 

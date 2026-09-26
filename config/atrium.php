@@ -104,6 +104,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Pennant
+    |--------------------------------------------------------------------------
+    |
+    | When laravel/pennant is installed, Atrium registers a plugin for
+    | managing stored feature flag values. Set "enabled" to false to leave it
+    | out. "store" picks the Pennant store to manage, null for the default;
+    | listing needs a store backed by the database driver. "gate" optionally
+    | names an ability checked on top of the dashboard gate.
+    |
+    */
+
+    'pennant' => [
+        'enabled' => true,
+        'store' => null,
+        'gate' => null,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Alpine.js
     |--------------------------------------------------------------------------
     |
