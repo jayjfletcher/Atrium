@@ -11,6 +11,8 @@ use JayI\Atrium\Pennant\FeatureFlagManager;
 use JayI\Atrium\Pennant\StoredFeatureValue;
 use JayI\Atrium\Plugins\PennantPlugin;
 use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Tests\Fixtures\Features\Billing\InvoicingFeature;
+use JayI\Atrium\Tests\Fixtures\Features\Shipping\TrackingRates;
 use JayI\Atrium\Tests\TestCase;
 use Laravel\Pennant\Feature;
 use Laravel\Pennant\PennantServiceProvider;
@@ -124,6 +126,8 @@ class PennantPluginTest extends TestCase
 
     public function test_it_sets_a_value_for_a_picked_model(): void
     {
+        config(['atrium.pennant.scopes' => [User::class]]);
+
         $ada = $this->user();
 
         $this->actingAs($ada)->put(route('atrium.pennant.values.update'), [
@@ -153,11 +157,90 @@ class PennantPluginTest extends TestCase
 
     public function test_a_model_scope_needs_a_key(): void
     {
+        config(['atrium.pennant.scopes' => [User::class]]);
+
         $this->actingAs($this->user())->put(route('atrium.pennant.values.update'), [
             'feature' => 'beta',
             'scope_type' => User::class,
             'value' => 'true',
         ])->assertSessionHasErrors('scope_id');
+    }
+
+    public function test_a_model_scope_must_exist(): void
+    {
+        config(['atrium.pennant.scopes' => [User::class]]);
+
+        $this->actingAs($this->user())->put(route('atrium.pennant.values.update'), [
+            'feature' => 'beta',
+            'scope_type' => User::class,
+            'scope_id' => '999',
+            'value' => 'true',
+        ])->assertSessionHasErrors('scope_id');
+
+        $this->assertDatabaseMissing('features', ['name' => 'beta']);
+    }
+
+    public function test_a_model_scope_must_be_configured(): void
+    {
+        $ada = $this->user();
+
+        $this->actingAs($ada)->put(route('atrium.pennant.values.update'), [
+            'feature' => 'beta',
+            'scope_type' => User::class,
+            'scope_id' => (string) $ada->getKey(),
+            'value' => 'true',
+        ])->assertSessionHasErrors('scope_type');
+    }
+
+    public function test_it_finds_models_of_a_configured_scope(): void
+    {
+        config(['atrium.pennant.scopes' => [User::class => ['search' => ['name', 'email'], 'title' => 'email']]]);
+
+        $ada = $this->user('ada@example.com');
+        $bob = $this->user('bob@example.com');
+
+        $this->actingAs($ada)->getJson(route('atrium.pennant.scopes', ['type' => User::class, 'q' => 'bob']))
+            ->assertOk()
+            ->assertExactJson(['data' => [['id' => (string) $bob->getKey(), 'title' => 'bob@example.com']]]);
+
+        $this->actingAs($ada)->getJson(route('atrium.pennant.scopes', ['type' => User::class, 'q' => (string) $ada->getKey()]))
+            ->assertJsonPath('data.0.id', (string) $ada->getKey());
+    }
+
+    public function test_it_refuses_to_search_an_unconfigured_scope(): void
+    {
+        $this->actingAs($this->user())
+            ->getJson(route('atrium.pennant.scopes', ['type' => User::class, 'q' => 'ada']))
+            ->assertNotFound();
+    }
+
+    public function test_it_names_model_scoped_values_after_their_model(): void
+    {
+        config(['atrium.pennant.scopes' => [User::class => ['label' => 'People', 'title' => 'email']]]);
+
+        $ada = $this->user('ada@example.com');
+
+        Feature::for($ada)->activate('beta');
+
+        $this->assertSame('ada@example.com', app(FeatureFlagManager::class)->paginate()->items()[0]->title);
+
+        $this->actingAs($ada)->get(route('atrium.pennant.index'))
+            ->assertOk()
+            ->assertSee('People');
+    }
+
+    public function test_it_offers_every_discoverable_feature(): void
+    {
+        config(['atrium.pennant.features' => [dirname(__DIR__).'/Fixtures/Features/*']]);
+
+        Feature::for(null)->activate('stored-only');
+
+        $features = app(FeatureFlagManager::class)->features();
+
+        $this->assertContains(InvoicingFeature::class, $features);
+        $this->assertContains('shipping-tracking', $features);
+        $this->assertContains('stored-only', $features);
+        $this->assertNotContains(TrackingRates::class, $features);
     }
 
     public function test_it_forgets_a_stored_value(): void

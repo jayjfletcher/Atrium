@@ -14,6 +14,9 @@ use stdClass;
  */
 final class StoredFeatureValue
 {
+    /** How the scope's model is shown, when it is a configured scope model. */
+    public private(set) ?string $title = null;
+
     public function __construct(
         public private(set) string $feature,
         /** The scope exactly as Pennant serialized it. */
@@ -32,6 +35,13 @@ final class StoredFeatureValue
             json_decode((string) $row->value, true, flags: JSON_THROW_ON_ERROR),
             $updatedAt,
         );
+    }
+
+    public function title(?string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     public function isGlobal(): bool

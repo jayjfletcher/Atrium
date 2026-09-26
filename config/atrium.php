@@ -113,12 +113,31 @@ return [
     | listing needs a store backed by the database driver. "gate" optionally
     | names an ability checked on top of the dashboard gate.
     |
+    | "features" lists the directories holding class-based features, so every
+    | feature is offered even before Pennant has resolved it. Paths are globs,
+    | so one entry can match a Features directory inside every domain.
+    |
+    | "scopes" lists the models a value can be scoped to. Each entry is a
+    | model class, or a class mapped to options: a "label", the "search"
+    | columns used to find a model, and the "title" attribute shown for it.
+    |
     */
 
     'pennant' => [
         'enabled' => true,
         'store' => null,
         'gate' => null,
+        'features' => [
+            app_path('Features'),
+            // app_path('Domains/*/Features'),
+        ],
+        'scopes' => [
+            // App\Models\User::class => [
+            //     'label' => 'Users',
+            //     'search' => ['name', 'email'],
+            //     'title' => 'name',
+            // ],
+        ],
     ],
 
     /*

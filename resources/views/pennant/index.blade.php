@@ -2,10 +2,12 @@
     use JayI\Atrium\Pennant\FeatureFlagManager;
 
     $scopeOptions = ['' => __('atrium::atrium.pennant_all_scopes'), FeatureFlagManager::GLOBAL => __('atrium::atrium.pennant_global')]
-        + collect($scopeTypes)->mapWithKeys(fn (string $type): array => [$type => $type])->all()
+        + $scopeFilterOptions
         + [FeatureFlagManager::OTHER => __('atrium::atrium.pennant_other')];
 
-    $formScopeOptions = array_diff_key($scopeOptions, ['' => true]);
+    $formScopeOptions = [FeatureFlagManager::GLOBAL => __('atrium::atrium.pennant_global')]
+        + collect($scopeModels)->mapWithKeys(fn ($scope): array => [$scope->class => $scope->label])->all()
+        + [FeatureFlagManager::OTHER => __('atrium::atrium.pennant_other')];
 @endphp
 
 <x-atrium::layout :title="__('atrium::atrium.pennant_features')">
@@ -36,8 +38,56 @@
                     @endforeach
                 </datalist>
 
-                <x-atrium::form.select name="scope_type" id="atrium-pennant-scope-type" :label="__('atrium::atrium.pennant_scope')" :options="$formScopeOptions" :selected="FeatureFlagManager::GLOBAL" />
-                <x-atrium::form.input name="scope_id" id="atrium-pennant-scope-id" :label="__('atrium::atrium.pennant_scope_id')" />
+                <div class="contents" x-data="atriumPennantScope(@js(route('atrium.pennant.scopes')), @js(old('scope_type', FeatureFlagManager::GLOBAL)))">
+                    <x-atrium::form.select name="scope_type" id="atrium-pennant-scope-type" :label="__('atrium::atrium.pennant_scope')"
+                                           :options="$formScopeOptions" :selected="FeatureFlagManager::GLOBAL"
+                                           x-model="type" x-on:change="clear()" />
+
+                    {{-- Global needs no ID; the other scope kinds each render their own field. --}}
+                    <div class="w-full" x-show="type === @js(FeatureFlagManager::GLOBAL)"></div>
+
+                    <template x-if="type === @js(FeatureFlagManager::OTHER)">
+                        <x-atrium::form.input name="scope_id" id="atrium-pennant-scope-string" :label="__('atrium::atrium.pennant_scope_string')" />
+                    </template>
+
+                    <template x-if="type !== @js(FeatureFlagManager::GLOBAL) && type !== @js(FeatureFlagManager::OTHER)">
+                        <div class="relative flex w-full flex-col gap-1 text-on-surface dark:text-on-surface-dark" x-on:click.outside="open = false">
+                            <label for="atrium-pennant-scope-search" class="w-fit pl-0.5 text-sm">{{ __('atrium::atrium.pennant_find_model') }}</label>
+
+                            <input type="hidden" name="scope_id" x-bind:value="id">
+
+                            <div x-show="id !== ''" class="flex items-center justify-between gap-2 rounded-radius border border-outline bg-surface-alt px-2 py-2 text-sm dark:border-outline-dark dark:bg-surface-dark-alt/50">
+                                <span x-text="title" data-testid="pennant-scope-picked"></span>
+                                <button type="button" class="cursor-pointer text-xs underline" x-on:click="clear()">{{ __('atrium::atrium.pennant_clear') }}</button>
+                            </div>
+
+                            <input x-show="id === ''" id="atrium-pennant-scope-search" type="search" autocomplete="off"
+                                   placeholder="{{ __('atrium::atrium.pennant_find_model_placeholder') }}"
+                                   class="w-full rounded-radius border border-outline bg-surface-alt px-2 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-outline-dark dark:bg-surface-dark-alt/50 dark:focus-visible:outline-primary-dark"
+                                   x-model="query" x-on:input.debounce.250ms="search()" x-on:focus="open = results.length > 0"
+                                   data-testid="pennant-scope-search">
+
+                            <ul x-show="open" x-cloak
+                                class="absolute top-full z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-radius border border-outline bg-surface py-1 text-sm shadow-sm dark:border-outline-dark dark:bg-surface-dark">
+                                <template x-for="result in results" x-bind:key="result.id">
+                                    <li>
+                                        <button type="button" class="flex w-full cursor-pointer justify-between gap-3 px-3 py-1.5 text-left hover:bg-surface-alt dark:hover:bg-surface-dark-alt"
+                                                x-on:click="pick(result)">
+                                            <span x-text="result.title"></span>
+                                            <span class="opacity-60" x-text="'#' + result.id"></span>
+                                        </button>
+                                    </li>
+                                </template>
+                                <li x-show="results.length === 0" class="px-3 py-1.5 opacity-75">{{ __('atrium::atrium.pennant_no_models') }}</li>
+                            </ul>
+
+                            @error('scope_id')
+                                <small class="pl-0.5 text-xs text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </template>
+                </div>
+
                 <x-atrium::form.input name="value" :label="__('atrium::atrium.pennant_value')" value="true" :hint="__('atrium::atrium.pennant_value_hint')" required />
 
                 <div class="pb-5">
@@ -80,6 +130,9 @@
                             <x-atrium::table.cell class="font-medium">{{ $value->feature }}</x-atrium::table.cell>
                             <x-atrium::table.cell>
                                 <span title="{{ $value->scope }}">{{ $value->scopeLabel() }}</span>
+                                @if ($value->title)
+                                    <span class="block text-xs opacity-75">{{ $value->title }}</span>
+                                @endif
                             </x-atrium::table.cell>
                             <x-atrium::table.cell>
                                 <x-atrium::badge :variant="$value->isActive() ? 'success' : 'neutral'">
@@ -132,4 +185,43 @@
             @endif
         @endif
     </div>
+
+    @once
+        @push('atrium-scripts')
+            <script>
+                window.atriumPennantScope = function (url, type) {
+                    return {
+                        type: type,
+                        query: '',
+                        results: [],
+                        open: false,
+                        id: '',
+                        title: '',
+                        clear() {
+                            this.id = ''
+                            this.title = ''
+                            this.query = ''
+                            this.results = []
+                            this.open = false
+                        },
+                        pick(result) {
+                            this.id = result.id
+                            this.title = result.title + ' (#' + result.id + ')'
+                            this.open = false
+                        },
+                        async search() {
+                            if (this.query.trim() === '') { this.results = []; this.open = false; return }
+                            const response = await fetch(
+                                url + '?type=' + encodeURIComponent(this.type) + '&q=' + encodeURIComponent(this.query),
+                                { headers: { 'Accept': 'application/json' } }
+                            )
+                            const payload = await response.json()
+                            this.results = payload.data ?? []
+                            this.open = true
+                        },
+                    }
+                }
+            </script>
+        @endpush
+    @endonce
 </x-atrium::layout>

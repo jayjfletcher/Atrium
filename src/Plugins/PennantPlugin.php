@@ -57,6 +57,7 @@ class PennantPlugin extends Plugin
     public function routes(): void
     {
         Route::get('pennant', [FeatureFlagController::class, 'index'])->name('pennant.index');
+        Route::get('pennant/scopes', [FeatureFlagController::class, 'scopes'])->name('pennant.scopes');
         Route::put('pennant/values', [FeatureFlagController::class, 'update'])->name('pennant.values.update');
         Route::delete('pennant/values', [FeatureFlagController::class, 'destroy'])->name('pennant.values.destroy');
         Route::delete('pennant/features', [FeatureFlagController::class, 'purge'])->name('pennant.features.purge');

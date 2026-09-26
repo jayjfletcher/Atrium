@@ -35,4 +35,12 @@ class InvalidPluginException extends InvalidArgumentException
             $incoming,
         ));
     }
+
+    public static function notAModel(string $class): self
+    {
+        return new self(sprintf(
+            'Feature flag scope [%s] in atrium.pennant.scopes must be an Eloquent model.',
+            $class,
+        ));
+    }
 }

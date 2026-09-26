@@ -62,5 +62,11 @@ return [
     'pennant_value_saved' => 'Feature flag value saved.',
     'pennant_value_forgotten' => 'Feature flag value forgotten.',
     'pennant_feature_purged' => 'Feature flag purged.',
+    'pennant_scope_missing' => 'No model with that ID was found for the chosen scope.',
+    'pennant_find_model' => 'Find model',
+    'pennant_find_model_placeholder' => 'Search by ID or name…',
+    'pennant_scope_string' => 'Scope string',
+    'pennant_no_models' => 'No matching models.',
+    'pennant_clear' => 'Clear',
 
 ];
