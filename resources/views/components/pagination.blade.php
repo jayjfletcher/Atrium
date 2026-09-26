@@ -9,8 +9,8 @@
     $previous = $paginator?->previousPageUrl();
     $next = $paginator?->nextPageUrl();
 
-    $link = 'rounded-radius border border-outline px-3 py-1.5 transition hover:bg-surface-alt dark:border-outline-dark dark:hover:bg-surface-dark-alt';
-    $disabled = 'cursor-not-allowed rounded-radius border border-outline px-3 py-1.5 opacity-50 dark:border-outline-dark';
+    $link = 'inline-flex h-8 items-center rounded-radius border border-outline bg-surface px-3 font-medium text-on-surface-strong shadow-xs transition-colors hover:bg-surface-alt dark:border-outline-dark dark:bg-white/5 dark:text-on-surface-dark-strong dark:hover:bg-white/10';
+    $disabled = 'inline-flex h-8 cursor-not-allowed items-center rounded-radius border border-outline px-3 font-medium opacity-50 dark:border-outline-dark';
 @endphp
 
 @if ($paginator && $paginator->hasPages())

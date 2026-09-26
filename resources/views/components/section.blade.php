@@ -3,11 +3,11 @@
     'description' => null,
 ])
 
-<section {{ $attributes->class('mt-6 first:mt-0') }}>
+<section {{ $attributes->class('mt-8 first:mt-0') }}>
     @if ($title || $description)
         <div class="mb-3">
             @if ($title)
-                <h2 class="text-base font-semibold text-on-surface-strong dark:text-on-surface-dark-strong">{{ $title }}</h2>
+                <h2 class="text-base font-semibold tracking-tight text-on-surface-strong dark:text-on-surface-dark-strong">{{ $title }}</h2>
             @endif
 
             @if ($description)

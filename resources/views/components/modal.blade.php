@@ -19,21 +19,25 @@
     x-on:atrium-modal-close.window="if ($event.detail === '{{ $name }}') open = false"
     x-on:keydown.escape.window="open = false"
 >
-    <div class="fixed inset-0 z-40 bg-black/50" x-show="open" x-cloak x-on:click="open = false"></div>
+    <div class="fixed inset-0 z-40 bg-zinc-950/40 backdrop-blur-sm" x-show="open" x-cloak x-transition.opacity x-on:click="open = false"></div>
 
     <div
-        {{ $attributes->class('fixed left-1/2 top-[10vh] z-50 w-[calc(100vw-2rem)] -translate-x-1/2 overflow-y-auto rounded-radius border border-outline bg-surface text-on-surface shadow-lg dark:border-outline-dark dark:bg-surface-dark dark:text-on-surface-dark '.($sizes[$size] ?? $sizes['md'])) }}
+        {{ $attributes->class('fixed left-1/2 top-[10vh] z-50 w-[calc(100vw-2rem)] -translate-x-1/2 overflow-y-auto rounded-xl border border-outline bg-surface text-on-surface shadow-2xl dark:border-outline-dark dark:bg-surface-dark dark:text-on-surface-dark '.($sizes[$size] ?? $sizes['md'])) }}
         style="max-height: 80vh"
         x-show="open"
         x-cloak
+        x-transition:enter="transition duration-150 ease-out"
+        x-transition:enter-start="translate-y-2 opacity-0"
+        x-transition:leave="transition duration-100 ease-in"
+        x-transition:leave-end="translate-y-2 opacity-0"
         role="dialog"
         aria-modal="true"
     >
         @if ($title)
-            <div class="flex items-center justify-between border-b border-outline px-5 py-3 dark:border-outline-dark">
+            <div class="flex items-center justify-between px-5 pt-4">
                 <h2 class="text-base font-semibold text-on-surface-strong dark:text-on-surface-dark-strong">{{ $title }}</h2>
 
-                <button type="button" class="cursor-pointer opacity-70 transition hover:opacity-100" x-on:click="open = false" aria-label="Close">
+                <button type="button" class="grid size-8 cursor-pointer place-items-center rounded-md text-on-surface transition-colors hover:bg-on-surface-strong/5 hover:text-on-surface-strong dark:text-on-surface-dark dark:hover:bg-white/5 dark:hover:text-on-surface-dark-strong" x-on:click="open = false" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
@@ -44,7 +48,7 @@
         <div class="p-5">{{ $slot }}</div>
 
         @isset($footer)
-            <div class="border-t border-outline px-5 py-3 dark:border-outline-dark">{{ $footer }}</div>
+            <div class="flex justify-end gap-2 border-t border-outline bg-surface-alt/60 px-5 py-3 dark:border-outline-dark dark:bg-white/[0.02]">{{ $footer }}</div>
         @endisset
     </div>
 </div>

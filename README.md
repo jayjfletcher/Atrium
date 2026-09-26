@@ -188,7 +188,13 @@ Every color and radius is a design token expressed as a CSS custom property, so 
 ],
 ```
 
-Anything you add here is emitted as `--color-{key}` on the dashboard. The full token list is in `resources/css/atrium.css`. Dark mode follows a `dark` class on a parent element.
+Anything you add here is emitted as `--color-{key}` on the dashboard. The full token list is in `resources/css/atrium.css`; `canvas` / `canvas-dark` color the area behind the sidebar and content panel.
+
+Dark mode follows a `dark` class on `<html>`. The topbar's appearance menu switches between light, dark and following the system, and the choice is kept in `localStorage` and applied before paint.
+
+## Sidebar
+
+On large screens the sidebar collapses to an icon rail from the toggle at its foot, and stays collapsed across pages. In the rail, hovering an item shows its label, badge, and a menu of its children. Give nav items an `icon()` (any inline SVG); an item without one shows its initial in the rail. Group headings fold their items away, and an item with `children()` expands in place.
 
 To rebuild the stylesheet while working on the package itself:
 

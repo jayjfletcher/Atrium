@@ -19,6 +19,154 @@
         return meta ? meta.getAttribute('content') : null
     }
 
+    /**
+     * Storage can throw (private windows, blocked site data), and a lost
+     * preference is harmless, so both helpers swallow failures.
+     */
+    function remember(key, value) {
+        try {
+            if (value === null) {
+                localStorage.removeItem(key)
+            } else {
+                localStorage.setItem(key, value)
+            }
+        } catch (error) {}
+    }
+
+    function recall(key) {
+        try {
+            return localStorage.getItem(key)
+        } catch (error) {
+            return null
+        }
+    }
+
+    /**
+     * The sidebar shell: the off-canvas drawer below `lg`, the collapsed
+     * icon rail above it, which navigation groups are folded, and the
+     * floating label or child menu shown when hovering the rail.
+     *
+     * The rail's collapsed state lives on <html> as data-atrium-sidebar, set
+     * before paint by the layout's head script, so every rail style is plain
+     * CSS and nothing here has to run for the page to look right.
+     */
+    window.atriumShell = function () {
+        var closedGroups = []
+
+        try {
+            closedGroups = JSON.parse(recall('atrium.nav-groups') || '[]')
+        } catch (error) {}
+
+        return {
+            drawer: false,
+            collapsed: document.documentElement.dataset.atriumSidebar === 'collapsed',
+            closedGroups: closedGroups,
+            flyout: null,
+            hideTimer: null,
+
+            toggleCollapsed: function () {
+                this.collapsed = !this.collapsed
+                this.flyout = null
+
+                if (this.collapsed) {
+                    document.documentElement.dataset.atriumSidebar = 'collapsed'
+                } else {
+                    delete document.documentElement.dataset.atriumSidebar
+                }
+
+                remember('atrium.sidebar', this.collapsed ? 'collapsed' : null)
+            },
+
+            isGroupOpen: function (name) {
+                return this.closedGroups.indexOf(name) === -1
+            },
+
+            toggleGroup: function (name) {
+                var index = this.closedGroups.indexOf(name)
+
+                if (index === -1) {
+                    this.closedGroups.push(name)
+                } else {
+                    this.closedGroups.splice(index, 1)
+                }
+
+                remember('atrium.nav-groups', JSON.stringify(this.closedGroups))
+            },
+
+            /** Whether the sidebar is currently showing as the icon rail. */
+            isRail: function () {
+                return this.collapsed && window.matchMedia('(min-width: 64rem)').matches
+            },
+
+            /**
+             * Show an item's label, and its children if it has any, beside
+             * the rail. It is positioned fixed rather than nested in the item
+             * because the scrolling nav would clip anything that overflows it.
+             */
+            peek: function (element) {
+                if (!this.isRail()) return
+
+                clearTimeout(this.hideTimer)
+
+                var rect = element.getBoundingClientRect()
+                var data = JSON.parse(element.dataset.flyout || '{}')
+
+                data.top = rect.top
+                data.left = rect.right + 8
+                this.flyout = data
+            },
+
+            /** Hide after a beat, so the pointer can cross into a child menu. */
+            unpeek: function () {
+                var self = this
+
+                clearTimeout(this.hideTimer)
+
+                this.hideTimer = setTimeout(function () {
+                    self.flyout = null
+                }, 120)
+            },
+
+            holdFlyout: function () {
+                clearTimeout(this.hideTimer)
+            },
+        }
+    }
+
+    /**
+     * Light, dark, or following the system. The head script applies the
+     * stored choice before paint; this keeps it applied when the choice or
+     * the system setting changes.
+     */
+    window.atriumAppearance = function () {
+        return {
+            theme: recall('atrium.theme') || 'system',
+
+            init: function () {
+                var self = this
+
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+                    self.apply()
+                })
+            },
+
+            choose: function (theme) {
+                this.theme = theme
+
+                remember('atrium.theme', theme === 'system' ? null : theme)
+
+                this.apply()
+            },
+
+            apply: function () {
+                var dark = this.theme === 'dark' ||
+                    (this.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+                document.documentElement.classList.toggle('dark', dark)
+            },
+        }
+    }
+
     window.atriumDashboard = function (config) {
         return {
             editing: false,

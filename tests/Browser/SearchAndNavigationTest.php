@@ -49,3 +49,25 @@ it('shows an empty message when a search matches nothing', function (): void {
 it('marks the active navigation item on the current page', function (): void {
     visit('/atrium/settings')->assertPresent('@nav-item');
 });
+
+it('collapses the sidebar to an icon rail and remembers it across pages', function (): void {
+    visit('/atrium')
+        ->click('@sidebar-toggle')
+        ->assertScript('document.documentElement.dataset.atriumSidebar', 'collapsed')
+        ->navigate('/atrium/settings')
+        ->assertScript('document.documentElement.dataset.atriumSidebar', 'collapsed')
+        ->click('@sidebar-toggle')
+        ->assertScript('document.documentElement.dataset.atriumSidebar === undefined', true);
+});
+
+it('switches to dark mode and keeps it across pages', function (): void {
+    visit('/atrium')
+        ->click('@appearance-toggle')
+        ->click('@theme-dark')
+        ->assertScript('document.documentElement.classList.contains("dark")', true)
+        ->navigate('/atrium/settings')
+        ->assertScript('document.documentElement.classList.contains("dark")', true)
+        ->click('@appearance-toggle')
+        ->click('@theme-light')
+        ->assertScript('document.documentElement.classList.contains("dark")', false);
+});

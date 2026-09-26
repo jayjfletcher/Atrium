@@ -6,6 +6,12 @@ return [
 
     'skip_to_content' => 'Skip to content',
     'toggle_navigation' => 'Toggle navigation',
+    'collapse_sidebar' => 'Collapse sidebar',
+    'expand_sidebar' => 'Expand sidebar',
+    'appearance' => 'Appearance',
+    'theme_light' => 'Light',
+    'theme_dark' => 'Dark',
+    'theme_system' => 'System',
     'primary_navigation' => 'Primary navigation',
     'breadcrumbs' => 'Breadcrumbs',
     'search' => 'Search',

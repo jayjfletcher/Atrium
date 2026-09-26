@@ -19,6 +19,9 @@
 
 ### Changed
 
+- Visual refresh of the shell and every component: a zinc palette, an inset content panel over a new `canvas` token, and quieter buttons, inputs, cards, tables and badges.
+- The sidebar collapses to an icon rail with hover labels and child flyouts, folds its groups, and expands child items in place.
+- Dark mode is built in, with a light / dark / system switcher in the topbar. Search focuses with ⌘K / Ctrl K.
 - Requires `laravel/framework` instead of `illuminate/support`, since the package uses form requests, events, queues and views from the framework.
 
 

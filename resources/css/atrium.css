@@ -46,6 +46,7 @@
 @source '../views/dashboard/switcher.blade.php';
 @source '../views/dashboard/widget.blade.php';
 @source '../views/layouts/app.blade.php';
+@source '../views/partials/appearance.blade.php';
 @source '../views/partials/nav-item.blade.php';
 @source '../views/partials/navigation.blade.php';
 @source '../views/partials/search.blade.php';
@@ -54,8 +55,21 @@
 @source '../views/settings/index.blade.php';
 @source '../views/settings/show.blade.php';
 
-/* Dark mode follows a `.dark` class on a parent, matching Penguin's convention. */
+/* Dark mode follows a `.dark` class on a parent, matching Penguin's convention.
+   The layout's head script sets it from the stored preference before paint. */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* The collapsed icon rail. It only applies from the `lg` breakpoint, because
+   below it the sidebar is an off-canvas drawer that always shows labels. The
+   attribute is set on <html> before paint, so a collapsed rail never flashes
+   open on load. */
+@custom-variant rail {
+    @media (width >= 64rem) {
+        &:where([data-atrium-sidebar='collapsed'] *) {
+            @slot;
+        }
+    }
+}
 
 /*
  * The design tokens every component references. These are plain CSS custom
@@ -65,44 +79,54 @@
  */
 @theme {
     /* Light */
+    --color-canvas: var(--color-zinc-100);
     --color-surface: var(--color-white);
-    --color-surface-alt: var(--color-neutral-50);
-    --color-on-surface: var(--color-neutral-600);
-    --color-on-surface-strong: var(--color-neutral-900);
+    --color-surface-alt: var(--color-zinc-50);
+    --color-on-surface: var(--color-zinc-600);
+    --color-on-surface-strong: var(--color-zinc-900);
     --color-primary: var(--color-indigo-600);
     --color-on-primary: var(--color-white);
-    --color-secondary: var(--color-neutral-800);
+    --color-secondary: var(--color-zinc-900);
     --color-on-secondary: var(--color-white);
-    --color-outline: var(--color-neutral-300);
-    --color-outline-strong: var(--color-neutral-800);
+    --color-outline: var(--color-zinc-200);
+    --color-outline-strong: var(--color-zinc-800);
 
     /* Dark */
-    --color-surface-dark: var(--color-neutral-950);
-    --color-surface-dark-alt: var(--color-neutral-900);
-    --color-on-surface-dark: var(--color-neutral-300);
-    --color-on-surface-dark-strong: var(--color-white);
+    --color-canvas-dark: var(--color-zinc-950);
+    --color-surface-dark: var(--color-zinc-900);
+    --color-surface-dark-alt: var(--color-zinc-800);
+    --color-on-surface-dark: var(--color-zinc-400);
+    --color-on-surface-dark-strong: var(--color-zinc-50);
     --color-primary-dark: var(--color-indigo-400);
-    --color-on-primary-dark: var(--color-neutral-950);
-    --color-secondary-dark: var(--color-neutral-300);
-    --color-on-secondary-dark: var(--color-black);
-    --color-outline-dark: var(--color-neutral-700);
-    --color-outline-dark-strong: var(--color-neutral-300);
+    --color-on-primary-dark: var(--color-zinc-950);
+    --color-secondary-dark: var(--color-zinc-100);
+    --color-on-secondary-dark: var(--color-zinc-950);
+    --color-outline-dark: var(--color-zinc-800);
+    --color-outline-dark-strong: var(--color-zinc-300);
 
     /* Shared */
     --color-info: var(--color-sky-500);
     --color-on-info: var(--color-white);
-    --color-success: var(--color-green-600);
+    --color-success: var(--color-emerald-600);
     --color-on-success: var(--color-white);
     --color-warning: var(--color-amber-500);
     --color-on-warning: var(--color-white);
     --color-danger: var(--color-red-600);
     --color-on-danger: var(--color-white);
 
-    --radius-radius: var(--radius-md);
+    --radius-radius: var(--radius-lg);
 }
 
 @layer base {
     [x-cloak] {
         display: none !important;
+    }
+
+    html {
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
     }
 }

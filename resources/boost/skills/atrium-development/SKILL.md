@@ -68,7 +68,7 @@ Wrap a page in the shell with `<x-atrium::layout>`, which exposes `brand`, `topb
 
 ### 5. Theme without rebuilding assets
 
-Atrium ships one compiled stylesheet whose values are all CSS custom properties. Anything under `config('atrium.theme')` is emitted as `--color-{key}`, overriding the matching design token in `resources/css/atrium.css`. No Tailwind build is required in the host application.
+Atrium ships one compiled stylesheet whose values are all CSS custom properties. Anything under `config('atrium.theme')` is emitted as `--color-{key}`, overriding the matching design token in `resources/css/atrium.css`. No Tailwind build is required in the host application. Dark mode is a `dark` class on `<html>`, driven by the topbar's light / dark / system switcher; the sidebar collapses to an icon rail, so give `NavItem`s an `icon()`.
 
 ### 6. Customize who may change dashboards
 

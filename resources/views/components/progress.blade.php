@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <div class="h-2 w-full overflow-hidden rounded-full bg-surface-alt dark:bg-surface-dark-alt"
+    <div class="h-1.5 w-full overflow-hidden rounded-full bg-on-surface-strong/10 dark:bg-white/10"
          role="progressbar" aria-valuenow="{{ $value }}" aria-valuemin="0" aria-valuemax="{{ $max }}">
         <div class="h-full rounded-full bg-primary transition-all dark:bg-primary-dark" style="width: {{ $percent }}%"></div>
     </div>

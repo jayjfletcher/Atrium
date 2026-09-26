@@ -17,6 +17,6 @@
       x-on:focusin="show = true" x-on:focusout="show = false">
     {{ $slot }}
 
-    <span class="pointer-events-none absolute z-40 whitespace-nowrap rounded-radius bg-surface-dark px-2 py-1 text-xs text-on-surface-dark shadow dark:bg-surface dark:text-on-surface {{ $positions[$position] ?? $positions['top'] }}"
-          x-show="show" x-cloak role="tooltip">{{ $text }}</span>
+    <span class="pointer-events-none absolute z-40 whitespace-nowrap rounded-md bg-on-surface-strong px-2 py-1 text-xs font-medium text-surface shadow-lg dark:bg-on-surface-dark-strong dark:text-surface-dark {{ $positions[$position] ?? $positions['top'] }}"
+          x-show="show" x-cloak x-transition.opacity.duration.100ms role="tooltip">{{ $text }}</span>
 </span>
