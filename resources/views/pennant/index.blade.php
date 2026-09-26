@@ -27,7 +27,7 @@
         @endunless
 
         <x-atrium::card :title="__('atrium::atrium.pennant_set_value')">
-            <form method="POST" action="{{ route('atrium.pennant.values.update') }}" class="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-5" data-testid="pennant-set-value">
+            <form method="POST" action="{{ route('atrium.pennant.values.update') }}" class="grid items-start gap-3 sm:grid-cols-2 lg:grid-cols-5" data-testid="pennant-set-value">
                 @csrf
                 @method('PUT')
 
@@ -51,27 +51,27 @@
                     </template>
 
                     <template x-if="type !== @js(FeatureFlagManager::GLOBAL) && type !== @js(FeatureFlagManager::OTHER)">
-                        <div class="relative flex w-full flex-col gap-1 text-on-surface dark:text-on-surface-dark" x-on:click.outside="open = false">
-                            <label for="atrium-pennant-scope-search" class="w-fit pl-0.5 text-sm">{{ __('atrium::atrium.pennant_find_model') }}</label>
+                        <div class="relative flex w-full flex-col gap-1.5 text-on-surface dark:text-on-surface-dark" x-on:click.outside="open = false">
+                            <label for="atrium-pennant-scope-search" class="w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">{{ __('atrium::atrium.pennant_find_model') }}</label>
 
                             <input type="hidden" name="scope_id" x-bind:value="id">
 
-                            <div x-show="id !== ''" class="flex items-center justify-between gap-2 rounded-radius border border-outline bg-surface-alt px-2 py-2 text-sm dark:border-outline-dark dark:bg-surface-dark-alt/50">
+                            <div x-show="id !== ''" class="flex h-9 items-center justify-between gap-2 rounded-radius border border-outline bg-surface px-3 text-sm text-on-surface-strong shadow-xs dark:border-outline-dark dark:bg-white/5 dark:text-on-surface-dark-strong">
                                 <span x-text="title" data-testid="pennant-scope-picked"></span>
-                                <button type="button" class="cursor-pointer text-xs underline" x-on:click="clear()">{{ __('atrium::atrium.pennant_clear') }}</button>
+                                <button type="button" class="cursor-pointer rounded-md px-1.5 py-0.5 text-xs font-medium text-on-surface transition-colors hover:bg-on-surface-strong/5 hover:text-on-surface-strong dark:text-on-surface-dark dark:hover:bg-white/5 dark:hover:text-on-surface-dark-strong" x-on:click="clear()">{{ __('atrium::atrium.pennant_clear') }}</button>
                             </div>
 
                             <input x-show="id === ''" id="atrium-pennant-scope-search" type="search" autocomplete="off"
                                    placeholder="{{ __('atrium::atrium.pennant_find_model_placeholder') }}"
-                                   class="w-full rounded-radius border border-outline bg-surface-alt px-2 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-outline-dark dark:bg-surface-dark-alt/50 dark:focus-visible:outline-primary-dark"
+                                   class="h-9 w-full rounded-radius border border-outline bg-surface px-3 text-sm text-on-surface-strong shadow-xs transition placeholder:text-on-surface/60 hover:border-on-surface/30 focus:border-primary focus:outline-none focus:ring-3 focus:ring-primary/15 dark:border-outline-dark dark:bg-white/5 dark:text-on-surface-dark-strong dark:placeholder:text-on-surface-dark/60 dark:hover:border-white/20 dark:focus:border-primary-dark dark:focus:ring-primary-dark/20 [&::-webkit-search-cancel-button]:hidden"
                                    x-model="query" x-on:input.debounce.250ms="search()" x-on:focus="open = results.length > 0"
                                    data-testid="pennant-scope-search">
 
                             <ul x-show="open" x-cloak
-                                class="absolute top-full z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-radius border border-outline bg-surface py-1 text-sm shadow-sm dark:border-outline-dark dark:bg-surface-dark">
+                                class="absolute top-full z-20 mt-1.5 max-h-60 w-full overflow-y-auto rounded-radius border border-outline bg-surface p-1 text-sm shadow-xl dark:border-outline-dark dark:bg-surface-dark">
                                 <template x-for="result in results" x-bind:key="result.id">
                                     <li>
-                                        <button type="button" class="flex w-full cursor-pointer justify-between gap-3 px-3 py-1.5 text-left hover:bg-surface-alt dark:hover:bg-surface-dark-alt"
+                                        <button type="button" class="flex w-full cursor-pointer justify-between gap-3 rounded-md px-2 py-1.5 text-left text-on-surface-strong transition-colors hover:bg-on-surface-strong/5 dark:text-on-surface-dark-strong dark:hover:bg-white/5"
                                                 x-on:click="pick(result)">
                                             <span x-text="result.title"></span>
                                             <span class="opacity-60" x-text="'#' + result.id"></span>
@@ -82,7 +82,7 @@
                             </ul>
 
                             @error('scope_id')
-                                <small class="pl-0.5 text-xs text-danger">{{ $message }}</small>
+                                <small class="text-xs text-danger">{{ $message }}</small>
                             @enderror
                         </div>
                     </template>
@@ -90,7 +90,8 @@
 
                 <x-atrium::form.input name="value" :label="__('atrium::atrium.pennant_value')" value="true" :hint="__('atrium::atrium.pennant_value_hint')" required />
 
-                <div class="pb-5">
+                {{-- Offset by the label's height, so the button lines up with the fields. --}}
+                <div class="sm:pt-6.5">
                     <x-atrium::button type="submit">{{ __('atrium::atrium.pennant_save') }}</x-atrium::button>
                 </div>
             </form>
