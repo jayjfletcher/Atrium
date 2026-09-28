@@ -4,6 +4,7 @@
 
 ### Breaking
 
+- The bundled Pennant plugin (the Feature flags page, `FeatureFlagManager`, its requests, actions and `Feature*ActionEvent` events, and the `atrium.pennant` config) moved to `jayi/pennantplus` under `JayI\PennantPlus\Atrium`. Install that package to keep the page; its settings now live under `pennantplus.atrium`.
 - The PHP namespace changed from `Atrium\Atrium` to `JayI\Atrium`, matching the other `jayi/*` packages. Update `use` statements, the service provider and facade references, and any class names in your config (such as `atrium.php` middleware). The package name `jayi/atrium`, the `atrium::` view namespace, `atrium.*` config keys, route names and `atrium-*` publish tags are unchanged.
 - Event classes moved and were renamed. Model events now live in `JayI\Atrium\Events\Model` (`Events\Dashboard\DashboardCreatedEvent` is now `Events\Model\DashboardCreatedEvent`, and `Events\DashboardWidget\*` moved the same way). Action events moved from `Atrium\Atrium\Events\Actions` to `JayI\Atrium\Events\Action`. Update the `use` statements of your listeners.
 - The `Atrium\Atrium\Events\Event` base class was removed. Events are now final classes implementing `Contracts\ModelLifecycleEvent`, `Contracts\ActionStartingEvent` or `Contracts\ActionFinishedEvent`.
