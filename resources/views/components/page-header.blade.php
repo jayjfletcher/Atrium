@@ -3,7 +3,7 @@
     'description' => null,
 ])
 
-<div {{ $attributes->class('flex flex-wrap items-end justify-between gap-4') }}>
+<div {{ $attributes->class('flex flex-wrap items-start justify-between gap-4') }}>
     <div>
         <h1 class="text-2xl font-semibold tracking-tight text-on-surface-strong dark:text-on-surface-dark-strong">{{ $title }}</h1>
 
