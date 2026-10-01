@@ -151,6 +151,15 @@ class NavItem
             return false;
         }
 
-        return rtrim($request->url(), '/') === rtrim($url, '/');
+        // Compare paths rather than full URLs, so relative URLs match and a
+        // scheme or host rewritten by a proxy does not hide the active item.
+        $host = parse_url($url, PHP_URL_HOST);
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if (! is_string($path) || ($host !== null && $host !== $request->getHost())) {
+            return false;
+        }
+
+        return trim($path, '/') === trim($request->getPathInfo(), '/');
     }
 }

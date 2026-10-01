@@ -90,3 +90,34 @@ it('marks an item active when the current url matches', function (): void {
     expect($item->isActive(Request::create('http://localhost/atrium/reports')))->toBeTrue()
         ->and($item->isActive(Request::create('http://localhost/atrium/other')))->toBeFalse();
 });
+
+it('marks an item with a relative url active on the matching page', function (): void {
+    $item = NavItem::make('Reports')->url('/atrium/reports/');
+
+    expect($item->isActive(Request::create('https://example.test/atrium/reports?page=2')))->toBeTrue()
+        ->and($item->isActive(Request::create('https://example.test/atrium/reports/sales')))->toBeFalse();
+});
+
+it('ignores the scheme but not the host when matching an absolute url', function (): void {
+    $item = NavItem::make('Reports')->url('http://example.test/atrium/reports');
+
+    expect($item->isActive(Request::create('https://example.test/atrium/reports')))->toBeTrue()
+        ->and($item->isActive(Request::create('https://other.test/atrium/reports')))->toBeFalse();
+});
+
+it('never marks a fragment-only url active', function (): void {
+    expect(NavItem::make('Sales')->url('#sales')->isActive(Request::create('http://localhost/')))->toBeFalse();
+});
+
+it('renders only the current page as active in the sidebar', function (): void {
+    app()->detectEnvironment(fn (): string => 'local');
+
+    app(NavigationRegistry::class)
+        ->add(NavItem::make('Home')->route('atrium.dashboard'))
+        ->add(NavItem::make('Settings')->url('/atrium/settings'));
+
+    $html = $this->get('/atrium/settings')->assertOk()->getContent();
+
+    expect(substr_count($html, 'aria-current="page"'))->toBe(1)
+        ->and(strpos($html, 'aria-current="page"'))->toBeGreaterThan(strpos($html, 'href="/atrium/settings"'));
+});
