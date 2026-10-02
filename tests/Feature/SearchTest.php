@@ -14,6 +14,7 @@ use JayI\Atrium\Search\SearchRegistry;
 use JayI\Atrium\Search\SearchResult;
 use JayI\Atrium\Search\SearchSource;
 use JayI\Atrium\Tests\Fixtures\FullPlugin;
+use JayI\Atrium\Tests\Fixtures\MultiSourcePlugin;
 use Laravel\Ai\AiServiceProvider;
 use Laravel\Ai\Classification;
 use Laravel\Ai\Responses\Data\ChoiceAnswer;
@@ -183,6 +184,13 @@ it('aggregates results across plugin sources', function (): void {
     $results = app(SearchRegistry::class)->search(Request::create('/atrium/search'), 'invoices');
 
     expect($results)->toHaveCount(2);
+});
+
+it('searches every source a plugin returns, each with its own cap', function (): void {
+    app(PluginRegistry::class)->register(MultiSourcePlugin::class);
+
+    // Five people fill their source's cap without crowding out the place.
+    expect(searchTitles('anyone'))->toBe(['Person 1', 'Person 2', 'Person 3', 'Person 4', 'Person 5', 'Place 1']);
 });
 
 it('returns nothing for an empty query without calling sources', function (): void {

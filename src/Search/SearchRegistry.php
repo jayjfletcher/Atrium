@@ -46,10 +46,12 @@ class SearchRegistry
         $sources = $this->extra;
 
         foreach ($this->plugins->authorized($request) as $plugin) {
-            $source = $plugin->search();
+            $found = $plugin->search();
 
-            if ($source instanceof SearchSource) {
-                $sources[] = $source;
+            foreach (is_array($found) ? $found : [$found] as $source) {
+                if ($source instanceof SearchSource) {
+                    $sources[] = $source;
+                }
             }
         }
 

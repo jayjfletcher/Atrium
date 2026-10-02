@@ -193,7 +193,7 @@ npm run build:css
 
 ## Search
 
-A plugin's `search()` returns a `SearchSource`, and the topbar's command palette queries every source the user may see:
+A plugin's `search()` returns a `SearchSource`, or a list of them, and the topbar's command palette queries every source the user may see. Return one source per kind of thing the plugin finds: each gets its own `results.per_source`, and classification can choose between them.
 
 ```php
 use JayI\Atrium\Search\SearchResult;

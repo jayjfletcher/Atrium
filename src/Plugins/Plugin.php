@@ -54,7 +54,14 @@ abstract class Plugin implements PluginContract
         return [];
     }
 
-    public function search(): ?SearchSource
+    /**
+     * The plugin's search source, or several - one per kind of thing it
+     * finds, so each gets its own `results.per_source` and classification
+     * can pick between them.
+     *
+     * @return SearchSource|array<int, SearchSource>|null
+     */
+    public function search(): SearchSource|array|null
     {
         return null;
     }

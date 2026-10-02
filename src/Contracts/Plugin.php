@@ -56,7 +56,9 @@ interface Plugin
     public function widgets(): array;
 
     /**
-     * Source queried by the global search palette.
+     * The plugin's search source, or one per kind of thing it finds.
+     *
+     * @return SearchSource|array<int, SearchSource>|null
      */
-    public function search(): ?SearchSource;
+    public function search(): SearchSource|array|null;
 }
