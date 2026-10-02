@@ -34,7 +34,17 @@ abstract class Plugin implements PluginContract
         return true;
     }
 
+    public function features(): array
+    {
+        return [];
+    }
+
     public function navigation(): array
+    {
+        return [];
+    }
+
+    public function navigationGroups(): array
     {
         return [];
     }

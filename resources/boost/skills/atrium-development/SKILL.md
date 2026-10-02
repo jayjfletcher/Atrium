@@ -43,12 +43,16 @@ The dashboard serves from `config('atrium.path')`, which defaults to `/atrium`.
 
 A plugin is how anything appears in the dashboard. Generate one with `php artisan atrium:plugin BillingPlugin`, then extend `JayI\Atrium\Plugins\Plugin` and implement only the methods needed:
 
-- `navigation()` returns `NavItem` objects for the sidebar
+- `navigation()` returns `NavItem` objects for the sidebar. Gate them with `->can($ability, $arguments)`, `->feature(...$features)`, or `->authorize(fn (Request $request) => bool)`; every rule must pass, and children are filtered the same way
+- `navigationGroups()` returns `NavGroup::make($name)` rules that hide a whole sidebar group
+- `features()` lists features that must all be on for the plugin to appear at all; its routes 404 otherwise
 - `routes()` registers routes inside Atrium's group, so the prefix, middleware, and route name prefix already apply
 - `widgets()` returns `WidgetDefinition` objects offered in the widget picker
 - `settings()` returns a `SettingsPanel` for the settings page
 - `search()` returns a `SearchSource` for the command palette. Give it a `label()` and `description()`: sources run concurrently (at most `atrium.search.concurrency_limit` at once when classification is off), a source that throws or exceeds its timeout (`atrium.search.timeout`, or `->timeout($seconds)`) is reported and skipped, results are capped by `atrium.search.results.per_source` and `.total`, and with `atrium.search.classification.enabled` and laravel/ai installed only the `atrium.search.classification.sources` most likely sources run, chosen from those labels and descriptions
 - `authorize(Request $request)` hides the whole plugin when it returns false
+
+Atrium has no permission or feature-flag system of its own. `can()` asks Laravel's Gate unless the application calls `Atrium::resolvePermissionsUsing()`, and `feature()` is always on until something calls `Atrium::resolveFeaturesUsing()` (jayi/pennantplus does, with Pennant). Guard other routes with the `atrium.feature:{features}` middleware.
 
 Register it one of two ways. Packages declare the class in their `composer.json` under `extra.atrium.plugins` and Atrium discovers it. Applications call `Atrium::plugin(BillingPlugin::class)` in a service provider's `boot()` method.
 

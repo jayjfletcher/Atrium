@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace JayI\Atrium;
 
+use Closure;
 use Illuminate\Http\Request;
+use JayI\Atrium\Access\Gatekeeper;
 use JayI\Atrium\Contracts\Plugin;
+use JayI\Atrium\Navigation\NavGroup;
 use JayI\Atrium\Navigation\NavigationRegistry;
 use JayI\Atrium\Navigation\NavItem;
 use JayI\Atrium\Plugins\PluginRegistry;
@@ -25,6 +28,7 @@ class Atrium
         protected WidgetRegistry $widgets,
         protected SettingsRegistry $settings,
         protected SearchRegistry $search,
+        protected Gatekeeper $gatekeeper,
     ) {}
 
     /**
@@ -60,6 +64,47 @@ class Atrium
         $this->navigation->add($item);
 
         return $this;
+    }
+
+    /**
+     * Describe a sidebar group's visibility outside of any plugin.
+     */
+    public function navigationGroup(NavGroup $group): static
+    {
+        $this->navigation->group($group);
+
+        return $this;
+    }
+
+    /**
+     * Decide the permissions `can()` checks with the given callback instead
+     * of the Gate.
+     *
+     * @param  (Closure(string $ability, array<array-key, mixed> $arguments, Request $request): bool)|null  $callback
+     */
+    public function resolvePermissionsUsing(?Closure $callback): static
+    {
+        $this->gatekeeper->resolvePermissionsUsing($callback);
+
+        return $this;
+    }
+
+    /**
+     * Decide whether the features `feature()` and plugins name are on. Until
+     * a resolver is registered every feature is on.
+     *
+     * @param  (Closure(string $feature, Request $request): bool)|null  $callback
+     */
+    public function resolveFeaturesUsing(?Closure $callback): static
+    {
+        $this->gatekeeper->resolveFeaturesUsing($callback);
+
+        return $this;
+    }
+
+    public function featureEnabled(string $feature, ?Request $request = null): bool
+    {
+        return $this->gatekeeper->enabled($feature, $request ?? request());
     }
 
     /**

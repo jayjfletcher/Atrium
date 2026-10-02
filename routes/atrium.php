@@ -8,6 +8,7 @@ use JayI\Atrium\Http\Controllers\DashboardCrudController;
 use JayI\Atrium\Http\Controllers\DashboardLayoutController;
 use JayI\Atrium\Http\Controllers\SearchController;
 use JayI\Atrium\Http\Controllers\SettingsController;
+use JayI\Atrium\Http\Middleware\EnsureFeaturesAreEnabled;
 use JayI\Atrium\Plugins\PluginRegistry;
 
 $config = app('config');
@@ -43,7 +44,12 @@ Route::group($attributes, function (): void {
 app()->booted(function () use ($attributes): void {
     Route::group($attributes, function (): void {
         foreach (app(PluginRegistry::class)->all() as $plugin) {
-            $plugin->routes();
+            // A plugin's routes go away with its features, as its links do.
+            $features = $plugin->features();
+
+            $features === []
+                ? $plugin->routes()
+                : Route::middleware(EnsureFeaturesAreEnabled::class.':'.implode(',', $features))->group(fn () => $plugin->routes());
         }
     });
 });

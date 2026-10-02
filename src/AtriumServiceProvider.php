@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use JayI\Atrium\Access\Gatekeeper;
 use JayI\Atrium\Console\Commands\InstallCommand;
 use JayI\Atrium\Console\Commands\MakePluginCommand;
 use JayI\Atrium\Console\Commands\PluginListCommand;
 use JayI\Atrium\Dashboards\DashboardManager;
+use JayI\Atrium\Http\Middleware\EnsureFeaturesAreEnabled;
 use JayI\Atrium\Models\Dashboard;
 use JayI\Atrium\Navigation\NavigationRegistry;
 use JayI\Atrium\Plugins\PluginRegistry;
@@ -43,6 +45,7 @@ class AtriumServiceProvider extends ServiceProvider
             return new PluginRegistry($app)->disable(is_array($disabled) ? $disabled : []);
         });
 
+        $this->app->singleton(Gatekeeper::class);
         $this->app->singleton(NavigationRegistry::class);
         $this->app->singleton(WidgetRegistry::class);
         $this->app->singleton(SettingsRegistry::class);
@@ -62,6 +65,8 @@ class AtriumServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Route::model('dashboard', Dashboard::class);
+
+        Route::aliasMiddleware('atrium.feature', EnsureFeaturesAreEnabled::class);
 
         $this->loadRoutesFrom(__DIR__.'/../routes/atrium.php');
 

@@ -184,6 +184,64 @@ Dark mode follows a `dark` class on `<html>`. The topbar's appearance menu switc
 
 On large screens the sidebar collapses to an icon rail from the toggle at its foot, and stays collapsed across pages. In the rail, hovering an item shows its label, badge, and a menu of its children. Give nav items an `icon()` (any inline SVG); an item without one shows its initial in the rail. Group headings fold their items away, and an item with `children()` expands in place.
 
+### Who sees what
+
+Navigation is filtered per request. An item, a whole group, or a whole plugin can be gated by permissions, by feature flags, or by any callback, and every rule must pass:
+
+```php
+use JayI\Atrium\Navigation\NavGroup;
+use JayI\Atrium\Navigation\NavItem;
+
+class BillingPlugin extends Plugin
+{
+    // Hides the plugin's navigation, widgets, settings, and search, and
+    // answers its routes with a 404, while any of these features is off.
+    public function features(): array
+    {
+        return ['billing'];
+    }
+
+    // Rules for a whole sidebar group. The host application can describe
+    // the same group with Atrium::navigationGroup() to override these.
+    public function navigationGroups(): array
+    {
+        return [NavGroup::make('Billing admin')->can('billing.manage')];
+    }
+
+    public function navigation(): array
+    {
+        return [
+            NavItem::make('Invoices')
+                ->url('/atrium/billing/invoices')
+                ->can('billing.invoices.view')            // a permission
+                ->feature('billing-v2')                   // a feature flag
+                ->authorize(fn (Request $request) => ...) // anything else
+                ->children([
+                    NavItem::make('Refunds')->url('/atrium/billing/refunds')->can('billing.refunds.view'),
+                ]),
+        ];
+    }
+}
+```
+
+Hidden children are removed from their parent, and a parent with no link of its own disappears once all of its children are hidden. A group disappears once it has no visible items.
+
+Atrium has no feature-flag or permission system of its own; it asks resolvers you can replace, typically from a service provider:
+
+```php
+use JayI\Atrium\Facades\Atrium;
+
+// Permissions default to Laravel's Gate. Replace them with any system.
+Atrium::resolvePermissionsUsing(fn (string $ability, array $arguments, Request $request): bool =>
+    $request->user()?->hasPermission($ability) ?? false);
+
+// Until a resolver is registered every feature is on, so gating is opt-in.
+Atrium::resolveFeaturesUsing(fn (string $feature, Request $request): bool =>
+    Feature::for($request->user())->active($feature));
+```
+
+[jayi/pennantplus](https://github.com/jayjfletcher/pennantplus) registers a feature resolver backed by Pennant when both packages are installed. Hiding a link does not protect the page behind it: plugin routes follow the plugin's `features()`, `atrium.feature:billing,billing-v2` guards any other route the same way, and permissions still belong in your routes, requests, or policies.
+
 To rebuild the stylesheet while working on the package itself:
 
 ```bash

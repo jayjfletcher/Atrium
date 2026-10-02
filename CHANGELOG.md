@@ -10,8 +10,14 @@
 - The `Atrium\Atrium\Events\Event` base class was removed. Events are now final classes implementing `Contracts\ModelLifecycleEvent`, `Contracts\ActionStartingEvent` or `Contracts\ActionFinishedEvent`.
 - Model events now fire synchronously as Eloquent fires the hook, rather than after commit, so `creating`, `updating`, `saving` and `deleting` listeners can cancel a write. Action finish events still wait for the commit.
 - Dashboard requests are authorized through model policies. Guests can no longer create a dashboard through `POST dashboards`.
+- The `Plugin` contract gained `features()` and `navigationGroups()`. Plugins extending `JayI\Atrium\Plugins\Plugin` inherit empty defaults; classes implementing the contract directly must add both.
+- Child navigation items are now filtered by their own rules. A parent without a link of its own is hidden once all of its children are.
 
 ### Added
+
+- Navigation gating: `NavItem::can()` and `feature()` beside `authorize()`, `NavGroup` rules for whole sidebar groups (from a plugin's `navigationGroups()` or `Atrium::navigationGroup()`), and plugin `features()` that hide a plugin and 404 its routes while a feature is off.
+- `Atrium::resolvePermissionsUsing()` and `Atrium::resolveFeaturesUsing()` to plug in any permission or feature-flag system. Permissions default to the Gate; features are on until a resolver is registered.
+- `atrium.feature:{features}` route middleware and `Atrium::featureEnabled()`.
 
 - Every action now fires a start event before its work, carrying its input: `DashboardCreatingActionEvent`, `DashboardUpdatingActionEvent`, `DashboardDeletingActionEvent` and `DashboardLayoutSavingActionEvent`.
 - `ModelLifecycleEvent`, `ActionStartingEvent` and `ActionFinishedEvent` contracts, to listen to a whole family of events at once. Model events expose `model()` and `hook()`.

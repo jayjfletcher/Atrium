@@ -8,9 +8,12 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use JayI\Atrium\Access\Concerns\Gated;
 
 class NavItem
 {
+    use Gated;
+
     public private(set) ?string $url = null;
 
     /** The route name this item points at, when it was built from a route. */
@@ -27,9 +30,6 @@ class NavItem
 
     /** @var (Closure(): (string|int|null))|null */
     private ?Closure $badge = null;
-
-    /** @var (Closure(Request): bool)|null */
-    private ?Closure $authorize = null;
 
     /** @var array<int, NavItem> */
     public private(set) array $children = [];
@@ -93,16 +93,6 @@ class NavItem
     }
 
     /**
-     * @param  Closure(Request): bool  $callback
-     */
-    public function authorize(Closure $callback): static
-    {
-        $this->authorize = $callback;
-
-        return $this;
-    }
-
-    /**
      * @param  array<int, NavItem>  $children
      */
     public function children(array $children): static
@@ -128,11 +118,6 @@ class NavItem
     public function resolveBadge(): string|int|null
     {
         return $this->badge === null ? null : ($this->badge)();
-    }
-
-    public function isAuthorized(Request $request): bool
-    {
-        return $this->authorize === null || ($this->authorize)($request) === true;
     }
 
     public function isActive(Request $request): bool

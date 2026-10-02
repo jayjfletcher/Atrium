@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JayI\Atrium\Contracts;
 
 use Illuminate\Http\Request;
+use JayI\Atrium\Navigation\NavGroup;
 use JayI\Atrium\Navigation\NavItem;
 use JayI\Atrium\Search\SearchSource;
 use JayI\Atrium\Settings\SettingsPanel;
@@ -28,11 +29,27 @@ interface Plugin
     public function authorize(Request $request): bool;
 
     /**
+     * Features that must all be on for the plugin to appear at all - its
+     * navigation, widgets, settings, search, and routes. Atrium asks the
+     * feature resolver, so any flag system can answer.
+     *
+     * @return array<int, string>
+     */
+    public function features(): array;
+
+    /**
      * Navigation entries contributed to the dashboard sidebar.
      *
      * @return array<int, NavItem>
      */
     public function navigation(): array;
+
+    /**
+     * Visibility rules for the sidebar groups this plugin's items use.
+     *
+     * @return array<int, NavGroup>
+     */
+    public function navigationGroups(): array;
 
     /**
      * Register routes. Called inside Atrium's route group, so the prefix,

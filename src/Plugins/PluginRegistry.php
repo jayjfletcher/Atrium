@@ -6,6 +6,7 @@ namespace JayI\Atrium\Plugins;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
+use JayI\Atrium\Access\Gatekeeper;
 use JayI\Atrium\Contracts\Plugin as PluginContract;
 use JayI\Atrium\Exceptions\InvalidPluginException;
 
@@ -90,15 +91,21 @@ class PluginRegistry
     }
 
     /**
-     * Plugins the given request is authorized to see.
+     * Plugins the given request is authorized to see: every feature the
+     * plugin requires is on, and its authorize() passes.
      *
      * @return array<string, PluginContract>
      */
     public function authorized(Request $request): array
     {
+        $gatekeeper = $this->container->make(Gatekeeper::class);
+
         return array_filter(
             $this->plugins,
-            fn (PluginContract $plugin): bool => $plugin->authorize($request),
+            fn (PluginContract $plugin): bool => array_all(
+                $plugin->features(),
+                fn (string $feature): bool => $gatekeeper->enabled($feature, $request),
+            ) && $plugin->authorize($request),
         );
     }
 
