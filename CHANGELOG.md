@@ -2,6 +2,10 @@
 
 ## [Unreleased](https://github.com/jayi/atrium/compare/v0.1.0...1.x)
 
+### Fixed
+
+- Tooltips are no longer clipped by scrolling or `overflow: hidden` containers, such as tables: the bubble is drawn on `<body>`, fixed beside its trigger, and kept inside the viewport.
+
 ### Breaking
 
 - The bundled Pennant plugin (the Feature flags page, `FeatureFlagManager`, its requests, actions and `Feature*ActionEvent` events, and the `atrium.pennant` config) moved to `jayi/pennantplus` under `JayI\PennantPlus\Atrium`. Install that package to keep the page; its settings now live under `pennantplus.atrium`.
