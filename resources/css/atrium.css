@@ -24,6 +24,8 @@
 @source '../views/components/form/radio.blade.php';
 @source '../views/components/form/select.blade.php';
 @source '../views/components/form/textarea.blade.php';
+@source '../views/components/icon-button.blade.php';
+@source '../views/components/icon.blade.php';
 @source '../views/components/kbd.blade.php';
 @source '../views/components/layout.blade.php';
 @source '../views/components/modal.blade.php';
@@ -34,6 +36,7 @@
 @source '../views/components/skeleton.blade.php';
 @source '../views/components/spinner.blade.php';
 @source '../views/components/stat.blade.php';
+@source '../views/components/status-dot.blade.php';
 @source '../views/components/tab-panel.blade.php';
 @source '../views/components/table.blade.php';
 @source '../views/components/table/cell.blade.php';

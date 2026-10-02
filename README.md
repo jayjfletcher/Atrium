@@ -134,9 +134,22 @@ Available components:
 
 **Layout and content**: `card`, `section`, `page-header`, `empty-state`, `stat`, `table` (with `table.row` and `table.cell`), `pagination`, `breadcrumbs`
 
-**Controls**: `button`, `badge`, `kbd`, `avatar`, `toggle`, `tooltip`, `dropdown`, `modal`, `tabs`, `tab-panel`
+**Controls**: `button`, `icon-button`, `icon`, `badge`, `status-dot`, `kbd`, `avatar`, `toggle`, `tooltip`, `dropdown`, `modal`, `tabs`, `tab-panel`
 
 **Feedback**: `alert`, `progress`, `spinner`, `skeleton`
+
+### Screen conventions
+
+Packages built on Atrium share one look, so a dashboard reads the same whichever package a screen comes from:
+
+- **Actions are icon buttons.** `<x-atrium::icon-button icon="trash" :label="__('Delete')" variant="danger" type="submit" />` shows only the icon; the label is its accessible name and its tooltip. Tabs and back links too.
+- **Statuses are dots.** `<x-atrium::status-dot variant="success" label="Active" />`, the label on hover. `info` is kept for **pending** (waiting on someone's decision); `success` done or active, `warning` held, `danger` failed or revoked, `primary` in progress, `neutral` over.
+- **Navigation items have icons**: `NavItem::make('Users')->icon(Icons::svg('users'))`.
+- **Only what the viewer may use is shown**: gate navigation with `can()`, `feature()` or `authorize()`, and hide each control unless its action would be allowed - asked exactly as the action asks.
+
+Icons are the [Heroicons](https://heroicons.com) outline set (MIT), by name, through `JayI\Atrium\Support\Icons::svg('users')` or `<x-atrium::icon name="users" />`. Register your own with `Icons::register('my-icon', $svg)`.
+
+Tooltips are drawn on `<body>`, so tables and scrolling containers never clip them.
 
 **Forms**: `form.input`, `form.textarea`, `form.select`, `form.checkbox`, `form.radio`, `form.file`
 

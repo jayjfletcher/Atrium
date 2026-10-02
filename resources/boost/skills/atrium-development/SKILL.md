@@ -58,9 +58,12 @@ Register it one of two ways. Packages declare the class in their `composer.json`
 
 ### 4. Use the component library
 
+Screens follow one convention: actions are `<x-atrium::icon-button icon="…" :label="…" />` (icon only, labelled tooltip), statuses are `<x-atrium::status-dot variant="…" label="…" />` (`info` only for pending), navigation items get `->icon(\JayI\Atrium\Support\Icons::svg('…'))`, and controls are hidden unless their action would be allowed. Icons are Heroicons outline names; add more with `Icons::register()`.
+
+
 Components are namespaced Blade components that work anywhere, in the dashboard shell or in the application's own pages, with no Livewire dependency:
 
-`card`, `stat`, `table` (with `table.row`, `table.cell`), `button`, `badge`, `alert`, `modal`, `dropdown`, `tabs`, `tab-panel`, `empty-state`, `page-header`, `section`, `form.input`, `form.select`, `form.textarea`, `form.checkbox`.
+`card`, `stat`, `table` (with `table.row`, `table.cell`), `button`, `icon-button`, `icon`, `status-dot`, `badge`, `alert`, `modal`, `dropdown`, `tabs`, `tab-panel`, `empty-state`, `page-header`, `section`, `form.input`, `form.select`, `form.textarea`, `form.checkbox`.
 
 ```blade
 <x-atrium::card title="Revenue">
