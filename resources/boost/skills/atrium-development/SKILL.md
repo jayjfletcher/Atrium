@@ -47,7 +47,7 @@ A plugin is how anything appears in the dashboard. Generate one with `php artisa
 - `routes()` registers routes inside Atrium's group, so the prefix, middleware, and route name prefix already apply
 - `widgets()` returns `WidgetDefinition` objects offered in the widget picker
 - `settings()` returns a `SettingsPanel` for the settings page
-- `search()` returns a `SearchSource` for the command palette
+- `search()` returns a `SearchSource` for the command palette. Give it a `label()` and `description()`: sources run concurrently (at most `atrium.search.concurrency_limit` at once when classification is off), a source that throws or exceeds its timeout (`atrium.search.timeout`, or `->timeout($seconds)`) is reported and skipped, results are capped by `atrium.search.results.per_source` and `.total`, and with `atrium.search.classification.enabled` and laravel/ai installed only the `atrium.search.classification.sources` most likely sources run, chosen from those labels and descriptions
 - `authorize(Request $request)` hides the whole plugin when it returns false
 
 Register it one of two ways. Packages declare the class in their `composer.json` under `extra.atrium.plugins` and Atrium discovers it. Applications call `Atrium::plugin(BillingPlugin::class)` in a service provider's `boot()` method.

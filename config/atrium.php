@@ -117,6 +117,61 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Global Search
+    |--------------------------------------------------------------------------
+    |
+    | Every search source runs concurrently, and a source that throws or
+    | runs out of time is reported and skipped rather than failing the
+    | whole search.
+    |
+    | concurrency: The Concurrency driver to run sources with - `process`,
+    |              `fork` or `sync`. Null uses the application's default.
+    |              Process and fork run each source outside the request, so
+    |              Atrium hands each one the signed-in user; anything else a
+    |              source needs from the request is not available to it.
+    | concurrency_limit:
+    |              The most sources searched at once when classification is
+    |              not choosing them. The rest wait, and each starts as soon
+    |              as a running one finishes. Null runs every source at once.
+    | timeout:     Seconds a source may run before it is stopped and left
+    |              out. A source's own `timeout()` overrides it. Only the
+    |              process driver can enforce it; null means no limit.
+    |
+    | results.per_source: The most results one source contributes.
+    | results.total:      The most results returned for one query.
+    |              Null for either means no limit.
+    |
+    | classification.enabled: Classify the query with laravel/ai (Jev, by
+    |              default) to decide what is being searched for, and only
+    |              run the most likely sources. Needs laravel/ai installed.
+    | classification.sources: How many of the most likely sources to run.
+    | classification.provider / classification.model:
+    |              Override laravel/ai's classification provider and model.
+    |
+    */
+
+    'search' => [
+        'concurrency' => null,
+
+        'concurrency_limit' => null,
+
+        'timeout' => 5,
+
+        'results' => [
+            'per_source' => 5,
+            'total' => 20,
+        ],
+
+        'classification' => [
+            'enabled' => false,
+            'sources' => 3,
+            'provider' => null,
+            'model' => null,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Theme
     |--------------------------------------------------------------------------
     |

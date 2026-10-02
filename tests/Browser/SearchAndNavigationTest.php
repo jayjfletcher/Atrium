@@ -31,6 +31,10 @@ it('returns results from a plugin search source as you type', function (): void 
 });
 
 it('shows an empty message when a search matches nothing', function (): void {
+    // A closure written in a test file cannot run in another process, as
+    // the test case class it is scoped to only exists in this one.
+    config()->set('atrium.search.concurrency', 'sync');
+
     // BrowserPlugin echoes any query back, so ask a source that filters.
     app(SearchRegistry::class)->add(
         SearchSource::make('filtered')

@@ -2,16 +2,176 @@
 
 declare(strict_types=1);
 
+use Carbon\CarbonInterval;
+use Illuminate\Auth\GenericUser;
+use Illuminate\Concurrency\SyncDriver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Concurrency;
+use Illuminate\Support\Facades\Exceptions;
 use JayI\Atrium\Plugins\PluginRegistry;
 use JayI\Atrium\Search\SearchRegistry;
 use JayI\Atrium\Search\SearchResult;
 use JayI\Atrium\Search\SearchSource;
 use JayI\Atrium\Tests\Fixtures\FullPlugin;
+use Laravel\Ai\AiServiceProvider;
+use Laravel\Ai\Classification;
+use Laravel\Ai\Responses\Data\ChoiceAnswer;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');
+
+    config()->set('atrium.search.concurrency', 'sync');
+
+    app()->register(AiServiceProvider::class);
 });
+
+/**
+ * Register sources that each return one result titled with their key.
+ */
+function searchSources(string ...$keys): void
+{
+    foreach ($keys as $key) {
+        app(SearchRegistry::class)->add(
+            SearchSource::make($key)->using(fn (string $q): array => [SearchResult::make($key, '/'.$key)]),
+        );
+    }
+}
+
+/**
+ * Register sources that return the id of the process they ran in. Built
+ * outside the test case, so no closure is scoped to a class the child
+ * process cannot load.
+ */
+function pidSources(string ...$keys): void
+{
+    foreach ($keys as $key) {
+        app(SearchRegistry::class)->add(
+            SearchSource::make($key)->using(fn (string $q): array => [SearchResult::make((string) getmypid(), '/'.$key)]),
+        );
+    }
+}
+
+/**
+ * Register sources that return the id of the signed-in user they ran as.
+ */
+function whoamiSources(string ...$keys): void
+{
+    foreach ($keys as $key) {
+        app(SearchRegistry::class)->add(
+            SearchSource::make($key)->using(fn (string $q): array => [SearchResult::make((string) Auth::id(), '/'.$key)]),
+        );
+    }
+}
+
+/**
+ * Register a source that returns the given number of results.
+ */
+function manyResultsSource(string $key, int $count): void
+{
+    app(SearchRegistry::class)->add(
+        SearchSource::make($key)->using(fn (string $q): array => array_map(
+            fn (int $i): SearchResult => SearchResult::make($key.$i, '/'.$key.'/'.$i),
+            range(1, $count),
+        )),
+    );
+}
+
+/**
+ * Register a source that sleeps for the given number of seconds first.
+ */
+function sleepySource(string $key, int $seconds, ?int $timeout = null): void
+{
+    $source = SearchSource::make($key)->using(function (string $q) use ($key, $seconds): array {
+        sleep($seconds);
+
+        return [SearchResult::make($key, '/'.$key)];
+    });
+
+    app(SearchRegistry::class)->add($timeout === null ? $source : $source->timeout($timeout));
+}
+
+/**
+ * Register sources that sleep for a second and report when they ran, as
+ * "start-end" in microseconds.
+ */
+function timedSources(string ...$keys): void
+{
+    foreach ($keys as $key) {
+        app(SearchRegistry::class)->add(
+            SearchSource::make($key)->using(function (string $q) use ($key): array {
+                $start = hrtime(true);
+
+                usleep(500_000);
+
+                return [SearchResult::make($start.'-'.hrtime(true), '/'.$key)];
+            }),
+        );
+    }
+}
+
+/**
+ * The most of the given "start-end" spans that overlap at any moment.
+ *
+ * @param  array<int, string>  $spans
+ */
+function mostAtOnce(array $spans): int
+{
+    $events = [];
+
+    foreach ($spans as $span) {
+        [$start, $end] = array_map(intval(...), explode('-', $span));
+
+        $events[] = [$start, 1];
+        $events[] = [$end, -1];
+    }
+
+    // Ends sort before starts at the same instant.
+    usort($events, fn (array $a, array $b): int => [$a[0], $a[1]] <=> [$b[0], $b[1]]);
+
+    $current = $most = 0;
+
+    foreach ($events as [, $change]) {
+        $most = max($most, $current += $change);
+    }
+
+    return $most;
+}
+
+/**
+ * Swap in a concurrency driver that records how many tasks each run gets.
+ */
+function recordingDriver(): ArrayObject
+{
+    $runs = new ArrayObject;
+
+    Concurrency::extend('recording', fn () => new class($runs) extends SyncDriver
+    {
+        public function __construct(private ArrayObject $runs) {}
+
+        public function run(Closure|array $tasks, CarbonInterval|int|null $timeout = null): array
+        {
+            $this->runs[] = count($tasks);
+
+            return parent::run($tasks, $timeout);
+        }
+    });
+
+    config()->set('atrium.search.concurrency', 'recording');
+
+    return $runs;
+}
+
+/**
+ * @return array<int, string>
+ */
+function searchTitles(string $query = 'x'): array
+{
+    return array_map(
+        fn (SearchResult $result): string => $result->title,
+        app(SearchRegistry::class)->search(Request::create('/atrium/search'), $query),
+    );
+}
 
 it('aggregates results across plugin sources', function (): void {
     app(PluginRegistry::class)->register(FullPlugin::class);
@@ -62,4 +222,259 @@ it('serves results as json from the search endpoint', function (): void {
 
 it('returns an empty payload for a blank query', function (): void {
     $this->getJson('/atrium/search?q=')->assertOk()->assertJsonPath('data', []);
+});
+
+it('runs sources in separate processes with the process driver', function (): void {
+    config()->set('atrium.search.concurrency', 'process');
+
+    pidSources('one', 'two');
+
+    $pids = searchTitles();
+
+    expect($pids)->toHaveCount(2)
+        ->and($pids)->not->toContain((string) getmypid())
+        ->and(array_unique($pids))->toHaveCount(2);
+});
+
+it('hands each process the signed-in user', function (): void {
+    config()->set('atrium.search.concurrency', 'process');
+
+    whoamiSources('one', 'two');
+
+    $request = Request::create('/atrium/search');
+    $request->setUserResolver(fn (): GenericUser => new GenericUser(['id' => 42]));
+
+    $titles = array_map(
+        fn (SearchResult $result): string => $result->title,
+        app(SearchRegistry::class)->search($request, 'x'),
+    );
+
+    expect($titles)->toBe(['42', '42']);
+});
+
+it('reports a failing source and still returns the others', function (): void {
+    Exceptions::fake();
+
+    searchSources('first');
+
+    app(SearchRegistry::class)->add(
+        SearchSource::make('broken')->using(fn (string $q): array => throw new RuntimeException('Source down')),
+    );
+
+    searchSources('last');
+
+    expect(searchTitles())->toBe(['first', 'last']);
+
+    Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'Source down');
+});
+
+it('searches one source at a time when the concurrency driver fails', function (): void {
+    Exceptions::fake();
+
+    Concurrency::extend('broken', fn () => new class extends SyncDriver
+    {
+        public function run(Closure|array $tasks, CarbonInterval|int|null $timeout = null): array
+        {
+            throw new RuntimeException('No processes');
+        }
+    });
+
+    config()->set('atrium.search.concurrency', 'broken');
+
+    searchSources('first', 'second');
+
+    expect(searchTitles())->toBe(['first', 'second']);
+
+    Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'No processes');
+});
+
+it('does not classify the query unless classification is enabled', function (): void {
+    Classification::fake();
+
+    searchSources('users', 'orders', 'invoices', 'products');
+
+    expect(searchTitles())->toHaveCount(4);
+
+    Classification::assertNothingClassified();
+});
+
+it('runs only the most likely sources when classification is enabled', function (): void {
+    config()->set('atrium.search.classification.enabled', true);
+
+    Classification::fake([
+        ['source' => new ChoiceAnswer('invoices', ['users' => 0.05, 'orders' => 0.3, 'invoices' => 0.6, 'products' => 0.05])],
+    ]);
+
+    searchSources('users', 'orders', 'invoices', 'products');
+
+    app(SearchRegistry::class)->add(
+        SearchSource::make('payments')->label('Payments')->description('Card and bank payments'),
+    );
+
+    expect(searchTitles('unpaid invoice 1042'))->toBe(['invoices', 'orders', 'users']);
+
+    Classification::assertClassified(fn ($prompt): bool => $prompt->state === 'unpaid invoice 1042'
+        && $prompt->questions['source']->options['payments'] === 'Payments: Card and bank payments');
+});
+
+it('runs the configured number of most likely sources', function (): void {
+    config()->set('atrium.search.classification.enabled', true);
+    config()->set('atrium.search.classification.sources', 1);
+
+    Classification::fake([
+        ['source' => new ChoiceAnswer('orders', ['users' => 0.2, 'orders' => 0.8])],
+    ]);
+
+    searchSources('users', 'orders');
+
+    expect(searchTitles())->toBe(['orders']);
+});
+
+it('skips classification when there are no more sources than the limit', function (): void {
+    config()->set('atrium.search.classification.enabled', true);
+
+    Classification::fake();
+
+    searchSources('users', 'orders', 'invoices');
+
+    expect(searchTitles())->toHaveCount(3);
+
+    Classification::assertNothingClassified();
+});
+
+it('runs every source when classification fails', function (): void {
+    Exceptions::fake();
+
+    config()->set('atrium.search.classification.enabled', true);
+
+    Classification::fake(fn () => throw new RuntimeException('Classifier down'));
+
+    searchSources('users', 'orders', 'invoices', 'products');
+
+    expect(searchTitles())->toHaveCount(4);
+
+    Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'Classifier down');
+});
+
+it('caps the results each source contributes', function (): void {
+    config()->set('atrium.search.results.per_source', 2);
+
+    manyResultsSource('a', 5);
+    manyResultsSource('b', 1);
+
+    expect(searchTitles())->toBe(['a1', 'a2', 'b1']);
+});
+
+it('caps the total number of results', function (): void {
+    config()->set('atrium.search.results.per_source', null);
+    config()->set('atrium.search.results.total', 4);
+
+    manyResultsSource('a', 3);
+    manyResultsSource('b', 3);
+
+    expect(searchTitles())->toBe(['a1', 'a2', 'a3', 'b1']);
+});
+
+it('leaves results uncapped when the limits are null', function (): void {
+    config()->set('atrium.search.results.per_source', null);
+    config()->set('atrium.search.results.total', null);
+
+    manyResultsSource('a', 30);
+
+    expect(searchTitles())->toHaveCount(30);
+});
+
+it('stops a source that runs past the timeout and keeps the others', function (): void {
+    Exceptions::fake();
+
+    config()->set('atrium.search.concurrency', 'process');
+    config()->set('atrium.search.timeout', 1);
+
+    sleepySource('slow', 10);
+    sleepySource('quick', 0);
+
+    $started = microtime(true);
+
+    expect(searchTitles())->toBe(['quick'])
+        ->and(microtime(true) - $started)->toBeLessThan(5);
+
+    Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'Search source [slow] timed out.');
+});
+
+it('lets a source override the default timeout', function (): void {
+    Exceptions::fake();
+
+    config()->set('atrium.search.concurrency', 'process');
+    config()->set('atrium.search.timeout', 1);
+
+    sleepySource('patient', 2, timeout: 10);
+    sleepySource('hasty', 2);
+
+    expect(searchTitles())->toBe(['patient']);
+
+    Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'Search source [hasty] timed out.');
+});
+
+it('runs at most the configured number of processes at once', function (): void {
+    config()->set('atrium.search.concurrency', 'process');
+    config()->set('atrium.search.concurrency_limit', 2);
+
+    timedSources('a', 'b', 'c', 'd', 'e');
+
+    $spans = searchTitles();
+
+    expect($spans)->toHaveCount(5)
+        ->and(mostAtOnce($spans))->toBe(2);
+});
+
+it('runs every process at once without a concurrency limit', function (): void {
+    config()->set('atrium.search.concurrency', 'process');
+
+    timedSources('a', 'b', 'c');
+
+    expect(mostAtOnce(searchTitles()))->toBe(3);
+});
+
+it('hands other drivers the sources in batches of the concurrency limit', function (): void {
+    $runs = recordingDriver();
+
+    config()->set('atrium.search.concurrency_limit', 2);
+
+    searchSources('a', 'b', 'c', 'd', 'e');
+
+    // The last source runs on its own, without the driver.
+    expect(searchTitles())->toBe(['a', 'b', 'c', 'd', 'e'])
+        ->and($runs->getArrayCopy())->toBe([2, 2]);
+});
+
+it('ignores the concurrency limit when classification chooses the sources', function (): void {
+    $runs = recordingDriver();
+
+    config()->set('atrium.search.concurrency_limit', 1);
+    config()->set('atrium.search.classification.enabled', true);
+
+    Classification::fake([
+        ['source' => new ChoiceAnswer('c', ['a' => 0.1, 'b' => 0.2, 'c' => 0.4, 'd' => 0.3])],
+    ]);
+
+    searchSources('a', 'b', 'c', 'd');
+
+    expect(searchTitles())->toBe(['c', 'd', 'b'])
+        ->and($runs->getArrayCopy())->toBe([3]);
+});
+
+it('applies the concurrency limit when classification fails', function (): void {
+    Exceptions::fake();
+
+    $runs = recordingDriver();
+
+    config()->set('atrium.search.concurrency_limit', 2);
+    config()->set('atrium.search.classification.enabled', true);
+
+    Classification::fake(fn () => throw new RuntimeException('Classifier down'));
+
+    searchSources('a', 'b', 'c', 'd');
+
+    expect(searchTitles())->toHaveCount(4)
+        ->and($runs->getArrayCopy())->toBe([2, 2]);
 });

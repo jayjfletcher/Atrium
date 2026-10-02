@@ -191,6 +191,37 @@ npm install
 npm run build:css
 ```
 
+## Search
+
+A plugin's `search()` returns a `SearchSource`, and the topbar's command palette queries every source the user may see:
+
+```php
+use JayI\Atrium\Search\SearchResult;
+use JayI\Atrium\Search\SearchSource;
+
+public function search(): ?SearchSource
+{
+    return SearchSource::make('invoices')
+        ->label('Invoices')
+        ->description('Invoices by number, customer, or amount.')
+        ->using(fn (string $query) => Invoice::search($query)->take(5)->get()
+            ->map(fn (Invoice $invoice) => SearchResult::make($invoice->number, route('atrium.billing.invoice', $invoice)))
+            ->all());
+}
+```
+
+Sources run concurrently, using the `Concurrency` driver in `atrium.search.concurrency` (the application's default when null). A source that throws is reported and skipped, so one broken plugin never empties the palette. With the `process` or `fork` driver each source runs outside the request: Atrium hands it the signed-in user, but nothing else from the request.
+
+Each source gets `atrium.search.timeout` seconds (5 by default), or its own `->timeout(10)`. A source still running then is stopped, reported, and left out, while the others' results are still returned. Only the `process` driver can stop a running source; with `sync` or `fork` the timeout is not enforced.
+
+A source's closures are serialized into the child process, so they must be defined somewhere that process can autoload, such as a plugin class. Closures written inside a Pest test file are scoped to a test class that only exists in the test run, so set `atrium.search.concurrency` to `sync` in tests that register sources that way.
+
+Without classification every source runs, so `atrium.search.concurrency_limit` caps how many run at once. The rest wait their turn: with the `process` driver the next source starts the moment a running one finishes, and with other drivers sources run in batches of that size. Null runs every source at once.
+
+`atrium.search.results.per_source` (5) caps what one source contributes and `atrium.search.results.total` (20) caps the whole response. Set either to null for no limit.
+
+With [laravel/ai](https://github.com/laravel/ai) installed, set `atrium.search.classification.enabled` to `true` and Atrium classifies each query against the sources' labels and descriptions (with Jev, laravel/ai's default classifier), then only runs the `atrium.search.classification.sources` (3) most likely sources, most likely first. If classification fails, every source runs.
+
 ## Events
 
 Atrium announces everything it does, so a host application can react without patching the package. It fires two families of events, and every event uses `Dispatchable` and `SerializesModels`, so queued listeners work.
@@ -314,6 +345,11 @@ Actions expose `execute()` and keep `handle()` protected, so there is one entry 
 | `disabled` | Plugin keys to hide. |
 | `alpine` | Whether the layout loads Atrium's bundled Alpine.js. Set to `false` when the application already loads Alpine. |
 | `theme` | Values emitted as CSS custom properties. |
+| `search.concurrency` | The `Concurrency` driver search sources run with. Null uses the application's default. |
+| `search.concurrency_limit` | The most search sources run at once when classification is not choosing them. Null for no limit. |
+| `search.timeout` | Seconds a search source may run before it is stopped. Enforced by the `process` driver. |
+| `search.results` | `per_source` and `total` result caps. Null for no limit. |
+| `search.classification` | `enabled`, `sources` (how many of the most likely sources run, default 3), `provider`, and `model` for classifying search queries with laravel/ai. |
 
 ## Commands
 
