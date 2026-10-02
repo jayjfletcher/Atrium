@@ -66,6 +66,16 @@ function whoamiSources(string ...$keys): void
 }
 
 /**
+ * Register a source whose one result links to /somewhere.
+ */
+function linkSource(): void
+{
+    app(SearchRegistry::class)->add(
+        SearchSource::make('linker')->using(fn (string $q): array => [SearchResult::make('Link', url('/somewhere'))]),
+    );
+}
+
+/**
  * Register a source that returns the given number of results.
  */
 function manyResultsSource(string $key, int $count): void
@@ -242,6 +252,20 @@ it('runs sources in separate processes with the process driver', function (): vo
     expect($pids)->toHaveCount(2)
         ->and($pids)->not->toContain((string) getmypid())
         ->and(array_unique($pids))->toHaveCount(2);
+});
+
+it('builds result links for the host the user is on, in every process', function (): void {
+    config()->set('atrium.search.concurrency', 'process');
+    config()->set('app.url', 'http://configured.test');
+
+    linkSource();
+
+    $urls = array_map(
+        fn (SearchResult $result): string => $result->url,
+        app(SearchRegistry::class)->search(Request::create('https://admin.example.test/atrium/search'), 'x'),
+    );
+
+    expect($urls)->toBe(['https://admin.example.test/somewhere']);
 });
 
 it('hands each process the signed-in user', function (): void {

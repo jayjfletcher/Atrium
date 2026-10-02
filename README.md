@@ -210,7 +210,7 @@ public function search(): ?SearchSource
 }
 ```
 
-Sources run concurrently, using the `Concurrency` driver in `atrium.search.concurrency` (the application's default when null). A source that throws is reported and skipped, so one broken plugin never empties the palette. With the `process` or `fork` driver each source runs outside the request: Atrium hands it the signed-in user, but nothing else from the request.
+Sources run concurrently, using the `Concurrency` driver in `atrium.search.concurrency` (the application's default when null). A source that throws is reported and skipped, so one broken plugin never empties the palette. With the `process` or `fork` driver each source runs outside the request: Atrium hands it the signed-in user and the request's root URL (so `route()` and `url()` link to the host the user is on, not `APP_URL`), but nothing else from the request.
 
 Each source gets `atrium.search.timeout` seconds (5 by default), or its own `->timeout(10)`. A source still running then is stopped, reported, and left out, while the others' results are still returned. Only the `process` driver can stop a running source; with `sync` or `fork` the timeout is not enforced.
 

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Concurrency;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\URL;
 use JayI\Atrium\Plugins\PluginRegistry;
 use Laravel\Ai\Classification;
 use Laravel\Ai\Classification\Choice;
@@ -84,7 +85,7 @@ class SearchRegistry
         $limit = config('atrium.search.concurrency_limit');
         $limit = $chosen === null && is_int($limit) && $limit > 0 ? $limit : null;
 
-        $results = array_merge(...array_values($this->run($chosen ?? $sources, $query, $request->user(), $limit)));
+        $results = array_merge(...array_values($this->run($chosen ?? $sources, $query, $request->user(), $limit, $request->root())));
 
         $total = config('atrium.search.results.total');
 
@@ -97,12 +98,13 @@ class SearchRegistry
      *
      * @param  array<int, SearchSource>  $sources
      * @param  positive-int|null  $limit
+     * @param  string|null  $root  The request's root URL, for links built in child processes.
      * @return array<int, array<int, SearchResult>>
      */
-    protected function run(array $sources, string $query, mixed $user, ?int $limit = null): array
+    protected function run(array $sources, string $query, mixed $user, ?int $limit = null, ?string $root = null): array
     {
         $tasks = array_map(
-            fn (SearchSource $source): Closure => $this->task($source, $query, $user),
+            fn (SearchSource $source): Closure => $this->task($source, $query, $user, $root),
             $sources,
         );
 
@@ -141,16 +143,23 @@ class SearchRegistry
      *
      * @return Closure(): array<int, SearchResult>
      */
-    protected function task(SearchSource $source, string $query, mixed $user): Closure
+    protected function task(SearchSource $source, string $query, mixed $user, ?string $root = null): Closure
     {
         $limit = config('atrium.search.results.per_source');
         $limit = is_int($limit) ? $limit : null;
 
-        return static function () use ($source, $query, $user, $limit): array {
+        return static function () use ($source, $query, $user, $limit, $root): array {
             // Process and fork drivers run outside the request, where
             // nobody is signed in. Sources still need to know who asked.
             if ($user instanceof Authenticatable && ! Auth::check()) {
                 Auth::setUser($user);
+            }
+
+            // Outside the request, URLs would be built from APP_URL; results
+            // link back to the host the user is actually on.
+            if ($root !== null && app()->runningInConsole()) {
+                URL::forceRootUrl($root);
+                URL::forceScheme((string) parse_url($root, PHP_URL_SCHEME));
             }
 
             try {
