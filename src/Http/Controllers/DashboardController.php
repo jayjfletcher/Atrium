@@ -22,9 +22,13 @@ class DashboardController
         return $this->render($request, null);
     }
 
-    public function show(Request $request, string $dashboard): View
+    /**
+     * The parameter is a slug rather than `{dashboard}`, which is bound to the
+     * model by id for the routes that change a dashboard.
+     */
+    public function show(Request $request, string $slug): View
     {
-        return $this->render($request, $dashboard);
+        return $this->render($request, $slug);
     }
 
     protected function render(Request $request, ?string $slug): View

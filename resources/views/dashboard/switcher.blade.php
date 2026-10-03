@@ -1,4 +1,4 @@
-<x-atrium::dropdown>
+<x-atrium::dropdown align="right">
     <x-slot:trigger>
         <x-atrium::button variant="ghost">{{ $dashboard?->name ?? __('atrium::atrium.dashboards') }}</x-atrium::button>
     </x-slot:trigger>
@@ -14,7 +14,7 @@
                     {{ $option->name }}
 
                     @if ($option->is_shared)
-                        <x-atrium::badge>{{ __('atrium::atrium.dashboards') }}</x-atrium::badge>
+                        <x-atrium::badge>{{ __('atrium::atrium.shared') }}</x-atrium::badge>
                     @endif
                 </a>
             </li>

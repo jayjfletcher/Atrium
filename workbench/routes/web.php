@@ -1,16 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Convenience for `composer serve`: sign in as the seeded user so the
-// dashboard's editing features are reachable without a login screen.
-Route::get('/login-demo', function () {
-    Auth::loginUsingId(1);
-
-    return redirect('/atrium');
-});
+// `composer serve` signs in the seeded admin through /_workbench and starts
+// at the dashboard (see testbench.yaml), so the root only points there.
+Route::redirect('/', '/atrium');

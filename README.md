@@ -462,7 +462,7 @@ To see a working dashboard locally:
 composer build && composer serve
 ```
 
-The workbench ships a demo plugin exercising every plugin surface.
+Every build reseeds the workbench with a demo shop through Atrium's own actions: a few users, the signed-in admin's default and second dashboards with widgets placed, and a dashboard shared by another user. Its demo plugin exercises every plugin surface, including permission- and feature-gated navigation and two search sources.
 
 ## Credits
 

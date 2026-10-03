@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Workbench\App\Atrium;
 
 use Illuminate\Support\Facades\Route;
+use JayI\Atrium\Navigation\NavGroup;
 use JayI\Atrium\Navigation\NavItem;
 use JayI\Atrium\Plugins\Plugin;
 use JayI\Atrium\Search\SearchResult;
 use JayI\Atrium\Search\SearchSource;
 use JayI\Atrium\Settings\SettingsPanel;
+use JayI\Atrium\Support\Icons;
 use JayI\Atrium\Widgets\WidgetDefinition;
 use Workbench\App\Models\User;
 
 /**
- * Demonstrates every plugin surface Atrium offers, so `composer serve`
- * shows a working dashboard rather than an empty shell.
+ * Demonstrates every plugin surface Atrium offers with a small online shop,
+ * so `composer serve` shows a working dashboard rather than an empty shell.
  */
 class DemoPlugin extends Plugin
 {
@@ -26,7 +28,7 @@ class DemoPlugin extends Plugin
 
     public function label(): string
     {
-        return 'Demo';
+        return 'Acme Shop';
     }
 
     public function navigation(): array
@@ -34,88 +36,198 @@ class DemoPlugin extends Plugin
         return [
             NavItem::make('Overview')
                 ->route('atrium.dashboard')
-                ->icon(self::icon('M2.25 12l8.954-8.955a1.126 1.126 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'))
-                ->group('Demo')
+                ->icon(Icons::svg('home'))
+                ->group('Workspace')
                 ->sort(10),
 
-            NavItem::make('Users')
-                ->route('atrium.demo.users')
-                ->icon(self::icon('M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z'))
-                ->group('Demo')
+            NavItem::make('Orders')
+                ->route('atrium.demo.orders')
+                ->icon(Icons::svg('shopping-cart'))
+                ->group('Workspace')
                 ->sort(20)
+                ->badge(fn (): int => DemoData::orders()->where('status', 'pending')->count()),
+
+            NavItem::make('Team')
+                ->route('atrium.demo.users')
+                ->icon(Icons::svg('users'))
+                ->group('Workspace')
+                ->sort(30)
                 ->badge(fn (): int => User::query()->count()),
 
             NavItem::make('Reports')
-                ->icon(self::icon('M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z'))
-                ->group('Demo')
-                ->sort(30)
+                ->icon(Icons::svg('chart-bar'))
+                ->group('Insights')
+                ->sort(40)
                 ->children([
-                    NavItem::make('Sales')->url('#sales'),
-                    NavItem::make('Signups')->url('#signups'),
+                    NavItem::make('Sales')->route('atrium.demo.reports.sales'),
+                    NavItem::make('Signups')->route('atrium.demo.reports.signups'),
                 ]),
+
+            NavItem::make('Billing')
+                ->route('atrium.demo.billing')
+                ->icon(Icons::svg('credit-card'))
+                ->group('Administration')
+                ->sort(50)
+                ->feature('billing')
+                ->can('manageBilling'),
+
+            // The workbench's feature resolver turns `audit-log` off, so this
+            // item is registered but never shown.
+            NavItem::make('Audit log')
+                ->url('#audit-log')
+                ->icon(Icons::svg('clipboard-document-list'))
+                ->group('Administration')
+                ->sort(60)
+                ->feature('audit-log'),
         ];
     }
 
-    /**
-     * Wraps a Heroicons outline path, which is the markup NavItem::icon() takes.
-     */
-    private static function icon(string $path): string
+    public function navigationGroups(): array
     {
-        return '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="'.$path.'" /></svg>';
+        return [
+            NavGroup::make('Insights')->feature('reports')->can('viewReports'),
+            NavGroup::make('Administration')->can('administer'),
+        ];
     }
 
     public function routes(): void
     {
-        Route::get('demo/users', function () {
-            return view('workbench::demo.users', [
-                'users' => User::query()->orderBy('name')->get(),
-            ]);
-        })->name('demo.users');
+        Route::get('demo/orders', fn () => view('workbench::demo.orders', [
+            'orders' => DemoData::orders(),
+        ]))->name('demo.orders');
+
+        Route::get('demo/users', fn () => view('workbench::demo.users', [
+            'users' => User::query()->orderBy('name')->get(),
+        ]))->name('demo.users');
+
+        // One route per report, since a navigation item is active by route
+        // name and each report has its own item.
+        foreach (DemoData::reports() as $key => $report) {
+            Route::get('demo/reports/'.$key, fn () => view('workbench::demo.report', ['report' => $report]))
+                ->name('demo.reports.'.$key);
+        }
+
+        Route::get('demo/billing', fn () => view('workbench::demo.billing', [
+            'invoices' => DemoData::invoices(),
+        ]))->middleware('can:manageBilling')->name('demo.billing');
     }
 
     public function settings(): ?SettingsPanel
     {
         return SettingsPanel::make('demo')
-            ->label('Demo settings')
-            ->description('Shows how a plugin contributes to the settings page.')
-            ->view('workbench::demo.settings');
+            ->label('Shop settings')
+            ->description('Store details and the feature flags this workbench runs with.')
+            ->view('workbench::demo.settings')
+            ->resolve(fn (): array => ['features' => DemoData::FEATURES]);
     }
 
     /**
-     * Widgets are offered here. Nothing appears on a dashboard until
-     * someone picks it from the widget picker.
+     * Widgets are offered here. The workbench seeder places them on demo
+     * dashboards; in a real application users pick them from the picker.
      */
     public function widgets(): array
     {
+        $kpis = DemoData::kpis();
+
         return [
-            WidgetDefinition::make('demo.users')
-                ->label('User count')
-                ->description('How many users exist in the workbench app.')
+            WidgetDefinition::make('demo.revenue')
+                ->label('Revenue')
+                ->description('Revenue this month against last month.')
                 ->defaultSize(3, 1)
-                ->view('workbench::demo.widgets.users')
-                ->resolve(fn (array $settings): array => [
-                    'count' => User::query()->count(),
-                ]),
+                ->view('workbench::demo.widgets.stat')
+                ->resolve(fn (): array => ['label' => 'Revenue this month', 'icon' => 'banknotes', ...$kpis['revenue']]),
+
+            WidgetDefinition::make('demo.orders')
+                ->label('Orders')
+                ->description('Orders placed this month.')
+                ->defaultSize(3, 1)
+                ->view('workbench::demo.widgets.stat')
+                ->resolve(fn (): array => ['label' => 'Orders this month', 'icon' => 'shopping-cart', ...$kpis['orders']]),
+
+            WidgetDefinition::make('demo.conversion')
+                ->label('Conversion rate')
+                ->description('Share of storefront visits that end in an order.')
+                ->defaultSize(3, 1)
+                ->view('workbench::demo.widgets.stat')
+                ->resolve(fn (): array => ['label' => 'Conversion rate', 'icon' => 'presentation-chart-line', ...$kpis['conversion']]),
+
+            WidgetDefinition::make('demo.users')
+                ->label('Team members')
+                ->description('People with access, read from the users table.')
+                ->defaultSize(3, 1)
+                ->view('workbench::demo.widgets.stat')
+                ->resolve(function (): array {
+                    $pending = User::query()->whereNull('email_verified_at')->count();
+
+                    return [
+                        'label' => 'Team members',
+                        'icon' => 'users',
+                        'value' => User::query()->count(),
+                        'change' => $pending.' awaiting invitation',
+                        'trend' => null,
+                    ];
+                }),
+
+            WidgetDefinition::make('demo.recent-orders')
+                ->label('Recent orders')
+                ->description('The latest orders and their status.')
+                ->defaultSize(8, 2)
+                ->view('workbench::demo.widgets.recent-orders')
+                ->resolve(fn (): array => ['orders' => DemoData::orders()->take(5)]),
+
+            WidgetDefinition::make('demo.services')
+                ->label('Service status')
+                ->description('Health of the services the shop runs on.')
+                ->defaultSize(4, 2)
+                ->view('workbench::demo.widgets.services')
+                ->resolve(fn (): array => ['services' => DemoData::services()]),
+
+            WidgetDefinition::make('demo.goals')
+                ->label('Quarterly goals')
+                ->description('Progress toward this quarter\'s targets.')
+                ->defaultSize(6, 2)
+                ->view('workbench::demo.widgets.goals')
+                ->resolve(fn (): array => ['goals' => DemoData::goals()]),
 
             WidgetDefinition::make('demo.welcome')
                 ->label('Welcome note')
-                ->description('A static card explaining what Atrium is.')
+                ->description('A card explaining what this demo shows.')
                 ->defaultSize(6, 2)
                 ->view('workbench::demo.widgets.welcome'),
         ];
     }
 
-    public function search(): ?SearchSource
+    /**
+     * One source per kind of thing, so each is limited and grouped separately.
+     *
+     * @return array<int, SearchSource>
+     */
+    public function search(): array
     {
-        return SearchSource::make('demo')
-            ->label('Users')
-            ->using(fn (string $query): array => User::query()
-                ->where('name', 'like', '%'.$query.'%')
-                ->limit(5)
-                ->get()
-                ->map(fn (User $user): SearchResult => SearchResult::make($user->name, route('atrium.demo.users'))
-                    ->subtitle($user->email)
-                    ->group('Users'))
-                ->all());
+        return [
+            SearchSource::make('demo.team')
+                ->label('Team')
+                ->description('People with access to the shop.')
+                ->using(fn (string $query): array => User::query()
+                    ->where(fn ($builder) => $builder->where('name', 'like', '%'.$query.'%')->orWhere('email', 'like', '%'.$query.'%'))
+                    ->orderBy('name')
+                    ->limit(5)
+                    ->get()
+                    ->map(fn (User $user): SearchResult => SearchResult::make($user->name, route('atrium.demo.users'))
+                        ->subtitle($user->email)
+                        ->group('Team'))
+                    ->all()),
+
+            SearchSource::make('demo.orders')
+                ->label('Orders')
+                ->description('Customer orders by number or customer name.')
+                ->using(fn (string $query): array => DemoData::orders()
+                    ->filter(fn (array $order): bool => str_contains(strtolower($order['number'].' '.$order['customer']), strtolower($query)))
+                    ->map(fn (array $order): SearchResult => SearchResult::make($order['number'].' · '.$order['customer'], route('atrium.demo.orders').'#'.$order['number'])
+                        ->subtitle('$'.number_format($order['total'], 2).' · '.DemoData::orderStatus($order['status'])['label'])
+                        ->group('Orders'))
+                    ->values()
+                    ->all()),
+        ];
     }
 }

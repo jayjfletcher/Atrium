@@ -34,7 +34,7 @@ Route::group($attributes, function (): void {
     Route::get('search', SearchController::class)->name('search');
 
     // Declared last so its wildcard cannot shadow the routes above.
-    Route::get('d/{dashboard}', [DashboardController::class, 'show'])->name('dashboard.show');
+    Route::get('d/{slug}', [DashboardController::class, 'show'])->name('dashboard.show');
 });
 
 // Plugin routes go in a second group with the same attributes, registered

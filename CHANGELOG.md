@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Opening a dashboard by its slug (`/atrium/d/{slug}`, which the dashboard switcher links to) no longer returns 404. The route parameter was bound to the dashboard model by id.
+- The dashboard switcher opens toward the page instead of off its right edge, and labels shared dashboards "Shared".
 - Tooltips are no longer clipped by scrolling or `overflow: hidden` containers, such as tables: the bubble is drawn on `<body>`, fixed beside its trigger, and kept inside the viewport.
 
 ### Breaking

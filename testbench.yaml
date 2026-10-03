@@ -1,6 +1,10 @@
 laravel: '@testbench'
 
+env:
+  - APP_NAME="Acme Shop"
+
 providers:
+  - JayI\Atrium\AtriumServiceProvider
   - Workbench\App\Providers\WorkbenchServiceProvider
 
 migrations:
@@ -10,7 +14,10 @@ seeders:
   - Workbench\Database\Seeders\DatabaseSeeder
 
 workbench:
-  start: '/'
+  # The seeded admin is signed in through /_workbench. Testbench checks for a
+  # user at `/` before the session starts, so a start of `/` would loop.
+  start: '/atrium'
+  user: admin@example.com
   install: true
   health: false
   discovers:
@@ -25,8 +32,11 @@ workbench:
     - create-sqlite-db
     - db-wipe
     - migrate-fresh
+  # Republished on every build, so the served dashboard always uses the
+  # freshly compiled public/atrium.css and atrium.js.
   assets:
     - laravel-assets
+    - atrium-assets
   sync:
     - from: storage
       to: workbench/storage

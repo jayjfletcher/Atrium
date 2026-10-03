@@ -19,6 +19,7 @@ return [
     'no_results' => 'No results found.',
     'dashboard' => 'Dashboard',
     'dashboards' => 'Dashboards',
+    'shared' => 'Shared',
     'settings' => 'Settings',
     'add_widget' => 'Add widget',
     'no_widgets' => 'This dashboard is empty. Add a widget to get started.',

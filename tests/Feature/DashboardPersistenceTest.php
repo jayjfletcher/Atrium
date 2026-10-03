@@ -86,3 +86,18 @@ it('knows which owner a dashboard belongs to', function (): void {
         ->and($shared->isOwnedBy($user))->toBeFalse()
         ->and($owned->isOwnedBy(null))->toBeFalse();
 });
+
+it('shows a dashboard by its slug', function (): void {
+    app()->detectEnvironment(fn (): string => 'local');
+
+    $user = User::forceCreate(['name' => 'Ada', 'email' => 'ada@example.com', 'password' => bcrypt('secret')]);
+
+    Dashboard::query()->create(['name' => 'Mine', 'owner_type' => $user->getMorphClass(), 'owner_id' => $user->getKey()]);
+    Dashboard::query()->create(['name' => 'Company KPIs', 'is_shared' => true]);
+
+    $this->actingAs($user)->get(route('atrium.dashboard.show', 'company-kpis'))
+        ->assertOk()
+        ->assertSee('<title>Company KPIs', false);
+
+    $this->actingAs($user)->get(route('atrium.dashboard.show', 'missing'))->assertNotFound();
+});
