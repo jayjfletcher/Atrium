@@ -19,6 +19,7 @@
 
 ### Added
 
+- `Atrium::css()` and `Atrium::stylesheet()` let packages add styles to the dashboard's `<head>`, after Atrium's own stylesheet.
 - `icon-button`, `icon` and `status-dot` components and the Heroicons outline set (`JayI\Atrium\Support\Icons`, extensible with `Icons::register()`), with screen conventions in the README: icon-only actions, status dots with `info` kept for pending, and navigation icons.
 - Navigation gating: `NavItem::can()` and `feature()` beside `authorize()`, `NavGroup` rules for whole sidebar groups (from a plugin's `navigationGroups()` or `Atrium::navigationGroup()`), and plugin `features()` that hide a plugin and 404 its routes while a feature is off.
 - `Atrium::resolvePermissionsUsing()` and `Atrium::resolveFeaturesUsing()` to plug in any permission or feature-flag system. Permissions default to the Gate; features are on until a resolver is registered.

@@ -7,6 +7,7 @@ namespace JayI\Atrium;
 use Closure;
 use Illuminate\Http\Request;
 use JayI\Atrium\Access\Gatekeeper;
+use JayI\Atrium\Assets\StyleRegistry;
 use JayI\Atrium\Contracts\Plugin;
 use JayI\Atrium\Navigation\NavGroup;
 use JayI\Atrium\Navigation\NavigationRegistry;
@@ -29,7 +30,29 @@ class Atrium
         protected SettingsRegistry $settings,
         protected SearchRegistry $search,
         protected Gatekeeper $gatekeeper,
+        protected StyleRegistry $styles,
     ) {}
+
+    /**
+     * Link a stylesheet in the dashboard's <head>, after Atrium's own.
+     */
+    public function stylesheet(string $href): static
+    {
+        $this->styles->stylesheet($href);
+
+        return $this;
+    }
+
+    /**
+     * Add CSS to the dashboard's <head>, after Atrium's own stylesheet - for
+     * utilities a package uses that Atrium's precompiled stylesheet lacks.
+     */
+    public function css(string $css, ?string $key = null): static
+    {
+        $this->styles->css($css, $key);
+
+        return $this;
+    }
 
     /**
      * Register a plugin with Atrium.

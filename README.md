@@ -151,6 +151,17 @@ Icons are the [Heroicons](https://heroicons.com) outline set (MIT), by name, thr
 
 Tooltips are drawn on `<body>`, so tables and scrolling containers never clip them.
 
+### Package styles
+
+Atrium ships one precompiled stylesheet built from its own views, so a utility only your package uses (`w-48`, say) isn't in it. Add what you need from your service provider's `boot()`; it is emitted in the dashboard's `<head>`, after Atrium's stylesheet:
+
+```php
+use JayI\Atrium\Facades\Atrium;
+
+Atrium::css(file_get_contents(__DIR__.'/../resources/css/atrium.css'), 'billing'); // inline, once per key
+Atrium::stylesheet(asset('vendor/billing/billing.css'));                           // or a published file
+```
+
 **Forms**: `form.input`, `form.textarea`, `form.select`, `form.checkbox`, `form.radio`, `form.file`
 
 The markup is adapted from [Penguin UI](https://www.penguinui.com) under the MIT License. See [CREDITS.md](CREDITS.md).

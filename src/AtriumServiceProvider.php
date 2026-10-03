@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use JayI\Atrium\Access\Gatekeeper;
+use JayI\Atrium\Assets\StyleRegistry;
 use JayI\Atrium\Console\Commands\InstallCommand;
 use JayI\Atrium\Console\Commands\MakePluginCommand;
 use JayI\Atrium\Console\Commands\PluginListCommand;
@@ -46,6 +47,7 @@ class AtriumServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Gatekeeper::class);
+        $this->app->singleton(StyleRegistry::class);
         $this->app->singleton(NavigationRegistry::class);
         $this->app->singleton(WidgetRegistry::class);
         $this->app->singleton(SettingsRegistry::class);

@@ -13,6 +13,15 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/atrium/atrium.css') }}">
 
+    {{-- Styles packages added with Atrium::stylesheet() and Atrium::css(). --}}
+    @php($atriumStyles = app(\JayI\Atrium\Assets\StyleRegistry::class))
+    @foreach ($atriumStyles->stylesheets() as $href)
+        <link rel="stylesheet" href="{{ $href }}">
+    @endforeach
+    @if ($atriumStyles->inline() !== [])
+        <style>{!! implode("\n", $atriumStyles->inline()) !!}</style>
+    @endif
+
     @stack('atrium-head')
 </head>
 <body class="bg-canvas text-on-surface antialiased dark:bg-canvas-dark dark:text-on-surface-dark">
