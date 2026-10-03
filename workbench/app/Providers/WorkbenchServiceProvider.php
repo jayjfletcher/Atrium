@@ -2,11 +2,14 @@
 
 namespace Workbench\App\Providers;
 
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use JayI\Atrium\Facades\Atrium;
 use Workbench\App\Atrium\DemoData;
 use Workbench\App\Atrium\DemoPlugin;
+use Workbench\App\Http\Middleware\SignInWorkbenchUser;
 use Workbench\App\Models\User;
 
 class WorkbenchServiceProvider extends ServiceProvider
@@ -24,6 +27,13 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Keep the workbench user signed in whatever URL is opened first.
+        $this->callAfterResolving(HttpKernel::class, function (HttpKernel $kernel): void {
+            if ($kernel instanceof Kernel) {
+                $kernel->appendMiddlewareToGroup('web', SignInWorkbenchUser::class);
+            }
+        });
+
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'workbench');
 
         // Installed packages are discovered from their composer.json; the
