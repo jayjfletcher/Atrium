@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Models\DashboardWidget;
-use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\BrowserPlugin;
 use Workbench\App\Models\User;
@@ -29,9 +29,9 @@ function browserUser(string $email = 'browser@example.com'): User
     ]);
 }
 
-function browserDashboard(User $user, array $widgetKeys = []): Dashboard
+function browserDashboard(User $user, array $widgetKeys = []): DashboardModel
 {
-    $dashboard = Dashboard::query()->create([
+    $dashboard = DashboardModel::query()->create([
         'name' => 'Ops',
         'owner_type' => $user->getMorphClass(),
         'owner_id' => $user->getKey(),
@@ -176,7 +176,7 @@ it('reorders widgets by dragging one onto another', function (): void {
         ->assertSee('Layout saved');
 
     expect(
-        DashboardWidget::query()->orderBy('sort')->pluck('widget_key')->all(),
+        DashboardWidgetModel::query()->orderBy('sort')->pluck('widget_key')->all(),
     )->toBe(['browser.widget', 'alpha.stats']);
 });
 
@@ -184,7 +184,7 @@ it('hides editing controls from a viewer who does not own the dashboard', functi
     $owner = browserUser('owner@example.com');
     $viewer = browserUser('viewer@example.com');
 
-    $shared = Dashboard::query()->create(['name' => 'Shared', 'is_shared' => true, 'is_default' => true]);
+    $shared = DashboardModel::query()->create(['name' => 'Shared', 'is_shared' => true, 'is_default' => true]);
     $shared->widgets()->create(['widget_key' => 'alpha.stats']);
 
     $this->actingAs($viewer);

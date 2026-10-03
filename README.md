@@ -36,9 +36,9 @@ php artisan atrium:plugin BillingPlugin
 Every method is optional. A plugin that only adds one sidebar link implements one method.
 
 ```php
-use JayI\Atrium\Navigation\NavItem;
-use JayI\Atrium\Plugins\Plugin;
-use JayI\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Domains\Navigation\Data\NavItem;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
+use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
 use Illuminate\Support\Facades\Route;
 
 class BillingPlugin extends Plugin
@@ -213,8 +213,8 @@ On large screens the sidebar collapses to an icon rail from the toggle at its fo
 Navigation is filtered per request. An item, a whole group, or a whole plugin can be gated by permissions, by feature flags, or by any callback, and every rule must pass:
 
 ```php
-use JayI\Atrium\Navigation\NavGroup;
-use JayI\Atrium\Navigation\NavItem;
+use JayI\Atrium\Domains\Navigation\Data\NavGroup;
+use JayI\Atrium\Domains\Navigation\Data\NavItem;
 
 class BillingPlugin extends Plugin
 {
@@ -278,8 +278,8 @@ npm run build:css
 A plugin's `search()` returns a `SearchSource`, or a list of them, and the topbar's command palette queries every source the user may see. Return one source per kind of thing the plugin finds: each gets its own `results.per_source`, and classification can choose between them.
 
 ```php
-use JayI\Atrium\Search\SearchResult;
-use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Domains\Search\Data\SearchResult;
+use JayI\Atrium\Domains\Search\Data\SearchSource;
 
 public function search(): ?SearchSource
 {
@@ -310,17 +310,17 @@ Atrium announces everything it does, so a host application can react without pat
 
 ### Model events
 
-`Dashboard` and `DashboardWidget` fire a class-based event for every Eloquent hook: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, and `replicating`. They live in `JayI\Atrium\Events\Model` and are named `{Model}{Hook}Event`, such as `DashboardCreatingEvent` or `DashboardWidgetDeletedEvent`. The model is a typed property (`$event->dashboard`, `$event->widget`) and is also available as `$event->model()`, alongside `$event->hook()`.
+`DashboardModel` and `DashboardWidgetModel` fire a class-based event for every Eloquent hook: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, and `replicating`. They live beside the models in `JayI\Atrium\Domains\Dashboard\Events` and are named `{Entity}{Hook}Event`, such as `DashboardCreatingEvent` or `DashboardWidgetDeletedEvent`. The model is a typed property (`$event->dashboard`, `$event->widget`) and is also available as `$event->model()`, alongside `$event->hook()`.
 
 ```php
-use JayI\Atrium\Events\Model\DashboardSavingEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardSavingEvent;
 
 Event::listen(DashboardSavingEvent::class, function (DashboardSavingEvent $event) {
     $event->dashboard->name = trim($event->dashboard->name);
 });
 ```
 
-They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends Dashboard`, fires the `Dashboard*` events. The mapping comes from the `JayI\Atrium\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
+They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `JayI\Atrium\Support\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
 
 ### Action events
 
@@ -334,7 +334,7 @@ Every action dispatches a start event before it does any work, carrying the inpu
 | `SaveDashboardLayoutAction` | `DashboardLayoutSavingActionEvent` (`dashboard`, `widgets`) | `DashboardLayoutSavedActionEvent` (`dashboard`, `widgetKeys`) |
 
 ```php
-use JayI\Atrium\Events\Action\DashboardLayoutSavedActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
 
 Event::listen(DashboardLayoutSavedActionEvent::class, function (DashboardLayoutSavedActionEvent $event) {
     // $event->dashboard, $event->widgetKeys
@@ -370,10 +370,10 @@ Access is checked in two layers:
 
 | Endpoint | Request | Ability |
 | --- | --- | --- |
-| `POST dashboards` | `StoreDashboardRequest` | `create` on `Dashboard::class` |
+| `POST dashboards` | `StoreDashboardRequest` | `create` on `DashboardModel::class` |
 | `PUT dashboards/{dashboard}` | `UpdateDashboardRequest` | `update` on the dashboard |
 | `DELETE dashboards/{dashboard}` | `DeleteDashboardRequest` | `delete` on the dashboard |
-| `PUT dashboards/{dashboard}/layout` | `SaveDashboardLayoutRequest` | `update` on the dashboard, `delete` on each placement it replaces, and `create` on `DashboardWidget::class` when it places any |
+| `PUT dashboards/{dashboard}/layout` | `SaveDashboardLayoutRequest` | `update` on the dashboard, `delete` on each placement it replaces, and `create` on `DashboardWidgetModel::class` when it places any |
 
 The dashboard's edit controls follow the same `update` check.
 
@@ -384,19 +384,19 @@ Swap a policy by pointing the model at your own class, typically one extending t
 ```php
 // config/atrium.php
 'policies' => [
-    Dashboard::class => App\Policies\AtriumDashboardPolicy::class,
-    DashboardWidget::class => DashboardWidgetPolicy::class,
+    DashboardModel::class => App\Policies\AtriumDashboardPolicy::class,
+    DashboardWidgetModel::class => DashboardWidgetPolicy::class,
 ],
 ```
 
 ```php
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Policies\DashboardPolicy;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
 use Illuminate\Database\Eloquent\Model;
 
 class AtriumDashboardPolicy extends DashboardPolicy
 {
-    public function update(Model $user, Dashboard $dashboard): bool
+    public function update(Model $user, DashboardModel $dashboard): bool
     {
         return parent::update($user, $dashboard) || ($dashboard->is_shared && $user->is_admin);
     }
@@ -413,6 +413,24 @@ $dashboard = app(CreateDashboardAction::class)->execute(['name' => 'Operations']
 
 Actions expose `execute()` and keep `handle()` protected, so there is one entry point per action.
 
+## Package layout
+
+The code is organised into domain modules under `src/Domains/{Domain}`, namespace `JayI\Atrium\Domains\{Domain}`. Each has its own service provider, registered by `JayI\Atrium\Domains\DomainServiceProvider`, which `AtriumServiceProvider` registers in turn.
+
+| Domain | What lives there |
+| --- | --- |
+| `Access` | `Services\Gatekeeper`, the `Concerns\Gated` trait, and the `Authorize` and `EnsureFeaturesAreEnabled` middleware (`Http\Middleware`) |
+| `Dashboard` | `Models\DashboardModel` and `Models\DashboardWidgetModel`, their policies, actions, events, requests and controllers, and `Services\DashboardManager` |
+| `Navigation` | `Data\NavItem`, `Data\NavGroup` and `Services\NavigationRegistry` |
+| `Plugins` | The `Contracts\Plugin` contract, the `Support\Plugin` base class, `Services\PluginRegistry`, Composer discovery and the plugin commands |
+| `Search` | `Data\SearchSource`, `Data\SearchResult`, `Services\SearchRegistry` and the search endpoint |
+| `Settings` | `Data\SettingsPanel`, `Services\SettingsRegistry` and the settings pages |
+| `Widgets` | `Data\WidgetDefinition` and `Services\WidgetRegistry` |
+
+Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Actions\Action` and `Http\Requests\Request` base classes, the event contracts in `Contracts`, and `Support` (`Icons`, `StyleRegistry`, the `DispatchesModelEvents` trait). Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
+
+The models keep the class names they had before the move (`JayI\Atrium\Models\Dashboard`, `JayI\Atrium\Models\DashboardWidget`) as their morph aliases, so any polymorphic column or audit record that stored those names still resolves, and new records store the same values.
+
 ## Configuration
 
 | Key | Purpose |
@@ -421,7 +439,7 @@ Actions expose `execute()` and keep `handle()` protected, so there is one entry 
 | `domain` | Serve the dashboard from a dedicated subdomain. |
 | `middleware` | The middleware stack applied to all Atrium and plugin routes. |
 | `gate` | The gate ability checked before the dashboard is shown. |
-| `policies` | The policy class the Gate uses for `Dashboard` and `DashboardWidget`. |
+| `policies` | The policy class the Gate uses for `DashboardModel` and `DashboardWidgetModel`. |
 | `discover` | Whether to discover plugins from installed packages. |
 | `plugins` | Plugin classes registered manually. |
 | `disabled` | Plugin keys to hide. |

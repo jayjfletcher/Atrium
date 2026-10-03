@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace JayI\Atrium\Tests\Fixtures;
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Plugins\Plugin;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
 
 class RoutedPlugin extends Plugin
 {

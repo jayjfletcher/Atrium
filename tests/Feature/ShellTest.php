@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use JayI\Atrium\Atrium;
-use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 
 beforeEach(function (): void {

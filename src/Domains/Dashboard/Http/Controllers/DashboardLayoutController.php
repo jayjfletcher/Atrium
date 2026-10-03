@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace JayI\Atrium\Domains\Dashboard\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use JayI\Atrium\Domains\Dashboard\Http\Requests\SaveDashboardLayoutRequest;
+
+class DashboardLayoutController
+{
+    public function update(SaveDashboardLayoutRequest $request): JsonResponse
+    {
+        return $request->persist();
+    }
+}

@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Widgets\WidgetDefinition;
-use JayI\Atrium\Widgets\WidgetRegistry;
 use Workbench\App\Models\User;
 
 beforeEach(function (): void {
@@ -28,9 +28,9 @@ function makeUser(string $email): User
     ]);
 }
 
-function dashboardFor(User $user): Dashboard
+function dashboardFor(User $user): DashboardModel
 {
-    return Dashboard::query()->create([
+    return DashboardModel::query()->create([
         'name' => 'Mine',
         'owner_type' => $user->getMorphClass(),
         'owner_id' => $user->getKey(),
@@ -84,7 +84,7 @@ it('refuses to modify a dashboard owned by someone else', function (): void {
 
 it('refuses to modify a shared dashboard nobody owns', function (): void {
     $user = makeUser('c@example.com');
-    $shared = Dashboard::query()->create(['name' => 'Shared', 'is_shared' => true]);
+    $shared = DashboardModel::query()->create(['name' => 'Shared', 'is_shared' => true]);
 
     $this->actingAs($user)
         ->putJson(route('atrium.dashboards.layout', $shared), ['widgets' => []])
@@ -122,7 +122,7 @@ it('creates a dashboard for the current user', function (): void {
         ->post(route('atrium.dashboards.store'), ['name' => 'Operations'])
         ->assertRedirect();
 
-    $dashboard = Dashboard::query()->where('name', 'Operations')->firstOrFail();
+    $dashboard = DashboardModel::query()->where('name', 'Operations')->firstOrFail();
 
     expect($dashboard->isOwnedBy($user))->toBeTrue();
 });
@@ -133,7 +133,7 @@ it('lets a user keep more than one dashboard', function (): void {
     $this->actingAs($user)->post(route('atrium.dashboards.store'), ['name' => 'First']);
     $this->actingAs($user)->post(route('atrium.dashboards.store'), ['name' => 'Second']);
 
-    expect(Dashboard::query()->ownedBy($user)->count())->toBe(2);
+    expect(DashboardModel::query()->ownedBy($user)->count())->toBe(2);
 });
 
 it('deletes a dashboard the user owns', function (): void {
@@ -144,7 +144,7 @@ it('deletes a dashboard the user owns', function (): void {
         ->delete(route('atrium.dashboards.destroy', $dashboard))
         ->assertRedirect();
 
-    expect(Dashboard::query()->count())->toBe(0);
+    expect(DashboardModel::query()->count())->toBe(0);
 });
 
 it('creates a first dashboard for a signed in user so the picker is reachable', function (): void {
@@ -152,7 +152,7 @@ it('creates a first dashboard for a signed in user so the picker is reachable', 
 
     $this->actingAs($user)->get('/atrium')->assertOk()->assertSee('Add widget');
 
-    $dashboard = Dashboard::query()->ownedBy($user)->firstOrFail();
+    $dashboard = DashboardModel::query()->ownedBy($user)->firstOrFail();
 
     // Created empty. Nothing is placed on the user's behalf.
     expect($dashboard->widgets()->count())->toBe(0);
@@ -171,7 +171,7 @@ it('offers every available widget in the picker without placing any', function (
 it('does not create dashboards for guests', function (): void {
     $this->get('/atrium')->assertOk();
 
-    expect(Dashboard::query()->count())->toBe(0);
+    expect(DashboardModel::query()->count())->toBe(0);
 });
 
 it('persists a reordering of placed widgets', function (): void {
@@ -242,7 +242,7 @@ it('renders the edit controls only for a dashboard the user can modify', functio
 it('omits the edit controls on a shared dashboard the user does not own', function (): void {
     $user = makeUser('viewer@example.com');
 
-    $shared = Dashboard::query()->create(['name' => 'Shared', 'is_shared' => true, 'is_default' => true]);
+    $shared = DashboardModel::query()->create(['name' => 'Shared', 'is_shared' => true, 'is_default' => true]);
     $shared->widgets()->create(['widget_key' => 'alpha.stats']);
 
     $this->actingAs($user)->get('/atrium')

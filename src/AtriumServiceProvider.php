@@ -5,26 +5,12 @@ declare(strict_types=1);
 namespace JayI\Atrium;
 
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use JayI\Atrium\Access\Gatekeeper;
-use JayI\Atrium\Assets\StyleRegistry;
 use JayI\Atrium\Console\Commands\InstallCommand;
-use JayI\Atrium\Console\Commands\MakePluginCommand;
-use JayI\Atrium\Console\Commands\PluginListCommand;
-use JayI\Atrium\Dashboards\DashboardManager;
-use JayI\Atrium\Http\Middleware\EnsureFeaturesAreEnabled;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Navigation\NavigationRegistry;
-use JayI\Atrium\Plugins\PluginRegistry;
-use JayI\Atrium\Search\SearchRegistry;
-use JayI\Atrium\Settings\SettingsRegistry;
-use JayI\Atrium\Support\Discovery\ComposerPluginDiscovery;
-use JayI\Atrium\Widgets\WidgetRegistry;
+use JayI\Atrium\Domains\DomainServiceProvider;
+use JayI\Atrium\Support\StyleRegistry;
 
 class AtriumServiceProvider extends ServiceProvider
 {
@@ -35,26 +21,10 @@ class AtriumServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/atrium.php', 'atrium');
 
-        $this->app->singleton(ComposerPluginDiscovery::class, fn (Application $app): ComposerPluginDiscovery => new ComposerPluginDiscovery(
-            $app->make(Filesystem::class),
-            $app->basePath('vendor'),
-        ));
-
-        $this->app->singleton(PluginRegistry::class, function (Application $app): PluginRegistry {
-            $disabled = $app->make(Repository::class)->get('atrium.disabled', []);
-
-            return new PluginRegistry($app)->disable(is_array($disabled) ? $disabled : []);
-        });
-
-        $this->app->singleton(Gatekeeper::class);
         $this->app->singleton(StyleRegistry::class);
-        $this->app->singleton(NavigationRegistry::class);
-        $this->app->singleton(WidgetRegistry::class);
-        $this->app->singleton(SettingsRegistry::class);
-        $this->app->singleton(SearchRegistry::class);
-        $this->app->singleton(DashboardManager::class);
-
         $this->app->singleton(Atrium::class);
+
+        $this->app->register(DomainServiceProvider::class);
     }
 
     /**
@@ -62,15 +32,7 @@ class AtriumServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPlugins();
-
         $this->registerPolicies();
-
-        Route::model('dashboard', Dashboard::class);
-
-        Route::aliasMiddleware('atrium.feature', EnsureFeaturesAreEnabled::class);
-
-        $this->loadRoutesFrom(__DIR__.'/../routes/atrium.php');
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'atrium');
 
@@ -112,8 +74,6 @@ class AtriumServiceProvider extends ServiceProvider
 
         $this->commands([
             InstallCommand::class,
-            MakePluginCommand::class,
-            PluginListCommand::class,
         ]);
     }
 
@@ -127,28 +87,6 @@ class AtriumServiceProvider extends ServiceProvider
 
         foreach ($policies as $model => $policy) {
             Gate::policy($model, $policy);
-        }
-    }
-
-    /**
-     * Register the discovered and configured plugins.
-     */
-    protected function registerPlugins(): void
-    {
-        $registry = $this->app->make(PluginRegistry::class);
-
-        $config = $this->app->make(Repository::class);
-
-        if ($config->get('atrium.discover', true) === true) {
-            $registry->registerMany(
-                $this->app->make(ComposerPluginDiscovery::class)->discover(),
-            );
-        }
-
-        $configured = $config->get('atrium.plugins', []);
-
-        if (is_array($configured)) {
-            $registry->registerMany($configured);
         }
     }
 }

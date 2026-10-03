@@ -1,11 +1,11 @@
 <?php
 
 declare(strict_types=1);
-use JayI\Atrium\Http\Middleware\Authorize;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Models\DashboardWidget;
-use JayI\Atrium\Policies\DashboardPolicy;
-use JayI\Atrium\Policies\DashboardWidgetPolicy;
+use JayI\Atrium\Domains\Access\Http\Middleware\Authorize;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
+use JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
 
 return [
 
@@ -75,8 +75,8 @@ return [
     */
 
     'policies' => [
-        Dashboard::class => DashboardPolicy::class,
-        DashboardWidget::class => DashboardWidgetPolicy::class,
+        DashboardModel::class => DashboardPolicy::class,
+        DashboardWidgetModel::class => DashboardWidgetPolicy::class,
     ],
 
     /*

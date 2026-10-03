@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Filesystem\Filesystem;
-use JayI\Atrium\AtriumServiceProvider;
-use JayI\Atrium\Plugins\PluginRegistry;
-use JayI\Atrium\Support\Discovery\ComposerPluginDiscovery;
+use JayI\Atrium\Domains\Plugins\PluginsServiceProvider;
+use JayI\Atrium\Domains\Plugins\Services\ComposerPluginDiscovery;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\BetaPlugin;
 
@@ -75,7 +75,7 @@ it('registers plugins listed in config', function (): void {
 
     app()->forgetInstance(PluginRegistry::class);
 
-    $provider = app()->getProvider(AtriumServiceProvider::class);
+    $provider = app()->getProvider(PluginsServiceProvider::class);
     $provider->boot();
 
     expect(app(PluginRegistry::class)->has('alpha'))->toBeTrue();

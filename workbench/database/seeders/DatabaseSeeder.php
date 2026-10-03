@@ -3,10 +3,10 @@
 namespace Workbench\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use JayI\Atrium\Actions\CreateDashboardAction;
-use JayI\Atrium\Actions\SaveDashboardLayoutAction;
-use JayI\Atrium\Actions\UpdateDashboardAction;
-use JayI\Atrium\Models\Dashboard;
+use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
+use JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
+use JayI\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
 use Workbench\App\Models\User;
 use Workbench\Database\Factories\UserFactory;
 
@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
      * @param  array{name: string, is_shared?: bool}  $data
      * @param  array<int, array{0: string, 1: int, 2: int}>  $widgets  Widget key, width and height.
      */
-    private function dashboard(array $data, User $owner, array $widgets): Dashboard
+    private function dashboard(array $data, User $owner, array $widgets): DashboardModel
     {
         $dashboard = app(CreateDashboardAction::class)->execute($data, $owner);
 

@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Exceptions\DuplicateWidgetException;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Plugins\Plugin;
-use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
+use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use JayI\Atrium\Domains\Widgets\Exceptions\DuplicateWidgetException;
+use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\BetaPlugin;
 use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
-use JayI\Atrium\Widgets\WidgetDefinition;
-use JayI\Atrium\Widgets\WidgetRegistry;
 
 function widgets(): WidgetRegistry
 {
@@ -27,7 +27,7 @@ it('collects widget definitions from registered plugins', function (): void {
 it('offers widgets without placing them on any dashboard', function (): void {
     app(PluginRegistry::class)->register(AlphaPlugin::class);
 
-    $dashboard = Dashboard::query()->create(['name' => 'Ops', 'is_shared' => true]);
+    $dashboard = DashboardModel::query()->create(['name' => 'Ops', 'is_shared' => true]);
 
     expect(widgets()->all())->toHaveKey('alpha.stats')
         ->and($dashboard->widgets()->count())->toBe(0);

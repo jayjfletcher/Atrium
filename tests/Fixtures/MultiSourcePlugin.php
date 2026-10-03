@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace JayI\Atrium\Tests\Fixtures;
 
-use JayI\Atrium\Plugins\Plugin;
-use JayI\Atrium\Search\SearchResult;
-use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
+use JayI\Atrium\Domains\Search\Data\SearchResult;
+use JayI\Atrium\Domains\Search\Data\SearchSource;
 
 /**
  * A plugin that searches two kinds of thing, as two sources.

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Exceptions\InvalidPluginException;
-use JayI\Atrium\Plugins\Plugin;
-use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Domains\Plugins\Exceptions\InvalidPluginException;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\BetaPlugin;
 use JayI\Atrium\Tests\Fixtures\NotAPlugin;

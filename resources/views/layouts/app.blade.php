@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/atrium/atrium.css') }}">
 
     {{-- Styles packages added with Atrium::stylesheet() and Atrium::css(). --}}
-    @php($atriumStyles = app(\JayI\Atrium\Assets\StyleRegistry::class))
+    @php($atriumStyles = app(\JayI\Atrium\Support\StyleRegistry::class))
     @foreach ($atriumStyles->stylesheets() as $href)
         <link rel="stylesheet" href="{{ $href }}">
     @endforeach

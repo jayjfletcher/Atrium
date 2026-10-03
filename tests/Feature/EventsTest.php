@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use JayI\Atrium\Actions\CreateDashboardAction;
-use JayI\Atrium\Actions\DeleteDashboardAction;
-use JayI\Atrium\Actions\SaveDashboardLayoutAction;
-use JayI\Atrium\Actions\UpdateDashboardAction;
 use JayI\Atrium\Contracts\ActionFinishedEvent;
 use JayI\Atrium\Contracts\ActionStartingEvent;
 use JayI\Atrium\Contracts\ModelLifecycleEvent;
-use JayI\Atrium\Events\Action\DashboardCreatedActionEvent;
-use JayI\Atrium\Events\Action\DashboardCreatingActionEvent;
-use JayI\Atrium\Events\Action\DashboardDeletedActionEvent;
-use JayI\Atrium\Events\Action\DashboardLayoutSavedActionEvent;
-use JayI\Atrium\Events\Action\DashboardLayoutSavingActionEvent;
-use JayI\Atrium\Events\Action\DashboardUpdatedActionEvent;
-use JayI\Atrium\Events\Action\DashboardUpdatingActionEvent;
-use JayI\Atrium\Events\Model\DashboardCreatingEvent;
-use JayI\Atrium\Events\Model\DashboardUpdatedEvent;
-use JayI\Atrium\Events\Model\DashboardWidgetCreatedEvent;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Models\DashboardWidget;
-use JayI\Atrium\Plugins\PluginRegistry;
+use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
+use JayI\Atrium\Domains\Dashboard\Actions\DeleteDashboardAction;
+use JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
+use JayI\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardDeletedActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatingActionEvent;
+use JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetCreatedEvent;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\Models\TeamDashboard;
 use Workbench\App\Models\User;
@@ -54,14 +54,14 @@ function actor(string $email = 'actor@example.com'): User
 it('fires every lifecycle event of a dashboard', function (): void {
     $seen = recordEvents(ModelLifecycleEvent::class);
 
-    $dashboard = Dashboard::query()->create(['name' => 'Ops']);
+    $dashboard = DashboardModel::query()->create(['name' => 'Ops']);
     $dashboard->update(['name' => 'Renamed']);
-    Dashboard::query()->find($dashboard->id);
+    DashboardModel::query()->find($dashboard->id);
     $dashboard->replicate();
     $dashboard->delete();
 
     $hooks = collect($seen)
-        ->filter(fn (ModelLifecycleEvent $event): bool => $event->model() instanceof Dashboard)
+        ->filter(fn (ModelLifecycleEvent $event): bool => $event->model() instanceof DashboardModel)
         ->map(fn (ModelLifecycleEvent $event): string => $event->hook())
         ->unique()
         ->values()
@@ -73,18 +73,18 @@ it('fires every lifecycle event of a dashboard', function (): void {
 });
 
 it('fires every lifecycle event of a widget placement', function (): void {
-    $dashboard = Dashboard::query()->create(['name' => 'Ops']);
+    $dashboard = DashboardModel::query()->create(['name' => 'Ops']);
 
     $seen = recordEvents(ModelLifecycleEvent::class);
 
     $widget = $dashboard->widgets()->create(['widget_key' => 'alpha.stats']);
     $widget->update(['grid_width' => 6]);
-    DashboardWidget::query()->find($widget->id);
+    DashboardWidgetModel::query()->find($widget->id);
     $widget->replicate();
     $widget->delete();
 
     $hooks = collect($seen)
-        ->filter(fn (ModelLifecycleEvent $event): bool => $event->model() instanceof DashboardWidget)
+        ->filter(fn (ModelLifecycleEvent $event): bool => $event->model() instanceof DashboardWidgetModel)
         ->map(fn (ModelLifecycleEvent $event): string => $event->hook())
         ->unique()
         ->values()
@@ -96,7 +96,7 @@ it('fires every lifecycle event of a widget placement', function (): void {
 });
 
 it('carries the model as a typed property', function (): void {
-    $dashboard = Dashboard::query()->create(['name' => 'Ops']);
+    $dashboard = DashboardModel::query()->create(['name' => 'Ops']);
 
     Event::fake([DashboardUpdatedEvent::class, DashboardWidgetCreatedEvent::class]);
 
@@ -124,10 +124,10 @@ it('fires the dashboard events for a dashboard subclass', function (): void {
 it('lets a creating listener stop a dashboard being created', function (): void {
     Event::listen(DashboardCreatingEvent::class, fn (): bool => false);
 
-    $dashboard = Dashboard::query()->create(['name' => 'Ops']);
+    $dashboard = DashboardModel::query()->create(['name' => 'Ops']);
 
     expect($dashboard->exists)->toBeFalse()
-        ->and(Dashboard::query()->count())->toBe(0);
+        ->and(DashboardModel::query()->count())->toBe(0);
 });
 
 it('starts and finishes every action once, in order', function (): void {
@@ -149,20 +149,17 @@ it('starts and finishes every action once, in order', function (): void {
 });
 
 it('gives every action exactly one start and one finish event', function (): void {
-    $actions = glob(dirname(__DIR__, 2).'/src/Actions/*Action.php') ?: [];
+    $actions = glob(dirname(__DIR__, 2).'/src/Domains/*/Actions/*Action.php') ?: [];
 
     $unpaired = [];
 
     foreach ($actions as $path) {
-        if (basename($path) === 'Action.php') {
-            continue;
-        }
-
+        $domain = basename(dirname($path, 2));
         $source = (string) file_get_contents($path);
         preg_match_all('/([A-Za-z]+ActionEvent)::dispatch/', $source, $matches);
 
         $kinds = array_map(
-            fn (string $event): string => is_subclass_of('JayI\\Atrium\\Events\\Action\\'.$event, ActionStartingEvent::class) ? 'start' : 'finish',
+            fn (string $event): string => is_subclass_of('JayI\\Atrium\\Domains\\'.$domain.'\\Events\\'.$event, ActionStartingEvent::class) ? 'start' : 'finish',
             $matches[1],
         );
 
@@ -225,7 +222,7 @@ it('starts before the work and finishes only once it is committed', function ():
     $countAtStart = null;
 
     Event::listen(DashboardCreatingActionEvent::class, function () use (&$countAtStart): void {
-        $countAtStart = Dashboard::query()->count();
+        $countAtStart = DashboardModel::query()->count();
     });
 
     $finished = recordEvents(DashboardCreatedActionEvent::class);
@@ -254,7 +251,7 @@ it('starts a create that rolled back but never finishes it', function (): void {
         // expected
     }
 
-    expect(Dashboard::query()->count())->toBe(0)
+    expect(DashboardModel::query()->count())->toBe(0)
         ->and($starts)->toHaveCount(1)
         ->and($stops)->toHaveCount(0);
 });

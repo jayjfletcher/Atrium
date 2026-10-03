@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Plugins\PluginRegistry;
-use JayI\Atrium\Settings\SettingsPanel;
-use JayI\Atrium\Settings\SettingsRegistry;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
+use JayI\Atrium\Domains\Settings\Services\SettingsRegistry;
 use JayI\Atrium\Tests\Fixtures\FullPlugin;
 use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 

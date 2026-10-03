@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace JayI\Atrium\Tests\Fixtures;
 
-use JayI\Atrium\Navigation\NavItem;
-use JayI\Atrium\Plugins\Plugin;
-use JayI\Atrium\Search\SearchResult;
-use JayI\Atrium\Search\SearchSource;
-use JayI\Atrium\Widgets\WidgetDefinition;
+use JayI\Atrium\Domains\Navigation\Data\NavItem;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
+use JayI\Atrium\Domains\Search\Data\SearchResult;
+use JayI\Atrium\Domains\Search\Data\SearchSource;
+use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
 
 class BrowserPlugin extends Plugin
 {

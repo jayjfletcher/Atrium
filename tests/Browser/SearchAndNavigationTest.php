@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Plugins\PluginRegistry;
-use JayI\Atrium\Search\SearchRegistry;
-use JayI\Atrium\Search\SearchResult;
-use JayI\Atrium\Search\SearchSource;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use JayI\Atrium\Domains\Search\Data\SearchResult;
+use JayI\Atrium\Domains\Search\Data\SearchSource;
+use JayI\Atrium\Domains\Search\Services\SearchRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\BrowserPlugin;
 

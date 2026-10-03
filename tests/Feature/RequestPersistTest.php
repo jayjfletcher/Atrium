@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Http\Requests\Request;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Plugins\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use Workbench\App\Models\User;
 
@@ -28,7 +28,7 @@ it('creates a dashboard through the request', function (): void {
         ->post(route('atrium.dashboards.store'), ['name' => 'Operations'])
         ->assertRedirect();
 
-    expect(Dashboard::query()->where('name', 'Operations')->exists())->toBeTrue();
+    expect(DashboardModel::query()->where('name', 'Operations')->exists())->toBeTrue();
 });
 
 it('rejects a create with no name', function (): void {
@@ -41,7 +41,7 @@ it('refuses to update a dashboard the user does not own', function (): void {
     $owner = persistUser('owner2@example.com');
     $intruder = persistUser('intruder2@example.com');
 
-    $dashboard = Dashboard::query()->create([
+    $dashboard = DashboardModel::query()->create([
         'name' => 'Theirs',
         'owner_type' => $owner->getMorphClass(),
         'owner_id' => $owner->getKey(),
@@ -57,7 +57,7 @@ it('refuses to update a dashboard the user does not own', function (): void {
 it('updates a dashboard the user owns', function (): void {
     $user = persistUser('update2@example.com');
 
-    $dashboard = Dashboard::query()->create([
+    $dashboard = DashboardModel::query()->create([
         'name' => 'Before',
         'owner_type' => $user->getMorphClass(),
         'owner_id' => $user->getKey(),
@@ -71,16 +71,14 @@ it('updates a dashboard the user owns', function (): void {
 });
 
 it('every atrium request declares how it persists', function (): void {
-    $requests = glob(__DIR__.'/../../src/Http/Requests/*.php') ?: [];
+    $requests = glob(__DIR__.'/../../src/Domains/*/Http/Requests/*.php') ?: [];
 
     expect($requests)->not->toBeEmpty();
 
     foreach ($requests as $file) {
-        $class = 'JayI\\Atrium\\Http\\Requests\\'.basename($file, '.php');
+        $class = 'JayI\\Atrium\\Domains\\'.basename(dirname($file, 3)).'\\Http\\Requests\\'.basename($file, '.php');
 
-        if ($class === Request::class) {
-            continue;
-        }
+        expect(is_subclass_of($class, Request::class))->toBeTrue();
 
         $method = new ReflectionMethod($class, 'persist');
 
@@ -90,7 +88,11 @@ it('every atrium request declares how it persists', function (): void {
 });
 
 it('keeps controllers free of business logic', function (): void {
-    foreach (glob(__DIR__.'/../../src/Http/Controllers/*.php') ?: [] as $file) {
+    $controllers = glob(__DIR__.'/../../src/Domains/*/Http/Controllers/*.php') ?: [];
+
+    expect($controllers)->not->toBeEmpty();
+
+    foreach ($controllers as $file) {
         $body = (string) file_get_contents($file);
 
         expect($body)->not->toContain('DB::')

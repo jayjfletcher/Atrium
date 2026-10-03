@@ -6,7 +6,7 @@ Adapted from the `mono` standard of the same name, minus its Pennant feature-gat
 
 ## Base class — `execute()` is the entry point, `handle()` does the work
 
-- Actions extend `JayI\Atrium\Actions\Action`.
+- Actions extend `JayI\Atrium\Actions\Action` and live in their domain's `Actions/` (`JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction`); see [[domain-modules]].
 - `Action::execute(mixed ...$args)` delegates to your **`protected handle(...)`**. You implement `handle()`, callers call `execute()`.
 - Never make `handle()` public — one entry point keeps a place to add cross-cutting behavior later.
 - No static constructors (`::run()`/`::make()`). Resolve and invoke via `app(XAction::class)->execute(...)`.
@@ -15,7 +15,7 @@ Adapted from the `mono` standard of the same name, minus its Pennant feature-gat
 class CreateDashboardAction extends Action
 {
     /** @param array{name: string, is_shared?: bool} $data */
-    protected function handle(array $data, ?Model $owner = null): Dashboard
+    protected function handle(array $data, ?Model $owner = null): DashboardModel
     {
         DashboardCreatingActionEvent::dispatch($data, $owner);
 
@@ -26,9 +26,9 @@ class CreateDashboardAction extends Action
         return $dashboard;
     }
 
-    private function perform(array $data, ?Model $owner): Dashboard
+    private function perform(array $data, ?Model $owner): DashboardModel
     {
-        return DB::transaction(fn (): Dashboard => Dashboard::query()->create([...]));
+        return DB::transaction(fn (): DashboardModel => DashboardModel::query()->create([...]));
     }
 }
 ```
@@ -52,7 +52,7 @@ class CreateDashboardAction extends Action
 
 ## Event
 
-- `final` classes in `Events\Action` using `Dispatchable` and `SerializesModels`; no base class.
+- `final` classes in the domain's `Events/` (beside its model lifecycle events) using `Dispatchable` and `SerializesModels`; no base class.
 - A plain data carrier using constructor property promotion; it may carry more than one value.
 - Every action has exactly one pair: `{Subject}{Verb-ing}ActionEvent` implementing `Contracts\ActionStartingEvent` (carries the input) and `{Subject}{Verb-ed}ActionEvent` implementing `Contracts\ActionFinishedEvent` (carries the result) — `DashboardLayoutSavingActionEvent` / `DashboardLayoutSavedActionEvent`. A test enforces the pairing.
 

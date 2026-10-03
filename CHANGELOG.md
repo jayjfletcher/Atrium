@@ -10,6 +10,81 @@
 
 ### Breaking
 
+- The source is reorganised into domain modules under `src/Domains/{Domain}` (`Access`, `Dashboard`, `Navigation`, `Plugins`, `Search`, `Settings`, `Widgets`), mirroring the `mono` application. Almost every class moved; there are no aliases for the old names, so update `use` statements, `extends`/`implements` clauses, and any class names in a published `config/atrium.php` (`middleware`, `policies`). The models are renamed `DashboardModel` and `DashboardWidgetModel`, value objects moved into `Data\`, registries into `Services\`, and model and action events now sit together in `Domains\Dashboard\Events`. `AtriumServiceProvider`, the `Atrium` class and facade, `Actions\Action`, `Http\Requests\Request`, the event contracts (`Contracts\Action*Event`, `Contracts\ModelLifecycleEvent`), `Support\Icons` and `Console\Commands\InstallCommand` keep their names. Config keys, route names, view and component names, translation keys, publish tags, table names and the `atrium.feature` middleware alias are unchanged. The models keep their old class names (`JayI\Atrium\Models\Dashboard`, `JayI\Atrium\Models\DashboardWidget`) as morph aliases, so stored polymorphic values still resolve and new rows store the same strings. The full map:
+
+  | Old | New |
+  | --- | --- |
+  | `JayI\Atrium\Access\Concerns\Gated` | `JayI\Atrium\Domains\Access\Concerns\Gated` |
+  | `JayI\Atrium\Access\Gatekeeper` | `JayI\Atrium\Domains\Access\Services\Gatekeeper` |
+  | `JayI\Atrium\Actions\CreateDashboardAction` | `JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction` |
+  | `JayI\Atrium\Actions\DeleteDashboardAction` | `JayI\Atrium\Domains\Dashboard\Actions\DeleteDashboardAction` |
+  | `JayI\Atrium\Actions\SaveDashboardLayoutAction` | `JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction` |
+  | `JayI\Atrium\Actions\UpdateDashboardAction` | `JayI\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction` |
+  | `JayI\Atrium\Assets\StyleRegistry` | `JayI\Atrium\Support\StyleRegistry` |
+  | `JayI\Atrium\Console\Commands\MakePluginCommand` | `JayI\Atrium\Domains\Plugins\Console\Commands\MakePluginCommand` |
+  | `JayI\Atrium\Console\Commands\PluginListCommand` | `JayI\Atrium\Domains\Plugins\Console\Commands\PluginListCommand` |
+  | `JayI\Atrium\Contracts\Plugin` | `JayI\Atrium\Domains\Plugins\Contracts\Plugin` |
+  | `JayI\Atrium\Dashboards\DashboardManager` | `JayI\Atrium\Domains\Dashboard\Services\DashboardManager` |
+  | `JayI\Atrium\Events\Action\DashboardCreatedActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardCreatingActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardDeletedActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardDeletedActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardDeletingActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardDeletingActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardLayoutSavedActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardLayoutSavingActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardUpdatedActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedActionEvent` |
+  | `JayI\Atrium\Events\Action\DashboardUpdatingActionEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatingActionEvent` |
+  | `JayI\Atrium\Events\Model\DashboardCreatedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardCreatedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardCreatingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardDeletedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardDeletedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardDeletingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardDeletingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardReplicatingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardReplicatingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardRetrievedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardRetrievedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardSavedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardSavedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardSavingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardSavingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardUpdatedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardUpdatingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetCreatedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetCreatedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetCreatingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetCreatingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetDeletedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetDeletedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetDeletingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetDeletingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetReplicatingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetReplicatingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetRetrievedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetRetrievedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetSavedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetSavedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetSavingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetSavingEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetUpdatedEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetUpdatedEvent` |
+  | `JayI\Atrium\Events\Model\DashboardWidgetUpdatingEvent` | `JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetUpdatingEvent` |
+  | `JayI\Atrium\Exceptions\DuplicateWidgetException` | `JayI\Atrium\Domains\Widgets\Exceptions\DuplicateWidgetException` |
+  | `JayI\Atrium\Exceptions\InvalidPluginException` | `JayI\Atrium\Domains\Plugins\Exceptions\InvalidPluginException` |
+  | `JayI\Atrium\Http\Controllers\DashboardController` | `JayI\Atrium\Domains\Dashboard\Http\Controllers\DashboardController` |
+  | `JayI\Atrium\Http\Controllers\DashboardCrudController` | `JayI\Atrium\Domains\Dashboard\Http\Controllers\DashboardCrudController` |
+  | `JayI\Atrium\Http\Controllers\DashboardLayoutController` | `JayI\Atrium\Domains\Dashboard\Http\Controllers\DashboardLayoutController` |
+  | `JayI\Atrium\Http\Controllers\SearchController` | `JayI\Atrium\Domains\Search\Http\Controllers\SearchController` |
+  | `JayI\Atrium\Http\Controllers\SettingsController` | `JayI\Atrium\Domains\Settings\Http\Controllers\SettingsController` |
+  | `JayI\Atrium\Http\Middleware\Authorize` | `JayI\Atrium\Domains\Access\Http\Middleware\Authorize` |
+  | `JayI\Atrium\Http\Middleware\EnsureFeaturesAreEnabled` | `JayI\Atrium\Domains\Access\Http\Middleware\EnsureFeaturesAreEnabled` |
+  | `JayI\Atrium\Http\Requests\DeleteDashboardRequest` | `JayI\Atrium\Domains\Dashboard\Http\Requests\DeleteDashboardRequest` |
+  | `JayI\Atrium\Http\Requests\SaveDashboardLayoutRequest` | `JayI\Atrium\Domains\Dashboard\Http\Requests\SaveDashboardLayoutRequest` |
+  | `JayI\Atrium\Http\Requests\StoreDashboardRequest` | `JayI\Atrium\Domains\Dashboard\Http\Requests\StoreDashboardRequest` |
+  | `JayI\Atrium\Http\Requests\UpdateDashboardRequest` | `JayI\Atrium\Domains\Dashboard\Http\Requests\UpdateDashboardRequest` |
+  | `JayI\Atrium\Models\Concerns\DispatchesModelEvents` | `JayI\Atrium\Support\Models\Concerns\DispatchesModelEvents` |
+  | `JayI\Atrium\Models\Dashboard` | `JayI\Atrium\Domains\Dashboard\Models\DashboardModel` |
+  | `JayI\Atrium\Models\DashboardWidget` | `JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel` |
+  | `JayI\Atrium\Navigation\NavGroup` | `JayI\Atrium\Domains\Navigation\Data\NavGroup` |
+  | `JayI\Atrium\Navigation\NavItem` | `JayI\Atrium\Domains\Navigation\Data\NavItem` |
+  | `JayI\Atrium\Navigation\NavigationRegistry` | `JayI\Atrium\Domains\Navigation\Services\NavigationRegistry` |
+  | `JayI\Atrium\Plugins\Plugin` | `JayI\Atrium\Domains\Plugins\Support\Plugin` |
+  | `JayI\Atrium\Plugins\PluginRegistry` | `JayI\Atrium\Domains\Plugins\Services\PluginRegistry` |
+  | `JayI\Atrium\Policies\DashboardPolicy` | `JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy` |
+  | `JayI\Atrium\Policies\DashboardWidgetPolicy` | `JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy` |
+  | `JayI\Atrium\Policies\Policy` | `JayI\Atrium\Domains\Dashboard\Policies\Policy` |
+  | `JayI\Atrium\Search\SearchRegistry` | `JayI\Atrium\Domains\Search\Services\SearchRegistry` |
+  | `JayI\Atrium\Search\SearchResult` | `JayI\Atrium\Domains\Search\Data\SearchResult` |
+  | `JayI\Atrium\Search\SearchSource` | `JayI\Atrium\Domains\Search\Data\SearchSource` |
+  | `JayI\Atrium\Settings\SettingsPanel` | `JayI\Atrium\Domains\Settings\Data\SettingsPanel` |
+  | `JayI\Atrium\Settings\SettingsRegistry` | `JayI\Atrium\Domains\Settings\Services\SettingsRegistry` |
+  | `JayI\Atrium\Support\Discovery\ComposerPluginDiscovery` | `JayI\Atrium\Domains\Plugins\Services\ComposerPluginDiscovery` |
+  | `JayI\Atrium\Widgets\WidgetDefinition` | `JayI\Atrium\Domains\Widgets\Data\WidgetDefinition` |
+  | `JayI\Atrium\Widgets\WidgetRegistry` | `JayI\Atrium\Domains\Widgets\Services\WidgetRegistry` |
 - The bundled Pennant plugin (the Feature flags page, `FeatureFlagManager`, its requests, actions and `Feature*ActionEvent` events, and the `atrium.pennant` config) moved to `jayi/pennantplus` under `JayI\PennantPlus\Atrium`. Install that package to keep the page; its settings now live under `pennantplus.atrium`.
 - The PHP namespace changed from `Atrium\Atrium` to `JayI\Atrium`, matching the other `jayi/*` packages. Update `use` statements, the service provider and facade references, and any class names in your config (such as `atrium.php` middleware). The package name `jayi/atrium`, the `atrium::` view namespace, `atrium.*` config keys, route names and `atrium-*` publish tags are unchanged.
 - Event classes moved and were renamed. Model events now live in `JayI\Atrium\Events\Model` (`Events\Dashboard\DashboardCreatedEvent` is now `Events\Model\DashboardCreatedEvent`, and `Events\DashboardWidget\*` moved the same way). Action events moved from `Atrium\Atrium\Events\Actions` to `JayI\Atrium\Events\Action`. Update the `use` statements of your listeners.

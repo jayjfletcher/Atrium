@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace JayI\Atrium\Tests\Fixtures;
 
-use JayI\Atrium\Plugins\Plugin;
-use JayI\Atrium\Search\SearchResult;
-use JayI\Atrium\Search\SearchSource;
-use JayI\Atrium\Settings\SettingsPanel;
+use JayI\Atrium\Domains\Plugins\Support\Plugin;
+use JayI\Atrium\Domains\Search\Data\SearchResult;
+use JayI\Atrium\Domains\Search\Data\SearchSource;
+use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
 
 class FullPlugin extends Plugin
 {

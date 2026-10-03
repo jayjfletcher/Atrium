@@ -5,11 +5,11 @@ declare(strict_types=1);
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Gate;
 use JayI\Atrium\AtriumServiceProvider;
-use JayI\Atrium\Models\Dashboard;
-use JayI\Atrium\Models\DashboardWidget;
-use JayI\Atrium\Plugins\PluginRegistry;
-use JayI\Atrium\Policies\DashboardPolicy;
-use JayI\Atrium\Policies\DashboardWidgetPolicy;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
+use JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\Models\TeamDashboard;
 use JayI\Atrium\Tests\Fixtures\Policies\KeepWidgetsPolicy;
@@ -44,9 +44,9 @@ function usePolicies(array $policies): void
     (fn () => $this->registerPolicies())->call($provider);
 }
 
-function ownedDashboard(User $owner, string $name = 'Mine'): Dashboard
+function ownedDashboard(User $owner, string $name = 'Mine'): DashboardModel
 {
-    return Dashboard::query()->create([
+    return DashboardModel::query()->create([
         'name' => $name,
         'owner_type' => $owner->getMorphClass(),
         'owner_id' => $owner->getKey(),
@@ -54,16 +54,16 @@ function ownedDashboard(User $owner, string $name = 'Mine'): Dashboard
 }
 
 it('registers the policies from the config', function (): void {
-    expect(Gate::getPolicyFor(Dashboard::class))->toBeInstanceOf(DashboardPolicy::class)
+    expect(Gate::getPolicyFor(DashboardModel::class))->toBeInstanceOf(DashboardPolicy::class)
         ->and(Gate::getPolicyFor(TeamDashboard::class))->toBeInstanceOf(DashboardPolicy::class)
-        ->and(Gate::getPolicyFor(DashboardWidget::class))->toBeInstanceOf(DashboardWidgetPolicy::class);
+        ->and(Gate::getPolicyFor(DashboardWidgetModel::class))->toBeInstanceOf(DashboardWidgetPolicy::class);
 });
 
 it('lets the owner do anything with their dashboard', function (): void {
     $dashboard = ownedDashboard($this->ann);
 
-    expect($this->ann->can('viewAny', Dashboard::class))->toBeTrue()
-        ->and($this->ann->can('create', Dashboard::class))->toBeTrue()
+    expect($this->ann->can('viewAny', DashboardModel::class))->toBeTrue()
+        ->and($this->ann->can('create', DashboardModel::class))->toBeTrue()
         ->and($this->ann->can('view', $dashboard))->toBeTrue()
         ->and($this->ann->can('update', $dashboard))->toBeTrue()
         ->and($this->ann->can('delete', $dashboard))->toBeTrue()
@@ -73,7 +73,7 @@ it('lets the owner do anything with their dashboard', function (): void {
 });
 
 it('lets everyone view a shared dashboard but nobody change it', function (): void {
-    $shared = Dashboard::query()->create(['name' => 'Company', 'is_shared' => true]);
+    $shared = DashboardModel::query()->create(['name' => 'Company', 'is_shared' => true]);
 
     expect($this->bob->can('view', $shared))->toBeTrue()
         ->and($this->bob->can('update', $shared))->toBeFalse()
@@ -83,42 +83,42 @@ it('lets everyone view a shared dashboard but nobody change it', function (): vo
 it('refuses guests', function (): void {
     $dashboard = ownedDashboard($this->ann);
 
-    expect(Gate::forUser(null)->allows('create', Dashboard::class))->toBeFalse()
+    expect(Gate::forUser(null)->allows('create', DashboardModel::class))->toBeFalse()
         ->and(Gate::forUser(null)->allows('view', $dashboard))->toBeFalse();
 
     $this->post(route('atrium.dashboards.store'), ['name' => 'Anonymous'])->assertForbidden();
 
-    expect(Dashboard::query()->where('name', 'Anonymous')->exists())->toBeFalse();
+    expect(DashboardModel::query()->where('name', 'Anonymous')->exists())->toBeFalse();
 });
 
 it('checks widget placements against their dashboard', function (): void {
     $dashboard = ownedDashboard($this->ann);
     $widget = $dashboard->widgets()->create(['widget_key' => 'alpha.stats']);
 
-    $shared = Dashboard::query()->create(['name' => 'Company', 'is_shared' => true]);
+    $shared = DashboardModel::query()->create(['name' => 'Company', 'is_shared' => true]);
     $sharedWidget = $shared->widgets()->create(['widget_key' => 'alpha.stats']);
 
-    expect($this->ann->can('viewAny', [DashboardWidget::class, $dashboard]))->toBeTrue()
-        ->and($this->ann->can('create', [DashboardWidget::class, $dashboard]))->toBeTrue()
+    expect($this->ann->can('viewAny', [DashboardWidgetModel::class, $dashboard]))->toBeTrue()
+        ->and($this->ann->can('create', [DashboardWidgetModel::class, $dashboard]))->toBeTrue()
         ->and($this->ann->can('view', $widget))->toBeTrue()
         ->and($this->ann->can('update', $widget))->toBeTrue()
         ->and($this->ann->can('delete', $widget))->toBeTrue()
-        ->and($this->bob->can('viewAny', [DashboardWidget::class, $dashboard]))->toBeFalse()
+        ->and($this->bob->can('viewAny', [DashboardWidgetModel::class, $dashboard]))->toBeFalse()
         ->and($this->bob->can('view', $widget))->toBeFalse()
         ->and($this->bob->can('delete', $widget))->toBeFalse()
         ->and($this->bob->can('view', $sharedWidget))->toBeTrue()
-        ->and($this->bob->can('create', [DashboardWidget::class, $shared]))->toBeFalse()
+        ->and($this->bob->can('create', [DashboardWidgetModel::class, $shared]))->toBeFalse()
         ->and($this->bob->can('update', $sharedWidget))->toBeFalse();
 });
 
 it('uses a dashboard policy swapped in the config, for dashboards and their widgets', function (): void {
-    usePolicies([Dashboard::class => ReadOnlyDashboardPolicy::class]);
+    usePolicies([DashboardModel::class => ReadOnlyDashboardPolicy::class]);
 
     $dashboard = ownedDashboard($this->ann);
     $dashboard->widgets()->create(['widget_key' => 'alpha.stats']);
 
     expect($this->ann->can('update', $dashboard))->toBeFalse()
-        ->and($this->ann->can('create', [DashboardWidget::class, $dashboard]))->toBeFalse();
+        ->and($this->ann->can('create', [DashboardWidgetModel::class, $dashboard]))->toBeFalse();
 
     $this->actingAs($this->ann)->post(route('atrium.dashboards.store'), ['name' => 'Another'])->assertForbidden();
     $this->actingAs($this->ann)->put(route('atrium.dashboards.update', $dashboard), ['name' => 'Renamed'])->assertForbidden();
@@ -133,11 +133,11 @@ it('uses a dashboard policy swapped in the config, for dashboards and their widg
     // Deleting is still the owner's call under this policy.
     $this->actingAs($this->ann)->delete(route('atrium.dashboards.destroy', $dashboard))->assertRedirect();
 
-    expect(Dashboard::query()->whereKey($dashboard->id)->exists())->toBeFalse();
+    expect(DashboardModel::query()->whereKey($dashboard->id)->exists())->toBeFalse();
 });
 
 it('checks every placement a layout save removes against a widget policy swapped in the config', function (): void {
-    usePolicies([DashboardWidget::class => KeepWidgetsPolicy::class]);
+    usePolicies([DashboardWidgetModel::class => KeepWidgetsPolicy::class]);
 
     $dashboard = ownedDashboard($this->ann);
 

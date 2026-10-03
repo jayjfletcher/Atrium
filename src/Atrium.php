@@ -6,20 +6,20 @@ namespace JayI\Atrium;
 
 use Closure;
 use Illuminate\Http\Request;
-use JayI\Atrium\Access\Gatekeeper;
-use JayI\Atrium\Assets\StyleRegistry;
-use JayI\Atrium\Contracts\Plugin;
-use JayI\Atrium\Navigation\NavGroup;
-use JayI\Atrium\Navigation\NavigationRegistry;
-use JayI\Atrium\Navigation\NavItem;
-use JayI\Atrium\Plugins\PluginRegistry;
-use JayI\Atrium\Search\SearchRegistry;
-use JayI\Atrium\Search\SearchResult;
-use JayI\Atrium\Search\SearchSource;
-use JayI\Atrium\Settings\SettingsPanel;
-use JayI\Atrium\Settings\SettingsRegistry;
-use JayI\Atrium\Widgets\WidgetDefinition;
-use JayI\Atrium\Widgets\WidgetRegistry;
+use JayI\Atrium\Domains\Access\Services\Gatekeeper;
+use JayI\Atrium\Domains\Navigation\Data\NavGroup;
+use JayI\Atrium\Domains\Navigation\Data\NavItem;
+use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
+use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
+use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use JayI\Atrium\Domains\Search\Data\SearchResult;
+use JayI\Atrium\Domains\Search\Data\SearchSource;
+use JayI\Atrium\Domains\Search\Services\SearchRegistry;
+use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
+use JayI\Atrium\Domains\Settings\Services\SettingsRegistry;
+use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use JayI\Atrium\Support\StyleRegistry;
 
 class Atrium
 {

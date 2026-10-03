@@ -1,7 +1,8 @@
 <?php
 
 declare(strict_types=1);
-use JayI\Atrium\Search\SearchRegistry;
+use Illuminate\Database\Eloquent\Model;
+use JayI\Atrium\Domains\Search\Services\SearchRegistry;
 
 arch()->preset()->php();
 
@@ -16,3 +17,9 @@ arch('it will not use dd(), ddd(), env(), or exit()')
 arch('the package source declares strict types')
     ->expect('JayI\Atrium')
     ->toUseStrictTypes();
+
+arch('domain models are named for their entity and end in Model')
+    ->expect('JayI\Atrium\Domains\Dashboard\Models')
+    ->classes()
+    ->toExtend(Model::class)
+    ->toHaveSuffix('Model');
