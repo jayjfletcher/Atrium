@@ -3,6 +3,8 @@
     'source' => null,
     // One record's history; omit for the whole package's.
     'subject' => null,
+    // Only this action, or a prefix ending in a dot: `feature.`.
+    'action' => null,
     'limit' => 20,
     'title' => null,
 ])
@@ -18,7 +20,7 @@
 @php
     $trail = app(\JayI\Foundation\Audit\Contracts\AuditTrail::class);
     $page = $trail->available()
-        ? $trail->entries(\JayI\Foundation\Audit\Data\AuditFilter::make()->source($source)->subject($subject)->limit((int) $limit))
+        ? $trail->entries(\JayI\Foundation\Audit\Data\AuditFilter::make()->source($source)->subject($subject)->action($action)->limit((int) $limit))
         : null;
 @endphp
 
@@ -28,7 +30,7 @@
 
         @if ($page->nextCursor !== null && \Illuminate\Support\Facades\Route::has('atrium.keen.entries.index'))
             <x-slot:footer>
-                <a class="text-sm underline-offset-2 hover:underline" href="{{ route('atrium.keen.entries.index', array_filter(['source' => $source, 'subject_type' => $subject?->getMorphClass(), 'subject_id' => $subject?->getKey()])) }}">{{ __('atrium::atrium.audit_view_all') }}</a>
+                <a class="text-sm underline-offset-2 hover:underline" href="{{ route('atrium.keen.entries.index', array_filter(['source' => $source, 'action' => $action, 'subject_type' => $subject?->getMorphClass(), 'subject_id' => $subject?->getKey()])) }}">{{ __('atrium::atrium.audit_view_all') }}</a>
             </x-slot:footer>
         @endif
     </x-atrium::card>

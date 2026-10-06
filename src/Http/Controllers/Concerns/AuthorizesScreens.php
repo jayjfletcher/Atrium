@@ -17,9 +17,10 @@ trait AuthorizesScreens
 {
     /**
      * @param  Model|class-string<Model>  $subject
+     * @param  array<int, mixed>  $arguments  Further policy arguments, after the subject.
      */
-    protected function authorizeScreen(string $ability, Model|string $subject): void
+    protected function authorizeScreen(string $ability, Model|string $subject, array $arguments = []): void
     {
-        abort_unless(ScreenAccess::allows(app(PackageRegistry::class)->forOrFail(static::class)->key, $ability, $subject), 403);
+        abort_unless(ScreenAccess::allows(app(PackageRegistry::class)->forOrFail(static::class)->key, $ability, $subject, arguments: $arguments), 403);
     }
 }

@@ -108,3 +108,13 @@ it('renders a standalone guest page with the stylesheet', function (): void {
         ->toContain('data-testid="guest-layout"')
         ->toContain('Welcome');
 });
+
+it('renders nothing for flash with nothing to say', function (): void {
+    expect(trim(Blade::render('<x-atrium::flash />')))->toBe('');
+});
+
+it('renders a passed id once', function (string $control): void {
+    $html = Blade::render('<x-atrium::form.'.$control.' name="x" id="custom" />');
+
+    expect(substr_count($html, 'id="custom"'))->toBe(1);
+})->with(['input', 'select', 'textarea', 'checkbox']);

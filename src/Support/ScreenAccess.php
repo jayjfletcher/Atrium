@@ -21,12 +21,13 @@ final class ScreenAccess
 {
     /**
      * @param  Model|class-string<Model>  $subject
+     * @param  array<int, mixed>  $arguments  Further policy arguments, after the subject.
      */
-    public static function allows(string $package, string $ability, Model|string $subject, ?Request $request = null): bool
+    public static function allows(string $package, string $ability, Model|string $subject, ?Request $request = null, array $arguments = []): bool
     {
         $user = ($request ?? request())->user();
 
         return Authorizer::for(app(PackageRegistry::class)->get($package))
-            ->can($user instanceof Authenticatable ? $user : null, $ability, $subject);
+            ->can($user instanceof Authenticatable ? $user : null, $ability, $subject, $arguments);
     }
 }

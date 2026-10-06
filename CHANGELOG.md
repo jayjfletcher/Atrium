@@ -9,6 +9,10 @@
 - `Plugin::featuresFromConfig()`, `JayI\Atrium\Support\ScreenAccess` and the `AuthorizesScreens` controller trait, so a package's plugin and screens stop copying the same feature loading and policy checks.
 - A safelist of layout utilities in the compiled stylesheet, and `JayI\Atrium\Testing\AtriumStyles` for checking a package's views use only Atrium's styles.
 
+### Fixed
+
+- Form controls no longer render an `id` twice when one is passed.
+
 ### Changed
 
 - Atrium now stands on [jayi/foundation](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. The `Action` base, the `ActionStartingEvent`, `ActionFinishedEvent` and `ModelLifecycleEvent` contracts and the `DispatchesModelEvents` trait moved there: import them from `JayI\Foundation\...` instead of `JayI\Atrium\...`. Atrium registers itself as the `atrium` package.

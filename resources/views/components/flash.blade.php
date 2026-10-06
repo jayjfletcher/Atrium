@@ -7,17 +7,31 @@
     The flash status and validation error at the top of a screen:
     `session('status')` as a dismissible success alert, then the first error.
 --}}
-<div {{ $attributes->class('flex flex-col gap-4 empty:hidden') }}>@if (session('status'))<x-atrium::alert variant="success" dismissible data-testid="flash-status">{{ session('status') }}</x-atrium::alert>@endif
-@php($bag = $errors ?? null)
-@if ($bag !== null)
-    @if ($keys === null && $bag->any())
-        <x-atrium::alert variant="danger" data-testid="flash-error">{{ $bag->first() }}</x-atrium::alert>
-    @elseif ($keys !== null)
-        @foreach ((array) $keys as $key)
-            @if ($bag->has($key))
-                <x-atrium::alert variant="danger" data-testid="flash-error">{{ $bag->first($key) }}</x-atrium::alert>
-                @break
-            @endif
-        @endforeach
-    @endif
-@endif</div>
+@php
+    $bag = $errors ?? null;
+    $status = session('status');
+    $error = null;
+
+    if ($bag !== null && $keys === null) {
+        $error = $bag->any() ? $bag->first() : null;
+    } elseif ($bag !== null) {
+        foreach ((array) $keys as $key) {
+            if ($bag->has($key)) {
+                $error = $bag->first($key);
+                break;
+            }
+        }
+    }
+@endphp
+
+{{-- Nothing at all when there is nothing to say, so no gap is left behind. --}}
+@if ($status || $error)
+    <div {{ $attributes->class('flex flex-col gap-4') }}>
+        @if ($status)
+            <x-atrium::alert variant="success" dismissible data-testid="flash-status">{{ $status }}</x-atrium::alert>
+        @endif
+        @if ($error)
+            <x-atrium::alert variant="danger" data-testid="flash-error">{{ $error }}</x-atrium::alert>
+        @endif
+    </div>
+@endif

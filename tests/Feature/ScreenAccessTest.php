@@ -58,3 +58,15 @@ it('refuses a screen for the package its controller belongs to', function (): vo
 
     $this->actingAs($user)->get('/refund')->assertOk()->assertSee('refunded');
 });
+
+it('passes further policy arguments after the subject', function (): void {
+    app(PackageRegistry::class)->register(Package::make('billing', 'Billing')->authorization());
+    Gate::define('refund', fn (User $user, string $class, int $amount): bool => $amount < 100);
+
+    $user = new User;
+    $user->id = 1;
+    request()->setUserResolver(fn (): User => $user);
+
+    expect(ScreenAccess::allows('billing', 'refund', User::class, arguments: [50]))->toBeTrue()
+        ->and(ScreenAccess::allows('billing', 'refund', User::class, arguments: [500]))->toBeFalse();
+});

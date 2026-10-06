@@ -33,7 +33,7 @@
         rows="{{ $rows }}"
         @if ($required) required @endif
         @if ($resolvedError) aria-invalid="true" aria-describedby="{{ $id }}-error" @endif
-        {{ $attributes->class([
+        {{ $attributes->except('id')->class([
             'w-full rounded-radius border bg-surface px-3 py-2 text-sm text-on-surface-strong shadow-xs transition placeholder:text-on-surface/60 focus:outline-none focus:ring-3 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white/5 dark:text-on-surface-dark-strong dark:placeholder:text-on-surface-dark/60',
             'border-outline hover:border-on-surface/30 focus:border-primary focus:ring-primary/15 dark:border-outline-dark dark:hover:border-white/20 dark:focus:border-primary-dark dark:focus:ring-primary-dark/20' => ! $resolvedError,
             'border-danger focus:ring-danger/15' => (bool) $resolvedError,
