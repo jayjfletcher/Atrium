@@ -4,4 +4,5 @@ parameters:
         - src
         - config
         - database
+        - tests/Fixtures/Billing
     tmpDir: build/phpstan

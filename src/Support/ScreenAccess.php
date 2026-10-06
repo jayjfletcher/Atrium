@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace JayI\Atrium\Support;
+
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use JayI\Foundation\Auth\Authorizer;
+use JayI\Foundation\Packages\PackageRegistry;
+
+/**
+ * Whether the signed-in user may perform an ability in a package, asked the
+ * way that package's JSON API and MCP tools ask it: the same ability on the
+ * same model or model class, through its policies. Screens refuse with it and
+ * hide controls with it, so a control shows exactly when its action is
+ * allowed. With the package's `authorization` config key off, everything is.
+ */
+final class ScreenAccess
+{
+    /**
+     * @param  Model|class-string<Model>  $subject
+     */
+    public static function allows(string $package, string $ability, Model|string $subject, ?Request $request = null): bool
+    {
+        $user = ($request ?? request())->user();
+
+        return Authorizer::for(app(PackageRegistry::class)->get($package))
+            ->can($user instanceof Authenticatable ? $user : null, $ability, $subject);
+    }
+}

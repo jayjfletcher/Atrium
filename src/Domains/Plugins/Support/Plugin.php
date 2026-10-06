@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use JayI\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
 use JayI\Atrium\Domains\Search\Data\SearchSource;
 use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
+use Throwable;
 
 /**
  * Convenience base class providing no-op defaults for every optional
@@ -37,6 +38,33 @@ abstract class Plugin implements PluginContract
     public function features(): array
     {
         return [];
+    }
+
+    /**
+     * The features listed under a config key, such as `keystone.atrium.features`,
+     * that can be loaded. A feature class whose package is missing - a
+     * PennantPlus feature without jayi/pennantplus - fails to load with an
+     * Error rather than class_exists() answering false, so it is skipped.
+     *
+     * @return array<int, string>
+     */
+    protected function featuresFromConfig(string $key): array
+    {
+        $features = config($key, []);
+
+        return array_values(array_filter(
+            is_array($features) ? $features : [],
+            fn (mixed $feature): bool => is_string($feature) && (! str_contains($feature, '\\') || self::loads($feature)),
+        ));
+    }
+
+    private static function loads(string $class): bool
+    {
+        try {
+            return class_exists($class);
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     public function navigation(): array

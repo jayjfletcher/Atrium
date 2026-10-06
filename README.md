@@ -74,6 +74,12 @@ class BillingPlugin extends Plugin
 }
 ```
 
+### Shared plugin helpers
+
+- `$this->featuresFromConfig('billing.atrium.features')` in `features()` returns the features listed under a config key that can be loaded, skipping feature classes whose package (such as jayi/pennantplus) is missing.
+- `JayI\Atrium\Support\ScreenAccess::allows('billing', 'refund', $invoice)` asks a package's policies exactly as its JSON API and MCP tools do, honouring its `authorization` switch. Use it to hide controls.
+- The `JayI\Atrium\Http\Controllers\Concerns\AuthorizesScreens` trait gives a screen controller `$this->authorizeScreen('refund', $invoice)`, which answers 403 the same way for the package the controller belongs to.
+
 ### Registering the plugin
 
 Packages declare their plugin in `composer.json` and Atrium discovers it on install:

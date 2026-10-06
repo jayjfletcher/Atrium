@@ -6,6 +6,7 @@
 
 - Shared components so the packages of the suite need no markup or styles of their own: `description-list`, `chip`, `search-input`, `flash`, `banner`, `guest`, `form.combobox`, `form.actions`, a `bare` mode for form controls, and `prefix`/`suffix` slots on `form.input`.
 - History components that read the audit log through jayi/foundation's `AuditTrail`: `audit-trail`, `audit.entries` and `audit.changes`. `audit-trail` renders nothing until an audit log (jayi/keen) is installed.
+- `Plugin::featuresFromConfig()`, `JayI\Atrium\Support\ScreenAccess` and the `AuthorizesScreens` controller trait, so a package's plugin and screens stop copying the same feature loading and policy checks.
 - A safelist of layout utilities in the compiled stylesheet, and `JayI\Atrium\Testing\AtriumStyles` for checking a package's views use only Atrium's styles.
 
 ### Changed
