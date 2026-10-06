@@ -320,7 +320,7 @@ Event::listen(DashboardSavingEvent::class, function (DashboardSavingEvent $event
 });
 ```
 
-They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `JayI\Atrium\Support\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
+They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `JayI\Foundation\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
 
 ### Action events
 
@@ -354,7 +354,7 @@ Each family implements an interface in `JayI\Atrium\Contracts`, and Laravel deli
 | `ActionFinishedEvent` | every action finish |
 
 ```php
-use JayI\Atrium\Contracts\ActionFinishedEvent;
+use JayI\Foundation\Contracts\ActionFinishedEvent;
 
 Event::listen(ActionFinishedEvent::class, fn (ActionFinishedEvent $event) => Log::info(class_basename($event)));
 ```
@@ -427,7 +427,7 @@ The code is organised into domain modules under `src/Domains/{Domain}`, namespac
 | `Settings` | `Data\SettingsPanel`, `Services\SettingsRegistry` and the settings pages |
 | `Widgets` | `Data\WidgetDefinition` and `Services\WidgetRegistry` |
 
-Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Actions\Action` and `Http\Requests\Request` base classes, the event contracts in `Contracts`, and `Support` (`Icons`, `StyleRegistry`, the `DispatchesModelEvents` trait). Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
+Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Http\Requests\Request` base class, and `Support` (`Icons`, `StyleRegistry`). The `Action` base, the event contracts and the `DispatchesModelEvents` trait come from [jayi/foundation](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
 
 The models keep the class names they had before the move (`JayI\Atrium\Models\Dashboard`, `JayI\Atrium\Models\DashboardWidget`) as their morph aliases, so any polymorphic column or audit record that stored those names still resolves, and new records store the same values.
 

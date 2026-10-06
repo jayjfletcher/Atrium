@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use JayI\Atrium\Contracts\ActionFinishedEvent;
-use JayI\Atrium\Contracts\ActionStartingEvent;
-use JayI\Atrium\Contracts\ModelLifecycleEvent;
 use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
 use JayI\Atrium\Domains\Dashboard\Actions\DeleteDashboardAction;
 use JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
@@ -26,6 +23,9 @@ use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
 use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
 use JayI\Atrium\Tests\Fixtures\Models\TeamDashboard;
+use JayI\Foundation\Contracts\ActionFinishedEvent;
+use JayI\Foundation\Contracts\ActionStartingEvent;
+use JayI\Foundation\Contracts\ModelLifecycleEvent;
 use Workbench\App\Models\User;
 
 /**

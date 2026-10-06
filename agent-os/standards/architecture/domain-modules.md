@@ -18,7 +18,7 @@ src/Domains/{Domain}/
 ```
 
 - Domains: `Access`, `Dashboard`, `Navigation`, `Plugins`, `Search`, `Settings`, `Widgets`. Create a subdirectory only when it holds something.
-- Package-wide code stays at the top level: `Atrium`, `AtriumServiceProvider`, `Facades\Atrium`, `Actions\Action`, `Http\Requests\Request`, the event contracts in `Contracts\`, `Console\Commands\InstallCommand`, and `Support\` (`Icons`, `StyleRegistry`, `ServiceProvider`, `Models\Concerns\DispatchesModelEvents`).
+- Package-wide code stays at the top level: `Atrium`, `AtriumServiceProvider`, `Facades\Atrium`, `Http\Requests\Request`, `Console\Commands\InstallCommand`, and `Support\` (`Icons`, `StyleRegistry`, `ServiceProvider`). The `Action` base, event contracts and `DispatchesModelEvents` come from `jayi/foundation`.
 - Migrations stay in `database/migrations`, views in `resources/views`, translations in `lang`. There is one config file, `config/atrium.php`; domains read from it and never ship their own.
 
 ## Registration

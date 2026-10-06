@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
 use JayI\Atrium\Facades\Atrium;
-use JayI\Atrium\Support\Models\Concerns\DispatchesModelEvents;
+use JayI\Foundation\Models\Concerns\DispatchesModelEvents;
 
 /**
  * @property int $id

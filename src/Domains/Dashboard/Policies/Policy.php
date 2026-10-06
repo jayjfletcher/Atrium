@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace JayI\Atrium\Domains\Dashboard\Policies;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Gate;
 use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Foundation\Policies\Policy as BasePolicy;
 
 /**
  * Shared checks for the bundled policies.
@@ -14,7 +14,7 @@ use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
  * Each policy is registered from `atrium.policies`, so an application swaps
  * one by pointing its model at another class there.
  */
-abstract class Policy
+abstract class Policy extends BasePolicy
 {
     /**
      * Whether the user is the dashboard's owner.
@@ -32,6 +32,6 @@ abstract class Policy
      */
     protected function allowsOnDashboard(Model $user, string $ability, DashboardModel $dashboard, array $arguments = []): bool
     {
-        return Gate::forUser($user)->allows($ability, [$dashboard, ...$arguments]);
+        return $this->allowsOn($user, $ability, $dashboard, $arguments);
     }
 }

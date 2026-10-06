@@ -2,6 +2,10 @@
 
 ## [Unreleased](https://github.com/jayi/atrium/compare/v0.1.0...1.x)
 
+### Changed
+
+- Atrium now stands on [jayi/foundation](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. The `Action` base, the `ActionStartingEvent`, `ActionFinishedEvent` and `ModelLifecycleEvent` contracts and the `DispatchesModelEvents` trait moved there: import them from `JayI\Foundation\...` instead of `JayI\Atrium\...`. Atrium registers itself as the `atrium` package.
+
 ### Fixed
 
 - Opening a dashboard by its slug (`/atrium/d/{slug}`, which the dashboard switcher links to) no longer returns 404. The route parameter was bound to the dashboard model by id.

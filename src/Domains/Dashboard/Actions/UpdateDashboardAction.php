@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace JayI\Atrium\Domains\Dashboard\Actions;
 
 use Illuminate\Support\Facades\DB;
-use JayI\Atrium\Actions\Action;
 use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedActionEvent;
 use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatingActionEvent;
 use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use JayI\Foundation\Actions\Action;
 
 class UpdateDashboardAction extends Action
 {

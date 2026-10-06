@@ -18,6 +18,7 @@
     ],
     "require": {
         "php": "^8.4",
+        "jayi/foundation": "dev-main",
         "laravel/framework": "^13.0"
     },
     "require-dev": {
@@ -111,5 +112,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/jayjfletcher/Foundation.git"
+        }
+    ]
 }

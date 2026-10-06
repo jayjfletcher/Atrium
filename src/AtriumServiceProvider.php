@@ -4,22 +4,32 @@ declare(strict_types=1);
 
 namespace JayI\Atrium;
 
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
 use JayI\Atrium\Console\Commands\InstallCommand;
 use JayI\Atrium\Domains\DomainServiceProvider;
 use JayI\Atrium\Support\StyleRegistry;
+use JayI\Foundation\Packages\Package;
+use JayI\Foundation\Support\PackageServiceProvider;
 
-class AtriumServiceProvider extends ServiceProvider
+class AtriumServiceProvider extends PackageServiceProvider
 {
+    /**
+     * The dashboard always authorizes through the Gate: every screen acts
+     * as the signed-in user, unless `atrium.authorization` turns it off.
+     */
+    protected function definition(): Package
+    {
+        return Package::make('atrium', __NAMESPACE__)->label('Atrium')->authorization();
+    }
+
     /**
      * Register any application services.
      */
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/atrium.php', 'atrium');
+
+        $this->registerPackage();
 
         $this->app->singleton(StyleRegistry::class);
         $this->app->singleton(Atrium::class);
@@ -75,18 +85,5 @@ class AtriumServiceProvider extends ServiceProvider
         $this->commands([
             InstallCommand::class,
         ]);
-    }
-
-    /**
-     * Register the model policies from `atrium.policies` with the Gate.
-     */
-    protected function registerPolicies(): void
-    {
-        /** @var array<class-string, class-string> $policies */
-        $policies = $this->app->make(Repository::class)->get('atrium.policies', []);
-
-        foreach ($policies as $model => $policy) {
-            Gate::policy($model, $policy);
-        }
     }
 }
