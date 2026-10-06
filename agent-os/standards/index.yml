@@ -11,3 +11,7 @@ architecture:
 models:
   lifecycle-events:
     description: "DispatchesModelEvents trait maps every Eloquent hook to Domains\\{Domain}\\Events\\{Entity}{Hook}Event implementing ModelLifecycleEvent; lifecycle events for data concerns, ActionEvents for business logic"
+
+frontend:
+  components:
+    description: "Atrium owns every component and style of the first-party suite; packages use x-atrium components plus the safelisted utilities only, checked by AtriumStyles; third parties may still add CSS and component namespaces"

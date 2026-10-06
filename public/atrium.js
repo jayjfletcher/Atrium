@@ -50,6 +50,46 @@
      * before paint by the layout's head script, so every rail style is plain
      * CSS and nothing here has to run for the page to look right.
      */
+    /**
+     * <x-atrium::form.combobox>: a text field that filters suggestions as the
+     * user types, with arrow keys and Enter to pick one.
+     */
+    window.atriumCombobox = function (options, value) {
+        return {
+            options: options,
+            query: value === null || value === undefined ? '' : String(value),
+            open: false,
+            active: -1,
+            get matches() {
+                var needle = this.query.trim().toLowerCase()
+
+                return needle === '' ? this.options : this.options.filter(function (option) {
+                    return String(option).toLowerCase().indexOf(needle) !== -1
+                })
+            },
+            show: function () {
+                this.open = true
+                this.active = -1
+            },
+            move: function (step) {
+                if (! this.open) { this.show() }
+                var count = this.matches.length
+                if (count === 0) { return }
+                this.active = (this.active + step + count) % count
+            },
+            choose: function (event) {
+                if (! this.open || this.active < 0 || ! this.matches[this.active]) { return }
+                event.preventDefault()
+                this.pick(this.matches[this.active])
+            },
+            pick: function (option) {
+                this.query = option
+                this.open = false
+                this.active = -1
+            },
+        }
+    }
+
     window.atriumShell = function () {
         var closedGroups = []
 

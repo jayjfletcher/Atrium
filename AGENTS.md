@@ -34,6 +34,7 @@ These are recorded in full under `agent-os/standards/`; the short form:
 - Styling tokens are design tokens in `resources/css/atrium.css` (`--color-primary`, `--color-on-surface`, and so on), overridable at runtime through `config('atrium.theme')`.
 - Run `npm run build:css` after changing any Blade file, and commit the compiled `public/atrium.css`. The build regenerates the `@source` list, so new views are picked up automatically.
 - Test hooks use `data-testid` attributes, which the browser suite selects with `@name`.
+- **Atrium owns every component and style of the first-party suite.** Cortex, Impex, Keystone, Keen, PennantPlus, Polycart and Roster ship no stylesheet and no component namespace; their views use `x-atrium::*` components and the utility safelist in `resources/css/atrium.css` only, checked by `JayI\Atrium\Testing\AtriumStyles`. When a package screen needs new UI, add a generic component here. `Atrium::css()`, `Atrium::stylesheet()` and custom component namespaces remain for third-party packages. See `agent-os/standards/frontend/components.md`.
 
 ## Quick Commands
 

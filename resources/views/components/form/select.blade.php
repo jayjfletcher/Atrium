@@ -1,4 +1,7 @@
 @props([
+    // Just the control - no wrapper, label, hint or error text - for a
+    // table cell or an inline row that labels it some other way.
+    'bare' => false,
     'wrapper' => null,
     'label' => null,
     'name',
@@ -16,9 +19,9 @@
     $current = old($name, $selected);
 @endphp
 
-<div @class(['flex flex-col gap-1.5 text-on-surface dark:text-on-surface-dark', $wrapper ?? 'w-full'])>
-    @if ($label)
-        <label for="{{ $id }}" class="w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">
+<div @class(['flex flex-col gap-1.5 text-on-surface dark:text-on-surface-dark' => ! $bare, $wrapper ?? 'w-full' => ! $bare, 'contents' => $bare])>
+    @if ($label && ! $bare)
+        <label for=\"{{ $id }}\" class=\"w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">
             {{ $label }}
             @if ($required)
                 <span class="text-danger" aria-hidden="true">*</span>
@@ -52,11 +55,11 @@
         </svg>
     </div>
 
-    @if ($hint && ! $resolvedError)
+    @if ($hint && ! $resolvedError && ! $bare)
         <small class="text-xs text-on-surface/80 dark:text-on-surface-dark/80">{{ $hint }}</small>
     @endif
 
-    @if ($resolvedError)
+    @if ($resolvedError && ! $bare)
         <small id="{{ $id }}-error" class="text-xs text-danger">{{ $resolvedError }}</small>
     @endif
 </div>

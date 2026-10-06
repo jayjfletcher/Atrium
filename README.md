@@ -132,11 +132,15 @@ Components work anywhere in your application, inside the dashboard or outside it
 
 Available components:
 
-**Layout and content**: `card`, `section`, `page-header`, `empty-state`, `stat`, `table` (with `table.row` and `table.cell`), `pagination`, `breadcrumbs`
+**Layout and content**: `card`, `section`, `page-header`, `empty-state`, `stat`, `table` (with `table.row` and `table.cell`), `description-list` (with `description-list.item`), `pagination`, `breadcrumbs`, `guest` (a standalone page outside the shell)
 
-**Controls**: `button`, `icon-button`, `icon`, `badge`, `status-dot`, `kbd`, `avatar`, `toggle`, `tooltip`, `dropdown`, `modal`, `tabs`, `tab-panel`
+**Controls**: `button`, `icon-button`, `icon`, `badge`, `status-dot`, `chip`, `kbd`, `avatar`, `toggle`, `tooltip`, `dropdown`, `modal`, `tabs`, `tab-panel`, `search-input`
 
-**Feedback**: `alert`, `progress`, `spinner`, `skeleton`
+**Feedback**: `alert`, `flash` (the session status and first error), `banner` (with `banner.button`), `progress`, `spinner`, `skeleton`
+
+**Forms**: `form.input` (with `prefix` and `suffix` slots), `form.textarea`, `form.select`, `form.checkbox`, `form.radio`, `form.file`, `form.combobox`, `form.actions`. Pass `bare` to an input, textarea, select or checkbox for the control alone, such as in a table cell.
+
+**History**: `audit-trail` (a package's or one record's history, from the installed audit log), `audit.entries`, `audit.changes`
 
 ### Screen conventions
 
@@ -153,7 +157,20 @@ Tooltips are drawn on `<body>`, so tables and scrolling containers never clip th
 
 ### Package styles
 
-Atrium ships one precompiled stylesheet built from its own views, so a utility only your package uses (`w-48`, say) isn't in it. Add what you need from your service provider's `boot()`; it is emitted in the dashboard's `<head>`, after Atrium's stylesheet:
+Atrium ships one precompiled stylesheet built from its own views plus a safelist of layout utilities (grid columns, gaps, spacing, widths, text sizes and so on; see `resources/css/atrium.css`). The packages of the jayi suite ship no stylesheet or components of their own: their screens use Atrium's components and those utilities only, and each checks it with `JayI\Atrium\Testing\AtriumStyles`:
+
+```php
+use JayI\Atrium\Testing\AtriumStyles;
+
+it('uses only atrium styles', function (): void {
+    $views = dirname(__DIR__, 2).'/resources/views';
+
+    expect(AtriumStyles::missingClasses($views))->toBe([])
+        ->and(AtriumStyles::inlineStyles($views))->toBe([]);
+});
+```
+
+A third-party package may add its own styles instead. Add what you need from your service provider's `boot()`; it is emitted in the dashboard's `<head>`, after Atrium's stylesheet:
 
 ```php
 use JayI\Atrium\Facades\Atrium;
@@ -162,7 +179,7 @@ Atrium::css(file_get_contents(__DIR__.'/../resources/css/atrium.css'), 'billing'
 Atrium::stylesheet(asset('vendor/billing/billing.css'));                           // or a published file
 ```
 
-**Forms**: `form.input`, `form.textarea`, `form.select`, `form.checkbox`, `form.radio`, `form.file`
+Third-party packages may register their own Blade components too, under their own namespace.
 
 The markup is adapted from [Penguin UI](https://www.penguinui.com) under the MIT License. See [CREDITS.md](CREDITS.md).
 

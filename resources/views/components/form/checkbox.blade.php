@@ -1,4 +1,7 @@
 @props([
+    // Just the control - no wrapper, label, hint or error text - for a
+    // table cell or an inline row that labels it some other way.
+    'bare' => false,
     'wrapper' => null,
     'label' => null,
     'name',
@@ -13,7 +16,7 @@
     $resolvedError = $error ?? ($errors ?? null)?->first($name);
 @endphp
 
-<div @class(['flex flex-col gap-1 text-on-surface dark:text-on-surface-dark', $wrapper ?? 'w-full'])>
+<div @class(['flex flex-col gap-1 text-on-surface dark:text-on-surface-dark' => ! $bare, $wrapper ?? 'w-full' => ! $bare, 'contents' => $bare])>
     <div class="flex items-center gap-2">
         <input
             id="{{ $id }}"
@@ -29,11 +32,11 @@
         @endif
     </div>
 
-    @if ($hint && ! $resolvedError)
+    @if ($hint && ! $resolvedError && ! $bare)
         <small class="text-xs text-on-surface/80 dark:text-on-surface-dark/80">{{ $hint }}</small>
     @endif
 
-    @if ($resolvedError)
+    @if ($resolvedError && ! $bare)
         <small class="text-xs text-danger">{{ $resolvedError }}</small>
     @endif
 </div>

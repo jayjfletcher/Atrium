@@ -1,4 +1,7 @@
 @props([
+    // Just the control - no wrapper, label, hint or error text - for a
+    // table cell or an inline row that labels it some other way.
+    'bare' => false,
     'wrapper' => null,
     'label' => null,
     'name',
@@ -16,11 +19,16 @@
     // An input backed by a <datalist> is a combobox, so it wears the same
     // chevron as a select instead of the browser's own picker indicator.
     $hasList = $attributes->has('list');
+
+    // Addons beside the field, such as a currency or a unit: <x-slot:suffix>kg</x-slot:suffix>.
+    $hasPrefix = isset($prefix) && trim((string) $prefix) !== '';
+    $hasSuffix = isset($suffix) && trim((string) $suffix) !== '';
+    $addon = 'inline-flex shrink-0 items-center border border-outline bg-surface-alt px-3 text-sm text-on-surface dark:border-outline-dark dark:bg-white/5 dark:text-on-surface-dark';
 @endphp
 
-<div @class(['flex flex-col gap-1.5 text-on-surface dark:text-on-surface-dark', $wrapper ?? 'w-full'])>
-    @if ($label)
-        <label for="{{ $id }}" class="w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">
+<div @class(['flex flex-col gap-1.5 text-on-surface dark:text-on-surface-dark' => ! $bare, $wrapper ?? 'w-full' => ! $bare, 'contents' => $bare])>
+    @if ($label && ! $bare)
+        <label for=\"{{ $id }}\" class=\"w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">
             {{ $label }}
             @if ($required)
                 <span class="text-danger" aria-hidden="true">*</span>
@@ -28,7 +36,11 @@
         </label>
     @endif
 
-    <div class="relative">
+    <div @class(['relative', 'flex' => $hasPrefix || $hasSuffix])>
+        @if ($hasPrefix)
+            <span class="{{ $addon }} rounded-l-radius border-r-0">{{ $prefix }}</span>
+        @endif
+
         <input
             id="{{ $id }}"
             name="{{ $name }}"
@@ -41,8 +53,15 @@
                 'border-outline hover:border-on-surface/30 focus:border-primary focus:ring-primary/15 dark:border-outline-dark dark:hover:border-white/20 dark:focus:border-primary-dark dark:focus:ring-primary-dark/20' => ! $resolvedError,
                 'border-danger focus:ring-danger/15' => (bool) $resolvedError,
                 'pr-9 [&::-webkit-calendar-picker-indicator]:opacity-0' => $hasList,
+                'min-w-0 flex-1' => $hasPrefix || $hasSuffix,
+                'rounded-l-none' => $hasPrefix,
+                'rounded-r-none' => $hasSuffix,
             ]) }}
         />
+
+        @if ($hasSuffix)
+            <span class="{{ $addon }} rounded-r-radius border-l-0">{{ $suffix }}</span>
+        @endif
 
         @if ($hasList)
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="pointer-events-none absolute right-2.5 top-1/2 size-4 -translate-y-1/2 opacity-60" aria-hidden="true">
@@ -51,11 +70,11 @@
         @endif
     </div>
 
-    @if ($hint && ! $resolvedError)
+    @if ($hint && ! $resolvedError && ! $bare)
         <small class="text-xs text-on-surface/80 dark:text-on-surface-dark/80">{{ $hint }}</small>
     @endif
 
-    @if ($resolvedError)
+    @if ($resolvedError && ! $bare)
         <small id="{{ $id }}-error" class="text-xs text-danger">{{ $resolvedError }}</small>
     @endif
 </div>
