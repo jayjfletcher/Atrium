@@ -19,7 +19,15 @@
 
 @php
     $trail = app(\JayI\Foundation\Audit\Contracts\AuditTrail::class);
-    $page = $trail->available()
+    $package = $source === null ? null : app(\JayI\Foundation\Packages\PackageRegistry::class)->find($source);
+
+    // Shown only to those the package's history endpoint would answer.
+    $allowed = $package === null || app(\JayI\Foundation\Audit\History::class)->allows($package, auth()->user(), array_filter([
+        'subject_type' => $subject?->getMorphClass(),
+        'subject_id' => $subject === null ? null : (string) $subject->getKey(),
+    ]));
+
+    $page = $allowed && $trail->available()
         ? $trail->entries(\JayI\Foundation\Audit\Data\AuditFilter::make()->source($source)->subject($subject)->action($action)->limit((int) $limit))
         : null;
 @endphp

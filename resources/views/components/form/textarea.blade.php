@@ -1,6 +1,7 @@
 @props([
     // Just the control - no wrapper, label, hint or error text - for a
-    // table cell or an inline row that labels it some other way.
+    // table cell or an inline row that labels it some other way. `wrapper`
+    // then sizes the control itself.
     'bare' => false,
     'wrapper' => null,
     'label' => null,

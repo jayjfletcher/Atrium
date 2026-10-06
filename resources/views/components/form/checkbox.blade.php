@@ -7,6 +7,8 @@
     'name',
     'value' => 1,
     'checked' => false,
+    // The tick colour: `primary`, or `danger` for a destructive choice.
+    'accent' => 'primary',
     'hint' => null,
     'error' => null,
 ])
@@ -24,7 +26,7 @@
             type="checkbox"
             value="{{ $value }}"
             @checked(old($name, $checked))
-            {{ $attributes->except('id')->class('size-4 shrink-0 cursor-pointer appearance-none rounded-sm border border-outline bg-surface shadow-xs accent-primary checked:appearance-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/20 dark:bg-white/5 dark:accent-primary-dark') }}
+            {{ $attributes->except('id')->class(['size-4 shrink-0 cursor-pointer appearance-none rounded-sm border border-outline bg-surface shadow-xs checked:appearance-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/20 dark:bg-white/5', $accent === 'danger' ? 'accent-danger' : 'accent-primary dark:accent-primary-dark']) }}
         />
 
         @if ($label)

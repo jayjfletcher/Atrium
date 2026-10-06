@@ -12,6 +12,7 @@
 ### Fixed
 
 - Form controls no longer render an `id` twice when one is passed.
+- `audit-trail` shows a package's history only to those its history endpoint would answer.
 
 ### Changed
 

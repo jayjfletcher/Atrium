@@ -1,6 +1,7 @@
 @props([
     // Just the control - no wrapper, label, hint or error text - for a
-    // table cell or an inline row that labels it some other way.
+    // table cell or an inline row that labels it some other way. `wrapper`
+    // then sizes the control itself.
     'bare' => false,
     'wrapper' => null,
     'label' => null,
@@ -36,7 +37,7 @@
         </label>
     @endif
 
-    <div @class(['relative', 'flex' => $hasPrefix || $hasSuffix])>
+    <div @class(['relative', 'flex' => $hasPrefix || $hasSuffix, $wrapper => $bare && $wrapper])>
         @if ($hasPrefix)
             <span class="{{ $addon }} rounded-l-radius border-r-0">{{ $prefix }}</span>
         @endif

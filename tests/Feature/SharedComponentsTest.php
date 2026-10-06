@@ -118,3 +118,13 @@ it('renders a passed id once', function (string $control): void {
 
     expect(substr_count($html, 'id="custom"'))->toBe(1);
 })->with(['input', 'select', 'textarea', 'checkbox']);
+
+it('sizes a bare control with its wrapper', function (): void {
+    expect(Blade::render('<x-atrium::form.input name="qty" wrapper="w-24" bare />'))->toContain('class="relative w-24"');
+});
+
+it('colours a destructive checkbox', function (): void {
+    expect(Blade::render('<x-atrium::form.checkbox name="remove" accent="danger" bare />'))
+        ->toContain('accent-danger')
+        ->not->toContain('accent-primary');
+});

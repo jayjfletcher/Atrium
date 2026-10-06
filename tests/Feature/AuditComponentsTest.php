@@ -9,6 +9,8 @@ use JayI\Foundation\Audit\Contracts\AuditTrail;
 use JayI\Foundation\Audit\Data\AuditEntry;
 use JayI\Foundation\Audit\Data\AuditFilter;
 use JayI\Foundation\Audit\Data\AuditPage;
+use JayI\Foundation\Packages\Package;
+use JayI\Foundation\Packages\PackageRegistry;
 
 function auditEntry(string $source = 'keystone', array $changes = []): AuditEntry
 {
@@ -90,4 +92,25 @@ it('lists field changes with their old and new values', function (): void {
 
 it('says when no fields changed', function (): void {
     expect(Blade::render('<x-atrium::audit.changes :changes="[]" />'))->toContain('No fields changed.');
+});
+
+it('hides a package history from those its history endpoint would refuse', function (): void {
+    app()->instance(AuditTrail::class, new class implements AuditTrail
+    {
+        public function available(): bool
+        {
+            return true;
+        }
+
+        public function entries(AuditFilter $filter): AuditPage
+        {
+            return new AuditPage([auditEntry()]);
+        }
+    });
+
+    app(PackageRegistry::class)->register(
+        Package::make('keystone', 'Keystone')->authorizeHistory(fn (): bool => false),
+    );
+
+    expect(trim(Blade::render('<x-atrium::audit-trail source="keystone" />')))->toBe('');
 });
