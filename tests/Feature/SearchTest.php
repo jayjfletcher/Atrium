@@ -77,6 +77,16 @@ function pidSources(string ...$keys): void
 }
 
 /**
+ * The messages of the exceptions reported so far, Exceptions::fake() first.
+ *
+ * @return array<int, string>
+ */
+function reportedMessages(): array
+{
+    return array_map(fn (Throwable $e): string => $e->getMessage(), Exceptions::reported());
+}
+
+/**
  * Register sources that return the id of the signed-in user they ran as.
  */
 function whoamiSources(string ...$keys): void
@@ -275,7 +285,7 @@ it('runs sources in separate processes with the process driver', function (): vo
     $pids = searchTitles();
 
     // A child that failed is reported with its error output, so show it.
-    Exceptions::assertNothingReported();
+    expect(reportedMessages())->toBe([]);
 
     expect($pids)->toHaveCount(2)
         ->and($pids)->not->toContain((string) getmypid())
@@ -311,7 +321,7 @@ it('hands each process the signed-in user', function (): void {
         app(SearchRegistry::class)->search($request, 'x'),
     );
 
-    Exceptions::assertNothingReported();
+    expect(reportedMessages())->toBe([]);
 
     expect($titles)->toBe(['42', '42']);
 });
