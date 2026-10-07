@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace JayI\Atrium\Domains\Navigation\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use JayI\Atrium\Domains\Navigation\Data\NavGroup;
 use JayI\Atrium\Domains\Navigation\Data\NavItem;
+use JayI\Atrium\Domains\Navigation\Data\NavSection;
 use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
 use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 
@@ -63,6 +65,58 @@ class NavigationRegistry
         }
 
         return $groups;
+    }
+
+    /**
+     * The sidebar's rail: each page outside a group as its own entry, first,
+     * then each group, by the group's sort or else its first page's. A page
+     * outside a group that has sub-pages opens in the panel, as a group does.
+     *
+     * @return array<int, NavSection>
+     */
+    public function sections(Request $request): array
+    {
+        $described = $this->groups($request);
+        $single = [];
+        $groups = [];
+
+        foreach ($this->grouped($request) as $name => $items) {
+            if ($name === '') {
+                foreach ($items as $index => $item) {
+                    // A page with sub-pages opens in the panel like a group,
+                    // so its sub-pages stay reachable.
+                    $single[] = new NavSection('page-'.$index.'-'.Str::slug($item->label), $item->label, $item->icon, [$item], $item->children !== []);
+                }
+
+                continue;
+            }
+
+            $group = $described[$name] ?? null;
+
+            $groups[] = [
+                'sort' => $group->sort ?? $items[0]->sort,
+                'section' => new NavSection('group-'.Str::slug($name), $name, $group->icon ?? $this->firstIcon($items), $items, true),
+            ];
+        }
+
+        // Stable: groups that tie keep the order their pages gave them.
+        usort($groups, fn (array $a, array $b): int => $a['sort'] <=> $b['sort']);
+
+        return [...$single, ...array_column($groups, 'section')];
+    }
+
+    /**
+     * @param  array<int, NavItem>  $items
+     */
+    protected function firstIcon(array $items): ?string
+    {
+        foreach ($items as $item) {
+            if ($item->icon !== null) {
+                return $item->icon;
+            }
+        }
+
+        return null;
     }
 
     /**

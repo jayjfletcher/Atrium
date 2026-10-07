@@ -25,7 +25,9 @@
     @stack('atrium-head')
 </head>
 <body class="bg-canvas text-on-surface antialiased dark:bg-canvas-dark dark:text-on-surface-dark">
-<div class="flex h-dvh" x-data="atriumShell()" x-on:keydown.escape.window="drawer = false">
+@php($atriumSections = \JayI\Atrium\Facades\Atrium::navigationSections(request()))
+@php($atriumCurrentSection = collect($atriumSections)->first(fn ($section) => $section->grouped && $section->isActive(request()))?->key)
+<div class="flex h-dvh" x-data="atriumShell(@js($atriumCurrentSection))" x-on:keydown.escape.window="drawer = false">
     <a class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-radius focus:bg-surface focus:px-3 focus:py-2 dark:focus:bg-surface-dark" href="#atrium-main">
         {{ __('atrium::atrium.skip_to_content') }}
     </a>
@@ -34,46 +36,14 @@
     <div class="fixed inset-0 z-30 bg-zinc-950/40 backdrop-blur-sm lg:hidden"
          x-show="drawer" x-cloak x-transition.opacity x-on:click="drawer = false"></div>
 
-    {{-- Sidebar: an off-canvas drawer below lg, a full or icon-only rail above --}}
+    {{-- Sidebar: a rail of sections and, docked beside it, the current
+         section's pages. Below lg both sit in an off-canvas drawer. --}}
     <aside
         data-testid="sidebar"
-        class="fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col bg-canvas transition-[translate,width] duration-200 ease-out max-lg:-translate-x-full max-lg:data-open:translate-x-0 max-lg:data-open:shadow-2xl lg:static lg:w-60 rail:w-16 dark:bg-canvas-dark"
+        class="fixed inset-y-0 left-0 z-40 flex shrink-0 bg-canvas transition-transform duration-200 ease-out max-lg:-translate-x-full max-lg:data-open:translate-x-0 max-lg:data-open:shadow-2xl lg:static dark:bg-canvas-dark"
         :data-open="drawer"
     >
-        <div class="flex h-14 shrink-0 items-center gap-2.5 overflow-hidden px-5 rail:justify-center rail:px-0">
-            @if (! empty($brand))
-                {{ $brand }}
-            @else
-                <a href="{{ route('atrium.dashboard') }}" class="flex min-w-0 items-center gap-2.5 font-semibold text-on-surface-strong dark:text-on-surface-dark-strong">
-                    <span class="grid size-7 shrink-0 place-items-center rounded-radius bg-primary text-sm text-on-primary shadow-xs dark:bg-primary-dark dark:text-on-primary-dark" aria-hidden="true">
-                        {{ mb_strtoupper(mb_substr((string) config('app.name'), 0, 1)) }}
-                    </span>
-                    <span class="truncate text-sm rail:sr-only">{{ config('app.name') }}</span>
-                </a>
-            @endif
-        </div>
-
-        @include('atrium::partials.navigation')
-
-        @if (! empty($sidebarFooter))
-            <div class="shrink-0 border-t border-outline px-4 py-3 rail:px-2 dark:border-outline-dark">{{ $sidebarFooter }}</div>
-        @endif
-
-        <div class="hidden shrink-0 p-3 lg:block rail:px-2">
-            <button type="button" data-testid="sidebar-toggle"
-                    class="flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-radius px-2.5 text-sm font-medium text-on-surface transition-colors hover:bg-on-surface-strong/5 hover:text-on-surface-strong rail:justify-center rail:px-0 dark:text-on-surface-dark dark:hover:bg-white/5 dark:hover:text-on-surface-dark-strong"
-                    x-on:click="toggleCollapsed()"
-                    :aria-label="collapsed ? @js(__('atrium::atrium.expand_sidebar')) : @js(__('atrium::atrium.collapse_sidebar'))"
-                    :aria-expanded="(! collapsed).toString()"
-                    data-flyout="{{ json_encode(['label' => __('atrium::atrium.expand_sidebar'), 'badge' => null, 'children' => []]) }}"
-                    x-on:mouseenter="peek($el)" x-on:mouseleave="unpeek()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" class="size-[18px] shrink-0 transition-transform rail:rotate-180" aria-hidden="true">
-                    <rect x="3" y="4" width="18" height="16" rx="2.5" />
-                    <path stroke-linecap="round" d="M9 4v16M15.5 10 13.5 12l2 2" />
-                </svg>
-                <span class="truncate rail:sr-only">{{ __('atrium::atrium.collapse_sidebar') }}</span>
-            </button>
-        </div>
+        @include('atrium::partials.navigation', ['sections' => $atriumSections, 'currentSection' => $atriumCurrentSection])
     </aside>
 
     {{-- Rail flyout: an item's label, and its children, beside the icon rail --}}

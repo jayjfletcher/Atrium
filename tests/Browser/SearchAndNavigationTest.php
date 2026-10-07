@@ -15,12 +15,38 @@ beforeEach(function (): void {
     app(PluginRegistry::class)->registerMany([AlphaPlugin::class, BrowserPlugin::class]);
 });
 
-it('shows plugin navigation grouped in the sidebar', function (): void {
+it('docks the current section\'s pages beside the rail', function (): void {
+    // Browser Page is /atrium, so the Testing section is the one in view.
     visit('/atrium')
+        ->assertSee('TESTING')
+        ->assertSee('Browser Page')
+        ->assertDontSee('Alpha Home')
+        ->assertPresent('[data-testid="nav-section"][aria-label="Main"]');
+});
+
+it('switches the docked section from the rail without leaving the page', function (): void {
+    visit('/atrium')
+        ->click('[data-testid="nav-section"][aria-label="Main"]')
         ->assertSee('MAIN')
         ->assertSee('Alpha Home')
-        ->assertSee('TESTING')
-        ->assertSee('Browser Page');
+        ->assertDontSee('Browser Page')
+        ->assertPathIs('/atrium');
+});
+
+it('previews another section\'s pages on hover', function (): void {
+    visit('/atrium')
+        ->hover('[data-testid="nav-section"][aria-label="Main"]')
+        ->assertPresent('@nav-flyout')
+        ->assertSeeIn('@nav-flyout', 'Alpha Home');
+});
+
+it('collapses to the rail and reopens on a section', function (): void {
+    visit('/atrium')
+        ->click('@sidebar-toggle')
+        ->assertDontSee('Browser Page')
+        ->click('[data-testid="nav-section"][aria-label="Main"]')
+        ->assertScript('document.documentElement.dataset.atriumSidebar === undefined', true)
+        ->assertSee('Alpha Home');
 });
 
 it('returns results from a plugin search source as you type', function (): void {

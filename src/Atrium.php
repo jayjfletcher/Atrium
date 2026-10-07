@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use JayI\Atrium\Domains\Access\Services\Gatekeeper;
 use JayI\Atrium\Domains\Navigation\Data\NavGroup;
 use JayI\Atrium\Domains\Navigation\Data\NavItem;
+use JayI\Atrium\Domains\Navigation\Data\NavSection;
 use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
 use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
 use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
@@ -166,6 +167,16 @@ class Atrium
     public function navigationGroups(?Request $request = null): array
     {
         return $this->navigation->grouped($request ?? request());
+    }
+
+    /**
+     * The sidebar rail's entries: single pages, then sections of pages.
+     *
+     * @return array<int, NavSection>
+     */
+    public function navigationSections(?Request $request = null): array
+    {
+        return $this->navigation->sections($request ?? request());
     }
 
     /**

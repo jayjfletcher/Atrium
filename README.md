@@ -282,7 +282,26 @@ Dark mode follows a `dark` class on `<html>`. The topbar's appearance menu switc
 
 ## Sidebar
 
-On large screens the sidebar collapses to an icon rail from the toggle at its foot, and stays collapsed across pages. In the rail, hovering an item shows its label, badge, and a menu of its children. Give nav items an `icon()` (any inline SVG); an item without one shows its initial in the rail. Group headings fold their items away, and an item with `children()` expands in place.
+The sidebar has two levels, so a dashboard with many packages stays readable:
+
+- **The rail** holds one icon per section. Pages outside any group (the app's own) come first, each linking straight to its page; then one icon per group, such as each package's.
+- **The docked panel** beside it lists the pages of the section you are in. Clicking another section's icon shows its pages in the panel without leaving the page; hovering an icon previews its pages in a flyout.
+- The toggle at the rail's foot collapses the panel away, leaving the rail, across pages. Clicking a section opens it again. Below the `lg` breakpoint both sit in an off-canvas drawer.
+
+Items join a section with `NavItem::group('Billing')`. Describe the group to give its section an icon and a place in the rail; otherwise it uses its first page's icon and sorts by its first page:
+
+```php
+use JayI\Atrium\Domains\Navigation\Data\NavGroup;
+use JayI\Atrium\Support\Icons;
+
+// In a plugin
+public function navigationGroups(): array
+{
+    return [NavGroup::make('Billing')->icon(Icons::svg('banknotes'))->sort(30)];
+}
+```
+
+Give nav items an `icon()` (any inline SVG); a section without one shows its initial. A page outside any group that has `children()` opens in the panel like a group, and in the panel an item with children expands in place.
 
 ### Who sees what
 

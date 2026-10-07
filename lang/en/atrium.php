@@ -16,6 +16,7 @@ return [
     'theme_atrium' => 'Atrium',
     'theme_harbor' => 'Harbor',
     'primary_navigation' => 'Primary navigation',
+    'section_navigation' => 'Section navigation',
     'breadcrumbs' => 'Breadcrumbs',
     'search' => 'Search',
     'search_placeholder' => 'Search…',

@@ -4,6 +4,7 @@
 
 ### Added
 
+- A two-level sidebar: a rail of sections (the app's own pages, then one icon per group) and a docked panel with the current section's pages. Clicking a section shows its pages without leaving the page, and hovering previews them. `NavGroup` gains `icon()` and `sort()` for its place in the rail. `Atrium::navigationSections()` lists the rail's entries.
 - A per-package audit log page at `atrium.history.show` (`/atrium/history/{package}`), with filters and paging, and `Plugin::historyNavItem()` to link it from a plugin's sidebar group. History panels link to it.
 - Themes: a second built-in theme, **Harbor**, beside the default **Atrium**; themes from `atrium.themes.available` and `Atrium::theme()`; and a theme switcher beside the light/dark toggle, shown behind the `atrium.themes.switcher_feature` feature (jayi/pennantplus's `ThemeSwitcherFeature` by default).
 - Shared components so the packages of the suite need no markup or styles of their own: `description-list`, `chip`, `search-input`, `flash`, `banner`, `guest`, `form.combobox`, `form.actions`, a `bare` mode for form controls, and `prefix`/`suffix` slots on `form.input`.

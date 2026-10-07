@@ -90,17 +90,17 @@
         }
     }
 
-    window.atriumShell = function () {
-        var closedGroups = []
-
-        try {
-            closedGroups = JSON.parse(recall('atrium.nav-groups') || '[]')
-        } catch (error) {}
-
+    /**
+     * The shell: the off-canvas drawer, the collapsed sidebar, and which
+     * section's pages the docked panel shows. `current` is the section the
+     * page belongs to; clicking another section's rail icon shows its pages
+     * instead, without leaving the page.
+     */
+    window.atriumShell = function (current) {
         return {
             drawer: false,
             collapsed: document.documentElement.dataset.atriumSidebar === 'collapsed',
-            closedGroups: closedGroups,
+            section: current || null,
             flyout: null,
             hideTimer: null,
 
@@ -117,20 +117,28 @@
                 remember('atrium.sidebar', this.collapsed ? 'collapsed' : null)
             },
 
-            isGroupOpen: function (name) {
-                return this.closedGroups.indexOf(name) === -1
-            },
+            /**
+             * Dock a section's pages in the panel, opening the sidebar if it
+             * was collapsed to the rail.
+             */
+            selectSection: function (key) {
+                this.flyout = null
 
-            toggleGroup: function (name) {
-                var index = this.closedGroups.indexOf(name)
-
-                if (index === -1) {
-                    this.closedGroups.push(name)
-                } else {
-                    this.closedGroups.splice(index, 1)
+                if (this.isRail()) {
+                    this.toggleCollapsed()
                 }
 
-                remember('atrium.nav-groups', JSON.stringify(this.closedGroups))
+                this.section = key
+            },
+
+            /**
+             * Preview a rail entry beside it: a section's pages, or a single
+             * page's name. The section already docked in the panel needs none.
+             */
+            previewSection: function (element, key) {
+                if (key !== null && key === this.section && !this.isRail()) return
+
+                this.showFlyout(element)
             },
 
             /** Whether the sidebar is currently showing as the icon rail. */
@@ -146,6 +154,10 @@
             peek: function (element) {
                 if (!this.isRail()) return
 
+                this.showFlyout(element)
+            },
+
+            showFlyout: function (element) {
                 clearTimeout(this.hideTimer)
 
                 var rect = element.getBoundingClientRect()
