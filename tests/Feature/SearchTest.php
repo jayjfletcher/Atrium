@@ -5,10 +5,12 @@ declare(strict_types=1);
 use Carbon\CarbonInterval;
 use Illuminate\Auth\GenericUser;
 use Illuminate\Concurrency\SyncDriver;
+use Illuminate\Console\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Concurrency;
 use Illuminate\Support\Facades\Exceptions;
+use Illuminate\Support\Facades\Process;
 use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Domains\Search\Data\SearchResult;
 use JayI\Atrium\Domains\Search\Data\SearchSource;
@@ -34,6 +36,14 @@ beforeEach(function (): void {
     // so make sure it is there for the children and tidy up afterwards.
     $this->vendor = new UsesVendor;
     $this->vendor->beforeEach($this->app);
+
+    // Creating the link refreshes package discovery, which clears the
+    // skeleton's cached manifests. Rebuild them with one child first, or the
+    // concurrent children all write them at once, and on Windows one of the
+    // simultaneous renames fails and takes that child down.
+    if ($this->vendor->vendorSymlinkCreated) {
+        Process::path(base_path())->run(Application::formatCommandString('--version'))->throw();
+    }
 });
 
 afterEach(function (): void {
@@ -256,11 +266,16 @@ it('returns an empty payload for a blank query', function (): void {
 });
 
 it('runs sources in separate processes with the process driver', function (): void {
+    Exceptions::fake();
+
     config()->set('atrium.search.concurrency', 'process');
 
     pidSources('one', 'two');
 
     $pids = searchTitles();
+
+    // A child that failed is reported with its error output, so show it.
+    Exceptions::assertNothingReported();
 
     expect($pids)->toHaveCount(2)
         ->and($pids)->not->toContain((string) getmypid())
@@ -282,6 +297,8 @@ it('builds result links for the host the user is on, in every process', function
 });
 
 it('hands each process the signed-in user', function (): void {
+    Exceptions::fake();
+
     config()->set('atrium.search.concurrency', 'process');
 
     whoamiSources('one', 'two');
@@ -293,6 +310,8 @@ it('hands each process the signed-in user', function (): void {
         fn (SearchResult $result): string => $result->title,
         app(SearchRegistry::class)->search($request, 'x'),
     );
+
+    Exceptions::assertNothingReported();
 
     expect($titles)->toBe(['42', '42']);
 });
