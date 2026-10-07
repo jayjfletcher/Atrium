@@ -18,6 +18,18 @@ abstract class BrowserTestCase extends TestCase
         $this->publishAtriumAssets();
     }
 
+    /**
+     * Search sources run in the request here. The process driver spawns a PHP
+     * process per source, which is slow and environment-sensitive on CI
+     * runners and makes typing-and-seeing tests flaky; SearchTest covers it.
+     */
+    protected function defineEnvironment($app): void
+    {
+        parent::defineEnvironment($app);
+
+        $app['config']->set('atrium.search.concurrency', 'sync');
+    }
+
     protected function publishAtriumAssets(): void
     {
         $target = public_path('vendor/atrium');
