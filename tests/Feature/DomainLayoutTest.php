@@ -8,6 +8,7 @@ use JayI\Atrium\Domains\Dashboard\DashboardServiceProvider;
 use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
 use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
 use JayI\Atrium\Domains\DomainServiceProvider;
+use JayI\Atrium\Domains\History\HistoryServiceProvider;
 use JayI\Atrium\Domains\Navigation\NavigationServiceProvider;
 use JayI\Atrium\Domains\Plugins\PluginsServiceProvider;
 use JayI\Atrium\Domains\Search\SearchServiceProvider;
@@ -21,6 +22,7 @@ it('registers every domain service provider', function (string $provider): void 
     DomainServiceProvider::class,
     AccessServiceProvider::class,
     DashboardServiceProvider::class,
+    HistoryServiceProvider::class,
     NavigationServiceProvider::class,
     PluginsServiceProvider::class,
     SearchServiceProvider::class,

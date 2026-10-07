@@ -6,9 +6,13 @@ namespace JayI\Atrium\Domains\Plugins\Support;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use JayI\Atrium\Domains\Navigation\Data\NavItem;
 use JayI\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
 use JayI\Atrium\Domains\Search\Data\SearchSource;
 use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
+use JayI\Atrium\Support\Icons;
+use JayI\Foundation\Audit\History;
+use JayI\Foundation\Packages\PackageRegistry;
 use Throwable;
 
 /**
@@ -65,6 +69,27 @@ abstract class Plugin implements PluginContract
         } catch (Throwable) {
             return false;
         }
+    }
+
+    /**
+     * A navigation item for a package's own audit log, at
+     * `atrium.history.show`. It shows only while an audit log (jayi/keen) is
+     * installed and the user may read the package's history, as the
+     * package's history endpoint decides:
+     *
+     *     $this->historyNavItem('roster')->group(__('Roster'))->sort(50),
+     */
+    protected function historyNavItem(string $package): NavItem
+    {
+        return NavItem::make(__('atrium::atrium.audit_log'))
+            ->icon(Icons::svg('clipboard-document-list'))
+            ->route('atrium.history.show', ['package' => $package])
+            ->authorize(function (Request $request) use ($package): bool {
+                $definition = app(PackageRegistry::class)->find($package);
+                $history = app(History::class);
+
+                return $definition !== null && $history->available() && $history->allows($definition, $request->user(), []);
+            });
     }
 
     public function navigation(): array

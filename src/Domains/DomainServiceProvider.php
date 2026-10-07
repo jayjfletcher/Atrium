@@ -7,6 +7,7 @@ namespace JayI\Atrium\Domains;
 use Illuminate\Support\ServiceProvider;
 use JayI\Atrium\Domains\Access\AccessServiceProvider;
 use JayI\Atrium\Domains\Dashboard\DashboardServiceProvider;
+use JayI\Atrium\Domains\History\HistoryServiceProvider;
 use JayI\Atrium\Domains\Navigation\NavigationServiceProvider;
 use JayI\Atrium\Domains\Plugins\PluginsServiceProvider;
 use JayI\Atrium\Domains\Search\SearchServiceProvider;
@@ -24,6 +25,7 @@ class DomainServiceProvider extends ServiceProvider
     private array $providers = [
         AccessServiceProvider::class,
         DashboardServiceProvider::class,
+        HistoryServiceProvider::class,
         NavigationServiceProvider::class,
         PluginsServiceProvider::class,
         SearchServiceProvider::class,

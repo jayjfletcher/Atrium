@@ -38,9 +38,10 @@
     <x-atrium::card :title="$title ?? __('atrium::atrium.audit_history')" :padded="false" {{ $attributes->merge(['data-testid' => 'audit-trail']) }}>
         <x-atrium::audit.entries :entries="$page->entries" :without-subject="$subject !== null" />
 
-        @if ($page->nextCursor !== null && \Illuminate\Support\Facades\Route::has('atrium.keen.entries.index'))
+        {{-- The package's own audit log, filtered to what this panel shows. --}}
+        @if ($page->nextCursor !== null && $package !== null)
             <x-slot:footer>
-                <a class="text-sm underline-offset-2 hover:underline" href="{{ route('atrium.keen.entries.index', array_filter(['source' => $source, 'action' => $action, 'subject_type' => $subject?->getMorphClass(), 'subject_id' => $subject?->getKey(), 'scope_type' => $scope?->getMorphClass(), 'scope_id' => $scope?->getKey()])) }}">{{ __('atrium::atrium.audit_view_all') }}</a>
+                <a class="text-sm underline-offset-2 hover:underline" data-testid="audit-trail-all" href="{{ route('atrium.history.show', [$package->key, ...array_filter(['action' => $action, 'subject_type' => $subject?->getMorphClass(), 'subject_id' => $subject?->getKey()])]) }}">{{ __('atrium::atrium.audit_view_all') }}</a>
             </x-slot:footer>
         @endif
     </x-atrium::card>

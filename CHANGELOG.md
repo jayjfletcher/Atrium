@@ -4,6 +4,7 @@
 
 ### Added
 
+- A per-package audit log page at `atrium.history.show` (`/atrium/history/{package}`), with filters and paging, and `Plugin::historyNavItem()` to link it from a plugin's sidebar group. History panels link to it.
 - Themes: a second built-in theme, **Harbor**, beside the default **Atrium**; themes from `atrium.themes.available` and `Atrium::theme()`; and a theme switcher beside the light/dark toggle, shown behind the `atrium.themes.switcher_feature` feature (jayi/pennantplus's `ThemeSwitcherFeature` by default).
 - Shared components so the packages of the suite need no markup or styles of their own: `description-list`, `chip`, `search-input`, `flash`, `banner`, `guest`, `form.combobox`, `form.actions`, a `bare` mode for form controls, and `prefix`/`suffix` slots on `form.input`.
 - History components that read the audit log through jayi/foundation's `AuditTrail`: `audit-trail`, `audit.entries` and `audit.changes`. `audit-trail` renders nothing until an audit log (jayi/keen) is installed.

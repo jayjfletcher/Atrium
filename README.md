@@ -80,6 +80,22 @@ class BillingPlugin extends Plugin
 - `JayI\Atrium\Support\ScreenAccess::allows('billing', 'refund', $invoice)` asks a package's policies exactly as its JSON API and MCP tools do, honouring its `authorization` switch. Use it to hide controls.
 - The `JayI\Atrium\Http\Controllers\Concerns\AuthorizesScreens` trait gives a screen controller `$this->authorizeScreen('refund', $invoice)`, which answers 403 the same way for the package the controller belongs to.
 
+### A package's own audit log
+
+With an audit log installed ([jayi/keen](https://github.com/jayjfletcher/Keen)), every package has its own log at `/atrium/history/{package}`: its entries, newest first, filtered by action or record. Add a link to it in your plugin's sidebar group:
+
+```php
+public function navigation(): array
+{
+    return [
+        // ...
+        $this->historyNavItem('billing')->group('Billing')->sort(90),
+    ];
+}
+```
+
+The link and the page show only while an audit log is installed and the user may read the package's history, as its history endpoint decides. `<x-atrium::audit-trail>` panels link to the same page.
+
 ### Registering the plugin
 
 Packages declare their plugin in `composer.json` and Atrium discovers it on install:

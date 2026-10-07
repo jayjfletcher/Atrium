@@ -90,6 +90,7 @@
 @source '../views/dashboard/picker.blade.php';
 @source '../views/dashboard/switcher.blade.php';
 @source '../views/dashboard/widget.blade.php';
+@source '../views/history/show.blade.php';
 @source '../views/layouts/app.blade.php';
 @source '../views/partials/appearance.blade.php';
 @source '../views/partials/nav-item.blade.php';

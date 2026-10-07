@@ -57,5 +57,14 @@ return [
     'audit_before' => 'Before',
     'audit_after' => 'After',
     'audit_view_all' => 'View all',
+    'audit_log' => 'Audit log',
+    'audit_log_for' => ':package audit log',
+    'audit_action_hint' => 'Exact, or a prefix ending in a dot: product.',
+    'audit_subject_type' => 'Record type',
+    'audit_subject_id' => 'Record key',
+    'audit_filter' => 'Filter',
+    'audit_clear' => 'Clear',
+    'audit_newest' => 'Newest',
+    'audit_older' => 'Older',
 
 ];
