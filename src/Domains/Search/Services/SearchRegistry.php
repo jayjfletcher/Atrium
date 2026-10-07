@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Concurrency;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
 use JayI\Atrium\Domains\Search\Data\SearchResult;
 use JayI\Atrium\Domains\Search\Data\SearchSource;
@@ -255,7 +256,9 @@ class SearchRegistry
         $payload = json_decode($output, true);
 
         if ($process->failed() || ! is_array($payload) || ($payload['successful'] ?? false) !== true || ! is_string($payload['result'] ?? null)) {
-            $reason = is_array($payload) && is_string($payload['message'] ?? null) ? $payload['message'] : $process->errorOutput();
+            $reason = is_array($payload) && is_string($payload['message'] ?? null)
+                ? $payload['message']
+                : sprintf('exit code %s; output: %s; errors: %s', $process->exitCode() ?? 'none', Str::limit(trim($output), 500), Str::limit(trim($process->errorOutput()), 1000));
 
             report(new RuntimeException("Search source [{$source->key}] failed: {$reason}"));
 
