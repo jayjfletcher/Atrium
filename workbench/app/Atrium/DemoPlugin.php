@@ -85,8 +85,9 @@ class DemoPlugin extends Plugin
     public function navigationGroups(): array
     {
         return [
-            NavGroup::make('Insights')->feature('reports')->can('viewReports'),
-            NavGroup::make('Administration')->can('administer'),
+            NavGroup::make('Workspace')->icon(Icons::svg('briefcase'))->sort(10),
+            NavGroup::make('Insights')->icon(Icons::svg('chart-pie'))->sort(20)->feature('reports')->can('viewReports'),
+            NavGroup::make('Administration')->icon(Icons::svg('cog-6-tooth'))->sort(30)->can('administer'),
         ];
     }
 
