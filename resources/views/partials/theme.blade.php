@@ -7,32 +7,34 @@
     $atriumThemeKeys = $atriumSwitchable ? array_keys($atriumThemes->all()) : array_filter([$atriumDefaultTheme]);
 @endphp
 
-{{-- Runs before the stylesheet paints, so a stored dark preference, theme or
-     collapsed sidebar never flashes the wrong state on load. atrium.js owns
-     changing them afterwards. --}}
+{{-- Runs before the stylesheet paints, so a stored dark preference, theme,
+     its layout, or a collapsed sidebar never flashes the wrong state on load.
+     atrium.js owns changing them afterwards. --}}
 <script>
     (function () {
-        var root = document.documentElement
-        var mode = null
-        var palette = null
-        var sidebar = null
-        var themes = @js(array_values($atriumThemeKeys))
+        var root = document.documentElement;
+        var mode = null;
+        var palette = null;
+        var sidebar = null;
+        var themes = @js(array_values($atriumThemeKeys));
+        var layouts = @js(array_intersect_key($atriumThemes->layouts(), array_flip($atriumThemeKeys)));
 
         try {
-            mode = localStorage.getItem('atrium.theme')
-            palette = localStorage.getItem('atrium.palette')
-            sidebar = localStorage.getItem('atrium.sidebar')
+            mode = localStorage.getItem('atrium.theme');
+            palette = localStorage.getItem('atrium.palette');
+            sidebar = localStorage.getItem('atrium.sidebar');
         } catch (error) {}
 
-        var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-        root.classList.toggle('dark', dark)
-        root.dataset.atriumTheme = themes.indexOf(palette) !== -1 ? palette : @js($atriumDefaultTheme)
+        root.classList.toggle('dark', dark);
+        root.dataset.atriumTheme = themes.indexOf(palette) !== -1 ? palette : @js($atriumDefaultTheme);
+        root.dataset.atriumLayout = layouts[root.dataset.atriumTheme] || 'sidebar';
 
         if (sidebar === 'collapsed') {
-            root.dataset.atriumSidebar = 'collapsed'
+            root.dataset.atriumSidebar = 'collapsed';
         }
-    })()
+    })();
 </script>
 
 {{-- Each theme sets the design tokens the stylesheet was compiled with, so

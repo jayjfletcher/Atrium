@@ -115,3 +115,25 @@ it('switches theme beside the dark mode toggle and keeps it across pages', funct
         ->click('@palette-atrium')
         ->assertScript('document.documentElement.dataset.atriumTheme', 'atrium');
 });
+
+it('lays the page out with navigation across the top for the ledger theme', function (): void {
+    visit('/atrium')
+        ->resize(1280, 800)
+        ->assertScript('document.documentElement.dataset.atriumLayout', 'sidebar')
+        ->assertVisible('@sidebar')
+        ->click('@theme-switcher')
+        ->click('@palette-ledger')
+        ->assertScript('document.documentElement.dataset.atriumLayout', 'top')
+        ->assertMissing('@sidebar')
+        ->assertVisible('@top-nav')
+        ->assertSeeIn('@top-nav', 'Browser Page')
+        ->hover('[data-testid="top-section"][data-section="group-main"]')
+        ->assertSeeIn('@nav-flyout', 'Alpha Home')
+        ->navigate('/atrium/settings')
+        ->assertScript('document.documentElement.dataset.atriumLayout', 'top')
+        ->click('@theme-switcher')
+        ->click('@palette-atrium')
+        ->assertScript('document.documentElement.dataset.atriumLayout', 'sidebar')
+        ->assertVisible('@sidebar')
+        ->assertNotPresent('@nav-flyout');
+});

@@ -233,7 +233,18 @@ Every color and radius is a design token expressed as a CSS custom property, so 
 
 ### Themes and the theme switcher
 
-Atrium ships two themes: **Atrium** (indigo on zinc, the default) and **Harbor** (teal on slate, with softer corners). People pick one from the switcher beside the light/dark toggle; the choice is kept in their browser and applied before paint, and each theme has its own light and dark tokens, so the two choices combine.
+Atrium ships six themes. People pick one from the switcher beside the light/dark toggle; the choice is kept in their browser and applied before paint, and each theme has its own light and dark tokens, so the two choices combine.
+
+| Theme | Look | Layout |
+|---|---|---|
+| **Atrium** (default) | Indigo on zinc | Sidebar |
+| **Harbor** | Teal on slate, softer corners | Sidebar |
+| **Sunset** | Orange on warm stone | Sidebar |
+| **Forest** | Green on sage | Sidebar |
+| **Midnight** | Violet on deep indigo, the roundest corners | Sidebar |
+| **Ledger** | Monochrome, near-square corners | Top navigation |
+
+A theme also chooses the shell's layout from the `lg` breakpoint up. `sidebar` is the rail of sections beside a docked panel. `top` puts the sections across a bar under the topbar, with the current section's pages as tabs beneath and a section's pages dropping down on hover. Below `lg` every theme uses the drawer.
 
 ```php
 // config/atrium.php
@@ -241,10 +252,11 @@ Atrium ships two themes: **Atrium** (indigo on zinc, the default) and **Harbor**
     'default' => 'atrium',
     'switcher_feature' => 'JayI\PennantPlus\Atrium\Features\ThemeSwitcherFeature',
     'available' => [
-        'sunset' => [
-            'label' => 'Sunset',
+        'dusk' => [
+            'label' => 'Dusk',
             'swatch' => '#ea580c',
             'radius' => '0.5rem',
+            'layout' => 'sidebar', // or 'top'
             'colors' => ['primary' => '#ea580c', 'primary-dark' => '#fb923c'],
         ],
     ],
@@ -257,7 +269,7 @@ Packages register themes in code:
 use JayI\Atrium\Domains\Themes\Data\Theme;
 use JayI\Atrium\Facades\Atrium;
 
-Atrium::theme(Theme::make('forest')->label('Forest')->swatch('#15803d')->colors([
+Atrium::theme(Theme::make('grove')->label('Grove')->swatch('#15803d')->layout('top')->colors([
     'primary' => '#15803d',
     'primary-dark' => '#4ade80',
 ]));

@@ -3,7 +3,7 @@
 {{-- Beside the light/dark toggle: pick the dashboard's theme. Shown when
      there is more than one theme and `atrium.themes.switcher_feature` is on. --}}
 @if ($atriumThemes->switchable(request()))
-    <div x-data="atriumPalette(@js(array_keys($atriumThemes->all())), @js($atriumThemes->default()?->key))">
+    <div x-data="atriumPalette(@js(array_keys($atriumThemes->all())), @js($atriumThemes->default()?->key), @js($atriumThemes->layouts()))">
         <x-atrium::dropdown align="right">
             <x-slot:trigger>
                 <button type="button" data-testid="theme-switcher"

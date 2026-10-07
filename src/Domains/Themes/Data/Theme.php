@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace JayI\Atrium\Domains\Themes\Data;
 
+use InvalidArgumentException;
+
 /**
  * One look for the dashboard: values for the design tokens in
  * resources/css/atrium.css, applied at runtime without rebuilding any CSS.
@@ -15,7 +17,8 @@ namespace JayI\Atrium\Domains\Themes\Data;
  *     Theme::make('harbor')
  *         ->label('Harbor')
  *         ->colors(['primary' => '#0d9488', 'primary-dark' => '#2dd4bf'])
- *         ->radius('0.75rem');
+ *         ->radius('0.75rem')
+ *         ->layout('top');
  */
 class Theme
 {
@@ -33,6 +36,17 @@ class Theme
 
     /** A colour that stands for the theme in the switcher. */
     public private(set) ?string $swatch = null;
+
+    /**
+     * How the shell is laid out from the `lg` breakpoint up: `sidebar` (a
+     * rail of sections beside a docked panel) or `top` (sections across a
+     * bar under the topbar, the current section's pages as tabs beneath).
+     */
+    public private(set) string $layout = self::SIDEBAR;
+
+    public const string SIDEBAR = 'sidebar';
+
+    public const string TOP = 'top';
 
     final public function __construct(public readonly string $key)
     {
@@ -71,6 +85,20 @@ class Theme
     public function swatch(?string $swatch): static
     {
         $this->swatch = $swatch;
+
+        return $this;
+    }
+
+    /**
+     * @throws InvalidArgumentException for a layout other than `sidebar` or `top`
+     */
+    public function layout(string $layout): static
+    {
+        if (! in_array($layout, [self::SIDEBAR, self::TOP], true)) {
+            throw new InvalidArgumentException("Theme [{$this->key}] has an unknown layout [{$layout}]; use 'sidebar' or 'top'.");
+        }
+
+        $this->layout = $layout;
 
         return $this;
     }

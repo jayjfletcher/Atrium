@@ -118,6 +118,11 @@ it('renders only the current page as active in the sidebar', function (): void {
 
     $html = $this->get('/atrium/settings')->assertOk()->getContent();
 
-    expect(substr_count($html, 'aria-current="page"'))->toBe(1)
-        ->and(strpos($html, 'aria-current="page"'))->toBeGreaterThan(strpos($html, 'href="/atrium/settings"'));
+    // The sidebar and the top layout's bar each mark it once; the theme's
+    // layout decides which of the two is shown.
+    [$sidebar, $topbar] = explode('data-testid="top-nav"', $html, 2);
+
+    expect(substr_count($sidebar, 'aria-current="page"'))->toBe(1)
+        ->and(substr_count($topbar, 'aria-current="page"'))->toBe(1)
+        ->and(strpos($sidebar, 'aria-current="page"'))->toBeGreaterThan(strpos($sidebar, 'href="/atrium/settings"'));
 });

@@ -175,9 +175,11 @@ return [
     | Themes
     |--------------------------------------------------------------------------
     |
-    | Atrium ships two themes - `atrium` (indigo on zinc) and `harbor` (teal
-    | on slate) - and people pick one from the switcher beside the light/dark
-    | toggle. Their choice is kept in their browser.
+    | Atrium ships six themes - `atrium` (indigo), `harbor` (teal), `sunset`
+    | (orange), `forest` (green), `midnight` (violet) and `ledger`
+    | (monochrome, with navigation across the top) - and people pick one from
+    | the switcher beside the light/dark toggle. Their choice is kept in their
+    | browser.
     |
     | default:          The theme shown until someone picks another.
     | switcher_feature: A feature the switcher shows behind, checked through
@@ -189,6 +191,7 @@ return [
     | available:        Your own themes. Each key is a token from
     |                   resources/css/atrium.css without `--color-`; set the
     |                   `-dark` tokens too so dark mode stays readable.
+    |                   `layout` is `sidebar` (the default) or `top`.
     |
     | Packages register themes with Atrium::theme(Theme::make('...')).
     |
@@ -200,10 +203,11 @@ return [
         'switcher_feature' => 'JayI\PennantPlus\Atrium\Features\ThemeSwitcherFeature',
 
         'available' => [
-            // 'sunset' => [
-            //     'label' => 'Sunset',
+            // 'dusk' => [
+            //     'label' => 'Dusk',
             //     'swatch' => '#ea580c',
             //     'radius' => '0.5rem',
+            //     'layout' => 'sidebar',
             //     'colors' => ['primary' => '#ea580c', 'primary-dark' => '#fb923c'],
             // ],
         ],

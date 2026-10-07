@@ -98,6 +98,7 @@
 @source '../views/partials/search.blade.php';
 @source '../views/partials/theme-switcher.blade.php';
 @source '../views/partials/theme.blade.php';
+@source '../views/partials/top-navigation.blade.php';
 @source '../views/settings/index.blade.php';
 @source '../views/settings/show.blade.php';
 
@@ -112,6 +113,17 @@
 @custom-variant rail {
     @media (width >= 64rem) {
         &:where([data-atrium-sidebar='collapsed'] *) {
+            @slot;
+        }
+    }
+}
+
+/* The top navigation layout, for themes that choose it. Like the rail it
+   applies from `lg` up; below it every theme uses the drawer. The attribute
+   is set on <html> before paint with the theme. */
+@custom-variant topnav {
+    @media (width >= 64rem) {
+        &:where([data-atrium-layout='top'] *) {
             @slot;
         }
     }

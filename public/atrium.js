@@ -135,10 +135,10 @@
              * Preview a rail entry beside it: a section's pages, or a single
              * page's name. The section already docked in the panel needs none.
              */
-            previewSection: function (element, key) {
-                if (key !== null && key === this.section && !this.isRail()) return
+            previewSection: function (element, key, below) {
+                if (! below && key !== null && key === this.section && !this.isRail()) return
 
-                this.showFlyout(element)
+                this.showFlyout(element, below)
             },
 
             /** Whether the sidebar is currently showing as the icon rail. */
@@ -157,14 +157,15 @@
                 this.showFlyout(element)
             },
 
-            showFlyout: function (element) {
+            /** Beside the element, or below it for the top layout's bar. */
+            showFlyout: function (element, below) {
                 clearTimeout(this.hideTimer)
 
                 var rect = element.getBoundingClientRect()
                 var data = JSON.parse(element.dataset.flyout || '{}')
 
-                data.top = rect.top
-                data.left = rect.right + 8
+                data.top = below ? rect.bottom + 6 : rect.top
+                data.left = below ? rect.left : rect.right + 8
                 this.flyout = data
             },
 
@@ -224,7 +225,7 @@
      * this browser; the pre-paint script in the theme partial applies it on
      * the next load.
      */
-    window.atriumPalette = function (themes, fallback) {
+    window.atriumPalette = function (themes, fallback, layouts) {
         var stored = recall('atrium.palette')
 
         return {
@@ -238,6 +239,11 @@
                 remember('atrium.palette', theme === fallback ? null : theme)
 
                 document.documentElement.dataset.atriumTheme = theme
+                document.documentElement.dataset.atriumLayout = (layouts && layouts[theme]) || 'sidebar'
+
+                // A layout change can hide the element a flyout belongs to
+                // before its mouseleave fires, so tell the shell.
+                window.dispatchEvent(new CustomEvent('atrium-theme-changed'))
             },
         }
     }

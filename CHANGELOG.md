@@ -4,6 +4,7 @@
 
 ### Added
 
+- Four more themes - **Sunset**, **Forest**, **Midnight** and **Ledger** - and theme layouts: `Theme::layout('top')` (or `'layout' => 'top'` in config) lays the shell out with sections across a bar under the topbar and the current section's pages as tabs beneath, as Ledger does.
 - A two-level sidebar: a rail of sections (the app's own pages, then one icon per group) and a docked panel with the current section's pages. Clicking a section shows its pages without leaving the page, and hovering previews them. `NavGroup` gains `icon()` and `sort()` for its place in the rail. `Atrium::navigationSections()` lists the rail's entries.
 - A per-package audit log page at `atrium.history.show` (`/atrium/history/{package}`), with filters and paging, and `Plugin::historyNavItem()` to link it from a plugin's sidebar group. History panels link to it.
 - Themes: a second built-in theme, **Harbor**, beside the default **Atrium**; themes from `atrium.themes.available` and `Atrium::theme()`; and a theme switcher beside the light/dark toggle, shown behind the `atrium.themes.switcher_feature` feature (jayi/pennantplus's `ThemeSwitcherFeature` by default).

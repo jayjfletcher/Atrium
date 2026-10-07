@@ -42,6 +42,17 @@ class ThemeRegistry
         return $this->themes;
     }
 
+    /**
+     * Each theme's layout, by key, for the script that applies a theme
+     * before the page paints.
+     *
+     * @return array<string, string>
+     */
+    public function layouts(): array
+    {
+        return array_map(fn (Theme $theme): string => $theme->layout, $this->themes);
+    }
+
     public function find(string $key): ?Theme
     {
         return $this->themes[$key] ?? null;

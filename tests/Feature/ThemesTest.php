@@ -12,10 +12,10 @@ beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');
 });
 
-it('ships the atrium and harbor themes, atrium first', function (): void {
+it('ships six themes, atrium first', function (): void {
     $themes = app(ThemeRegistry::class);
 
-    expect(array_keys($themes->all()))->toBe(['atrium', 'harbor'])
+    expect(array_keys($themes->all()))->toBe(['atrium', 'harbor', 'sunset', 'forest', 'midnight', 'ledger'])
         ->and($themes->default()?->key)->toBe('atrium')
         ->and($themes->find('harbor')?->properties())->toMatchArray([
             '--color-primary' => '#0d9488',
@@ -26,18 +26,20 @@ it('ships the atrium and harbor themes, atrium first', function (): void {
 
 it('adds themes from config and from packages', function (): void {
     config()->set('atrium.themes.available', [
-        'sunset' => ['label' => 'Sunset', 'swatch' => '#ea580c', 'colors' => ['primary' => '#ea580c']],
+        'dusk' => ['label' => 'Dusk', 'swatch' => '#ea580c', 'layout' => 'top', 'colors' => ['primary' => '#ea580c']],
     ]);
     app()->forgetInstance(ThemeRegistry::class);
 
-    Atrium::theme(Theme::make('forest')->label('Forest')->colors(['primary' => '#15803d']));
+    Atrium::theme(Theme::make('grove')->label('Grove')->colors(['primary' => '#15803d']));
 
     $themes = app(ThemeRegistry::class)->all();
 
-    expect(array_keys($themes))->toBe(['atrium', 'harbor', 'sunset', 'forest'])
-        ->and($themes['sunset']->label)->toBe('Sunset')
-        ->and($themes['sunset']->swatchColor())->toBe('#ea580c')
-        ->and($themes['forest']->properties())->toBe(['--color-primary' => '#15803d']);
+    expect(array_keys($themes))->toBe(['atrium', 'harbor', 'sunset', 'forest', 'midnight', 'ledger', 'dusk', 'grove'])
+        ->and($themes['dusk']->label)->toBe('Dusk')
+        ->and($themes['dusk']->swatchColor())->toBe('#ea580c')
+        ->and($themes['dusk']->layout)->toBe('top')
+        ->and($themes['grove']->layout)->toBe('sidebar')
+        ->and($themes['grove']->properties())->toBe(['--color-primary' => '#15803d']);
 });
 
 it('falls back to the first theme when the default names none', function (): void {
@@ -98,4 +100,23 @@ it('hides the switcher with a single theme', function (): void {
 
 it('applies themes on standalone guest pages too', function (): void {
     expect(Blade::render('<x-atrium::guest>Hi</x-atrium::guest>'))->toContain('data-atrium-themes');
+});
+
+it('lays ledger out with navigation across the top', function (): void {
+    $themes = app(ThemeRegistry::class);
+
+    expect($themes->find('ledger')?->layout)->toBe('top')
+        ->and($themes->layouts())->toMatchArray(['atrium' => 'sidebar', 'harbor' => 'sidebar', 'ledger' => 'top']);
+});
+
+it('refuses a layout it does not know', function (): void {
+    Theme::make('odd')->layout('diagonal');
+})->throws(InvalidArgumentException::class);
+
+it('renders the top navigation beside the sidebar for themes that choose it', function (): void {
+    $html = $this->get('/atrium')->assertOk()->getContent();
+
+    expect($html)->toContain('data-testid="top-nav"')
+        ->toContain('data-testid="topbar-brand"')
+        ->toMatch('/var layouts = .*ledger.*top/');
 });
