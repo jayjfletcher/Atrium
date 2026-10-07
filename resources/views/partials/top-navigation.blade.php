@@ -8,29 +8,18 @@
 @endphp
 
 {{-- The top layout, for themes that choose it (lg and up): the rail's
-     sections across a bar, and the docked section's pages as tabs beneath.
-     Hovering a section drops its pages down. --}}
+     sections across a bar, and the current section's pages as tabs beneath.
+     Clicking another section shows its tabs without leaving the page. --}}
 <div class="hidden shrink-0 border-b border-outline topnav:block dark:border-outline-dark" data-testid="top-nav">
-    <nav class="flex h-11 items-center gap-1 overflow-x-auto px-4 lg:px-6" aria-label="{{ __('atrium::atrium.primary_navigation') }}"
-         x-on:scroll="flyout = null">
+    <nav class="flex h-11 items-center gap-1 overflow-x-auto px-4 lg:px-6" aria-label="{{ __('atrium::atrium.primary_navigation') }}">
         @foreach ($sections as $section)
             @php
                 $active = $section->isActive(request());
-                $flyout = [
-                    'label' => $section->label,
-                    'badge' => null,
-                    'children' => $section->grouped ? array_map(fn ($item) => [
-                        'label' => $item->label,
-                        'url' => $item->resolveUrl() ?? '#',
-                        'active' => $item->isActive(request()),
-                    ], $section->items) : [],
-                ];
             @endphp
 
             @if ($section->grouped)
-                <button type="button" data-testid="top-section" data-section="{{ $section->key }}" data-flyout="{{ json_encode($flyout) }}"
-                        x-on:click="section = @js($section->key); flyout = null"
-                        x-on:mouseenter="previewSection($el, @js($section->key), true)" x-on:mouseleave="unpeek()"
+                <button type="button" data-testid="top-section" data-section="{{ $section->key }}"
+                        x-on:click="section = @js($section->key)"
                         :aria-pressed="(section === @js($section->key)).toString()"
                         @class([$tab, $tabActive => $active, $tabIdle => ! $active])
                         :class="! @js($active) && section === @js($section->key) && @js($tabActive)">

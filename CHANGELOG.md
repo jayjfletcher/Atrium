@@ -15,6 +15,8 @@
 
 ### Fixed
 
+- A page beneath a navigation item now counts as that item's: an item on a resource's `*.index` route stays active on its `*.show` and `*.edit` pages, and a URL item on the paths beneath it. The sidebar's panel and Ledger's tabs no longer disappear on a record's own page.
+- Ledger's top bar no longer has a hover menu as well as its row of tabs.
 - Form controls no longer render an `id` twice when one is passed.
 - `audit-trail` shows a package's history only to those its history endpoint would answer.
 

@@ -120,12 +120,22 @@ class NavItem
         return $this->badge === null ? null : ($this->badge)();
     }
 
+    /**
+     * Whether the request is this item's page or a page beneath it: an
+     * item on a resource's `*.index` route stays active on the resource's
+     * other routes (`*.show`, `*.edit`), and an item with a URL on the paths
+     * beneath it - except the dashboard root, which every page is beneath.
+     */
     public function isActive(Request $request): bool
     {
         if ($this->route !== null && $request->route() !== null) {
             $current = $request->route()->getName();
 
             if ($current !== null && ($current === $this->route || Str::is($this->route.'.*', $current))) {
+                return true;
+            }
+
+            if ($current !== null && str_ends_with($this->route, '.index') && str_starts_with($current, Str::beforeLast($this->route, '.index').'.')) {
                 return true;
             }
         }
@@ -145,6 +155,15 @@ class NavItem
             return false;
         }
 
-        return trim($path, '/') === trim($request->getPathInfo(), '/');
+        $path = trim($path, '/');
+        $current = trim($request->getPathInfo(), '/');
+
+        if ($path === $current) {
+            return true;
+        }
+
+        $root = trim((string) config('atrium.path', 'atrium'), '/');
+
+        return $path !== '' && $path !== $root && str_starts_with($current, $path.'/');
     }
 }

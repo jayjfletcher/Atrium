@@ -127,8 +127,12 @@ it('lays the page out with navigation across the top for the ledger theme', func
         ->assertMissing('@sidebar')
         ->assertVisible('@top-nav')
         ->assertSeeIn('@top-nav', 'Browser Page')
+        // One way to reach a section's pages: click it for its row of tabs.
         ->hover('[data-testid="top-section"][data-section="group-main"]')
-        ->assertSeeIn('@nav-flyout', 'Alpha Home')
+        ->assertNotPresent('@nav-flyout')
+        ->click('[data-testid="top-section"][data-section="group-main"]')
+        ->assertSeeIn('@top-nav', 'Alpha Home')
+        ->assertPathIs('/atrium')
         ->navigate('/atrium/settings')
         ->assertScript('document.documentElement.dataset.atriumLayout', 'top')
         ->click('@theme-switcher')

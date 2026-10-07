@@ -135,10 +135,10 @@
              * Preview a rail entry beside it: a section's pages, or a single
              * page's name. The section already docked in the panel needs none.
              */
-            previewSection: function (element, key, below) {
-                if (! below && key !== null && key === this.section && !this.isRail()) return
+            previewSection: function (element, key) {
+                if (key !== null && key === this.section && !this.isRail()) return
 
-                this.showFlyout(element, below)
+                this.showFlyout(element)
             },
 
             /** Whether the sidebar is currently showing as the icon rail. */
@@ -157,15 +157,14 @@
                 this.showFlyout(element)
             },
 
-            /** Beside the element, or below it for the top layout's bar. */
-            showFlyout: function (element, below) {
+            showFlyout: function (element) {
                 clearTimeout(this.hideTimer)
 
                 var rect = element.getBoundingClientRect()
                 var data = JSON.parse(element.dataset.flyout || '{}')
 
-                data.top = below ? rect.bottom + 6 : rect.top
-                data.left = below ? rect.left : rect.right + 8
+                data.top = rect.top
+                data.left = rect.right + 8
                 this.flyout = data
             },
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use JayI\Atrium\Domains\Navigation\Data\NavItem;
 use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
 use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
@@ -91,11 +92,12 @@ it('marks an item active when the current url matches', function (): void {
         ->and($item->isActive(Request::create('http://localhost/atrium/other')))->toBeFalse();
 });
 
-it('marks an item with a relative url active on the matching page', function (): void {
+it('marks an item with a relative url active on the matching page and the pages beneath it', function (): void {
     $item = NavItem::make('Reports')->url('/atrium/reports/');
 
     expect($item->isActive(Request::create('https://example.test/atrium/reports?page=2')))->toBeTrue()
-        ->and($item->isActive(Request::create('https://example.test/atrium/reports/sales')))->toBeFalse();
+        ->and($item->isActive(Request::create('https://example.test/atrium/reports/sales')))->toBeTrue()
+        ->and($item->isActive(Request::create('https://example.test/atrium/report')))->toBeFalse();
 });
 
 it('ignores the scheme but not the host when matching an absolute url', function (): void {
@@ -125,4 +127,39 @@ it('renders only the current page as active in the sidebar', function (): void {
     expect(substr_count($sidebar, 'aria-current="page"'))->toBe(1)
         ->and(substr_count($topbar, 'aria-current="page"'))->toBe(1)
         ->and(strpos($sidebar, 'aria-current="page"'))->toBeGreaterThan(strpos($sidebar, 'href="/atrium/settings"'));
+});
+
+/**
+ * A request for a path, matched to a route with the given name.
+ */
+function requestFor(string $path, ?string $route = null): Request
+{
+    $request = Request::create($path);
+
+    if ($route !== null) {
+        $request->setRouteResolver(fn (): Illuminate\Routing\Route => (new Illuminate\Routing\Route('GET', $path, fn (): null => null))->name($route));
+    }
+
+    return $request;
+}
+
+it('keeps a resource index item active on the resource\'s other pages', function (): void {
+    Route::get('things', fn (): null => null)->name('things.index');
+
+    $item = NavItem::make('Things')->route('things.index');
+
+    expect($item->isActive(requestFor('/things/5', 'things.show')))->toBeTrue()
+        ->and($item->isActive(requestFor('/things/5/edit', 'things.edit')))->toBeTrue()
+        ->and($item->isActive(requestFor('/thingies', 'thingies.index')))->toBeFalse();
+});
+
+it('keeps a url item active on the paths beneath it', function (): void {
+    $item = NavItem::make('Reports')->url('/reports');
+
+    expect($item->isActive(requestFor('/reports/sales/2026')))->toBeTrue()
+        ->and($item->isActive(requestFor('/reportsx')))->toBeFalse();
+});
+
+it('never treats the dashboard root as the parent of every page', function (): void {
+    expect(NavItem::make('Home')->url('/atrium')->isActive(requestFor('/atrium/settings')))->toBeFalse();
 });
