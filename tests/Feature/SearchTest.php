@@ -36,14 +36,6 @@ beforeEach(function (): void {
     // so make sure it is there for the children and tidy up afterwards.
     $this->vendor = new UsesVendor;
     $this->vendor->beforeEach($this->app);
-
-    // Creating the link refreshes package discovery, which clears the
-    // skeleton's cached manifests. Rebuild them with one child first, or the
-    // concurrent children all write them at once, and on Windows one of the
-    // simultaneous renames fails and takes that child down.
-    if ($this->vendor->vendorSymlinkCreated) {
-        Process::path(base_path())->run(Application::formatCommandString('--version'))->throw();
-    }
 });
 
 afterEach(function (): void {
@@ -74,6 +66,24 @@ function pidSources(string ...$keys): void
             SearchSource::make($key)->using(fn (string $q): array => [SearchResult::make((string) getmypid(), '/'.$key)]),
         );
     }
+}
+
+/**
+ * Search with the process driver, which runs each source through `php
+ * artisan` in Testbench's skeleton app.
+ *
+ * This test process and the skeleton register different service providers,
+ * so each treats the other's cached services manifest as stale and rewrites
+ * it. Concurrent children would all rewrite it at once, and on Windows one of
+ * the simultaneous renames fails and takes that child down. One child first
+ * leaves a manifest the others agree with. A real application and its
+ * children share their providers, so this never arises outside the tests.
+ */
+function useProcessDriver(): void
+{
+    config()->set('atrium.search.concurrency', 'process');
+
+    Process::path(base_path())->run(Application::formatCommandString('--version'))->throw();
 }
 
 /**
@@ -278,7 +288,7 @@ it('returns an empty payload for a blank query', function (): void {
 it('runs sources in separate processes with the process driver', function (): void {
     Exceptions::fake();
 
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
 
     pidSources('one', 'two');
 
@@ -293,7 +303,7 @@ it('runs sources in separate processes with the process driver', function (): vo
 });
 
 it('builds result links for the host the user is on, in every process', function (): void {
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
     config()->set('app.url', 'http://configured.test');
 
     linkSource();
@@ -309,7 +319,7 @@ it('builds result links for the host the user is on, in every process', function
 it('hands each process the signed-in user', function (): void {
     Exceptions::fake();
 
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
 
     whoamiSources('one', 'two');
 
@@ -461,7 +471,7 @@ it('leaves results uncapped when the limits are null', function (): void {
 it('stops a source that runs past the timeout and keeps the others', function (): void {
     Exceptions::fake();
 
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
     config()->set('atrium.search.timeout', 1);
 
     sleepySource('slow', 10);
@@ -478,7 +488,7 @@ it('stops a source that runs past the timeout and keeps the others', function ()
 it('lets a source override the default timeout', function (): void {
     Exceptions::fake();
 
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
     config()->set('atrium.search.timeout', 1);
 
     sleepySource('patient', 2, timeout: 10);
@@ -490,7 +500,7 @@ it('lets a source override the default timeout', function (): void {
 });
 
 it('runs at most the configured number of processes at once', function (): void {
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
     config()->set('atrium.search.concurrency_limit', 2);
 
     timedSources('a', 'b', 'c', 'd', 'e');
@@ -502,7 +512,7 @@ it('runs at most the configured number of processes at once', function (): void 
 });
 
 it('runs every process at once without a concurrency limit', function (): void {
-    config()->set('atrium.search.concurrency', 'process');
+    useProcessDriver();
 
     timedSources('a', 'b', 'c');
 
