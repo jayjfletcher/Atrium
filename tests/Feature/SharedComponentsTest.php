@@ -18,6 +18,13 @@ it('renders a description list of terms and values', function (): void {
         ->toMatch('/<dd[^>]*>Active<\/dd>/');
 });
 
+it('renders form labels with well-formed attributes', function (string $control): void {
+    $html = Blade::render("<x-atrium::form.{$control} name=\"code\" label=\"Code\" />");
+
+    expect($html)->toContain('<label for="atrium-code" class="w-fit text-sm font-medium')
+        ->not->toContain('\\"');
+})->with(['input', 'select', 'textarea', 'combobox', 'file']);
+
 it('renders a bare input with no label or wrapper', function (): void {
     $html = Blade::render('<x-atrium::form.input name="qty" label="Quantity" hint="How many" bare />');
 

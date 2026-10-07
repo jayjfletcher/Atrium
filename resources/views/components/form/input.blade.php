@@ -29,7 +29,7 @@
 
 <div @class(['flex flex-col gap-1.5 text-on-surface dark:text-on-surface-dark' => ! $bare, $wrapper ?? 'w-full' => ! $bare, 'contents' => $bare])>
     @if ($label && ! $bare)
-        <label for=\"{{ $id }}\" class=\"w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">
+        <label for="{{ $id }}" class="w-fit text-sm font-medium text-on-surface-strong dark:text-on-surface-dark-strong">
             {{ $label }}
             @if ($required)
                 <span class="text-danger" aria-hidden="true">*</span>

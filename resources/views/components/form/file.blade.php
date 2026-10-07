@@ -18,7 +18,7 @@
     @endif
 
     <input type="file" id="{{ $id }}" name="{{ $name }}{{ $multiple ? '[]' : '' }}" @if ($multiple) multiple @endif
-        {{ $attributes->except('id')->class('w-full cursor-pointer rounded-radius border border-outline bg-surface text-sm shadow-xs file:mr-3 file:cursor-pointer file:border-0 file:border-r file:border-outline file:bg-surface-alt file:px-3 file:py-2 file:text-sm file:font-medium file:text-on-surface-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-outline-dark dark:bg-white/5 dark:file:border-outline-dark dark:file:bg-white/5 dark:file:text-on-surface-dark-strong dark:focus-visible:outline-primary-dark') }} />
+        {{ $attributes->except('id')->class('h-9 w-full cursor-pointer rounded-radius border border-outline bg-surface text-sm shadow-xs file:mr-3 file:h-full file:py-0 file:cursor-pointer file:border-0 file:border-r file:border-outline file:bg-surface-alt file:px-3 file:text-sm file:font-medium file:text-on-surface-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary dark:border-outline-dark dark:bg-white/5 dark:file:border-outline-dark dark:file:bg-white/5 dark:file:text-on-surface-dark-strong dark:focus-visible:outline-primary-dark') }} />
 
     @if ($hint && ! $resolvedError)
         <small class="text-xs text-on-surface/80 dark:text-on-surface-dark/80">{{ $hint }}</small>
