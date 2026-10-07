@@ -18,16 +18,7 @@ use JayI\Atrium\Tests\Fixtures\MultiSourcePlugin;
 use Laravel\Ai\AiServiceProvider;
 use Laravel\Ai\Classification;
 use Laravel\Ai\Responses\Data\ChoiceAnswer;
-
-/**
- * The process driver spawns a PHP process per source. On Windows CI runners a
- * spawned Testbench process can take longer to boot than these tests' short
- * timeouts allow, so results go missing and timeouts are not reported. The
- * driver's behaviour is covered on Linux and macOS.
- */
-const PROCESS_DRIVER_UNTESTABLE = PHP_OS_FAMILY === 'Windows';
-
-const PROCESS_DRIVER_SKIP_REASON = 'Process driver timing is not reliable on Windows CI runners.';
+use Orchestra\Testbench\Attributes\UsesVendor;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');
@@ -35,6 +26,18 @@ beforeEach(function (): void {
     config()->set('atrium.search.concurrency', 'sync');
 
     app()->register(AiServiceProvider::class);
+
+    // The process driver runs each source through `php artisan` in
+    // Testbench's skeleton app, which needs the package's vendor directory
+    // linked into it. Testbench removes that link after its own commands on
+    // Windows, where the link is a junction is_symlink() does not recognise,
+    // so make sure it is there for the children and tidy up afterwards.
+    $this->vendor = new UsesVendor;
+    $this->vendor->beforeEach($this->app);
+});
+
+afterEach(function (): void {
+    $this->vendor->afterEach($this->app);
 });
 
 /**
@@ -262,7 +265,7 @@ it('runs sources in separate processes with the process driver', function (): vo
     expect($pids)->toHaveCount(2)
         ->and($pids)->not->toContain((string) getmypid())
         ->and(array_unique($pids))->toHaveCount(2);
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('builds result links for the host the user is on, in every process', function (): void {
     config()->set('atrium.search.concurrency', 'process');
@@ -276,7 +279,7 @@ it('builds result links for the host the user is on, in every process', function
     );
 
     expect($urls)->toBe(['https://admin.example.test/somewhere']);
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('hands each process the signed-in user', function (): void {
     config()->set('atrium.search.concurrency', 'process');
@@ -292,7 +295,7 @@ it('hands each process the signed-in user', function (): void {
     );
 
     expect($titles)->toBe(['42', '42']);
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('reports a failing source and still returns the others', function (): void {
     Exceptions::fake();
@@ -441,7 +444,7 @@ it('stops a source that runs past the timeout and keeps the others', function ()
         ->and(microtime(true) - $started)->toBeLessThan(5);
 
     Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'Search source [slow] timed out.');
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('lets a source override the default timeout', function (): void {
     Exceptions::fake();
@@ -455,7 +458,7 @@ it('lets a source override the default timeout', function (): void {
     expect(searchTitles())->toBe(['patient']);
 
     Exceptions::assertReported(fn (RuntimeException $e): bool => $e->getMessage() === 'Search source [hasty] timed out.');
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('runs at most the configured number of processes at once', function (): void {
     config()->set('atrium.search.concurrency', 'process');
@@ -467,7 +470,7 @@ it('runs at most the configured number of processes at once', function (): void 
 
     expect($spans)->toHaveCount(5)
         ->and(mostAtOnce($spans))->toBe(2);
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('runs every process at once without a concurrency limit', function (): void {
     config()->set('atrium.search.concurrency', 'process');
@@ -475,7 +478,7 @@ it('runs every process at once without a concurrency limit', function (): void {
     timedSources('a', 'b', 'c');
 
     expect(mostAtOnce(searchTitles()))->toBe(3);
-})->skip(PROCESS_DRIVER_UNTESTABLE, PROCESS_DRIVER_SKIP_REASON);
+});
 
 it('hands other drivers the sources in batches of the concurrency limit', function (): void {
     $runs = recordingDriver();
