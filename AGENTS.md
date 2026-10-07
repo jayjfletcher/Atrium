@@ -14,7 +14,7 @@ This repository is a Laravel package. Keep the package focused, idiomatic, and e
 
 These are recorded in full under `agent-os/standards/`; the short form:
 
-- **Code lives in domain modules.** `src/Domains/{Domain}/` (`Access`, `Dashboard`, `Navigation`, `Plugins`, `Search`, `Settings`, `Widgets`), namespace `JayI\Atrium\Domains\{Domain}`, each with a `{Domain}ServiceProvider` registered by `Domains\DomainServiceProvider`. Models are `{Entity}Model` in `Models/`; value objects in `Data/`; registries in `Services/`. Package-wide base classes, contracts and `Support/` stay at the top level. A moved model keeps its old class name as a morph alias. See `agent-os/standards/architecture/domain-modules.md`.
+- **Code lives in domain modules.** `src/Domains/{Domain}/` (`Access`, `Dashboard`, `Navigation`, `Plugins`, `Search`, `Settings`, `Themes`, `Widgets`), namespace `JayI\Atrium\Domains\{Domain}`, each with a `{Domain}ServiceProvider` registered by `Domains\DomainServiceProvider`. Models are `{Entity}Model` in `Models/`; value objects in `Data/`; registries in `Services/`. Package-wide base classes, contracts and `Support/` stay at the top level. A moved model keeps its old class name as a morph alias. See `agent-os/standards/architecture/domain-modules.md`.
 - **Actions own mutating logic.** Extend `JayI\Foundation\Actions\Action`, implement a `protected handle()` with a concrete return type, and let callers use `execute()`. `handle()` dispatches a starting `{Subject}{Verb-ing}ActionEvent` with the input, runs the work in a private `perform()` wrapped in `DB::transaction()`, then dispatches the finished `{Subject}{Verb-ed}ActionEvent` with the result.
 - **Requests own validation, authorization, and the call into an action.** Extend `JayI\Atrium\Http\Requests\Request` and implement `persist()`. Controllers only `return $request->persist();` and never contain database calls.
 - **Events are final classes using `Dispatchable` and `SerializesModels`.** Action events live in the domain's `Events/` and implement `JayI\Foundation\Contracts\ActionStartingEvent` or `ActionFinishedEvent` (after commit); every action has one of each. Model events live beside them, are named `{Entity}{Hook}Event`, implement `JayI\Foundation\Contracts\ModelLifecycleEvent`, and are mapped by the `JayI\Foundation\Models\Concerns\DispatchesModelEvents` trait every model uses.
@@ -25,13 +25,13 @@ These are recorded in full under `agent-os/standards/`; the short form:
 ## PHP Conventions
 
 - The package targets PHP 8.4. Use its syntax where it earns its place.
-- Value objects (`NavItem`, `WidgetDefinition`, `SettingsPanel`, `SearchSource`, `SearchResult`) expose state as `public private(set)` properties rather than getter methods, so they read as `$item->label` and stay immutable from the outside. Configure them through the fluent setters, which share the property's name.
+- Value objects (`NavItem`, `WidgetDefinition`, `SettingsPanel`, `SearchSource`, `SearchResult`, `Theme`) expose state as `public private(set)` properties rather than getter methods, so they read as `$item->label` and stay immutable from the outside. Configure them through the fluent setters, which share the property's name.
 - Closures and other internals stay `private`; only meaningful state is publicly readable.
 
 ## Frontend Conventions
 
 - Components use Tailwind CSS 4 utility classes in the markup, adapted from Penguin UI (MIT). There are no semantic `atrium-*` classes.
-- Styling tokens are design tokens in `resources/css/atrium.css` (`--color-primary`, `--color-on-surface`, and so on), overridable at runtime through `config('atrium.theme')`.
+- Styling tokens are design tokens in `resources/css/atrium.css` (`--color-primary`, `--color-on-surface`, and so on). Themes (`Domains\Themes`) set those tokens at runtime, light and `-dark` together, on `:root[data-atrium-theme]`; never hard-code a colour a theme should own. `config('atrium.theme')` still retunes the built-in `atrium` theme.
 - Run `npm run build:css` after changing any Blade file, and commit the compiled `public/atrium.css`. The build regenerates the `@source` list, so new views are picked up automatically.
 - Test hooks use `data-testid` attributes, which the browser suite selects with `@name`.
 - **Atrium owns every component and style of the first-party suite.** Cortex, Impex, Keystone, Keen, PennantPlus, Polycart and Roster ship no stylesheet and no component namespace; their views use `x-atrium::*` components and the utility safelist in `resources/css/atrium.css` only, checked by `JayI\Atrium\Testing\AtriumStyles`. When a package screen needs new UI, add a generic component here. `Atrium::css()`, `Atrium::stylesheet()` and custom component namespaces remain for third-party packages. See `agent-os/standards/frontend/components.md`.

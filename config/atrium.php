@@ -172,12 +172,52 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Theme
+    | Themes
     |--------------------------------------------------------------------------
     |
-    | These values override the design tokens the shipped stylesheet was
-    | compiled with, so the dashboard can be rethemed at runtime without
-    | rebuilding any assets. Any key here becomes "--color-{key}".
+    | Atrium ships two themes - `atrium` (indigo on zinc) and `harbor` (teal
+    | on slate) - and people pick one from the switcher beside the light/dark
+    | toggle. Their choice is kept in their browser.
+    |
+    | default:          The theme shown until someone picks another.
+    | switcher_feature: A feature the switcher shows behind, checked through
+    |                   Atrium's feature resolver. With jayi/pennantplus it is
+    |                   a Pennant feature, on until you turn it off, globally
+    |                   or for some users. Without PennantPlus the class is
+    |                   missing and the switcher always shows. Null always
+    |                   shows it too; a feature name of your own gates it.
+    | available:        Your own themes. Each key is a token from
+    |                   resources/css/atrium.css without `--color-`; set the
+    |                   `-dark` tokens too so dark mode stays readable.
+    |
+    | Packages register themes with Atrium::theme(Theme::make('...')).
+    |
+    */
+
+    'themes' => [
+        'default' => 'atrium',
+
+        'switcher_feature' => 'JayI\PennantPlus\Atrium\Features\ThemeSwitcherFeature',
+
+        'available' => [
+            // 'sunset' => [
+            //     'label' => 'Sunset',
+            //     'swatch' => '#ea580c',
+            //     'radius' => '0.5rem',
+            //     'colors' => ['primary' => '#ea580c', 'primary-dark' => '#fb923c'],
+            // ],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Theme overrides
+    |--------------------------------------------------------------------------
+    |
+    | These values override the design tokens of the built-in `atrium` theme,
+    | so it can be retuned at runtime without rebuilding any assets. Any key
+    | here becomes "--color-{key}". To offer a whole new look, add a theme
+    | under `themes.available` instead.
     |
     | See resources/css/atrium.css for the full list of available tokens.
     |

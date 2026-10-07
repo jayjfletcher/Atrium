@@ -75,3 +75,17 @@ it('switches to dark mode and keeps it across pages', function (): void {
         ->click('@theme-light')
         ->assertScript('document.documentElement.classList.contains("dark")', false);
 });
+
+it('switches theme beside the dark mode toggle and keeps it across pages', function (): void {
+    visit('/atrium')
+        ->assertScript('document.documentElement.dataset.atriumTheme', 'atrium')
+        ->click('@theme-switcher')
+        ->click('@palette-harbor')
+        ->assertScript('document.documentElement.dataset.atriumTheme', 'harbor')
+        ->assertScript('getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim()', '#0d9488')
+        ->navigate('/atrium/settings')
+        ->assertScript('document.documentElement.dataset.atriumTheme', 'harbor')
+        ->click('@theme-switcher')
+        ->click('@palette-atrium')
+        ->assertScript('document.documentElement.dataset.atriumTheme', 'atrium');
+});

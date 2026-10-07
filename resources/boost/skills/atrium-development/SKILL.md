@@ -75,7 +75,7 @@ Wrap a page in the shell with `<x-atrium::layout>`, which exposes `brand`, `topb
 
 ### 5. Theme without rebuilding assets
 
-Atrium ships one compiled stylesheet whose values are all CSS custom properties. Anything under `config('atrium.theme')` is emitted as `--color-{key}`, overriding the matching design token in `resources/css/atrium.css`. No Tailwind build is required in the host application. Dark mode is a `dark` class on `<html>`, driven by the topbar's light / dark / system switcher; the sidebar collapses to an icon rail, so give `NavItem`s an `icon()`.
+Atrium ships one compiled stylesheet whose values are all CSS custom properties. Themes set those tokens at runtime: the built-in `atrium` and `harbor`, any under `config('atrium.themes.available')` (token => value, light and `-dark` together), and any a package registers with `Atrium::theme(Theme::make('key')->label(...)->colors([...]))`. `atrium.themes.default` picks the default; a switcher beside the light/dark toggle lets people choose, shown while the `atrium.themes.switcher_feature` feature is on (jayi/pennantplus's `ThemeSwitcherFeature`; always shown without PennantPlus or when null). `config('atrium.theme')` still retunes the built-in `atrium` theme. No Tailwind build is required in the host application. Dark mode is a `dark` class on `<html>`, driven by the topbar's light / dark / system switcher; the sidebar collapses to an icon rail, so give `NavItem`s an `icon()`.
 
 ### 6. Customize who may change dashboards
 
@@ -104,7 +104,7 @@ In tests, fake only the events being asserted: `Event::fake([DashboardCreatedAct
 
 Read before executing:
 
-- `config/atrium.php` for `path`, `domain`, `middleware`, `gate`, `policies`, `discover`, `plugins`, `disabled`, `alpine`, and `theme`
+- `config/atrium.php` for `path`, `domain`, `middleware`, `gate`, `policies`, `discover`, `plugins`, `disabled`, `alpine`, `themes` and `theme`
 - the package README for the full plugin and component reference
 
 ## Key Behaviors

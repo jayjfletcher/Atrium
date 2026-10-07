@@ -17,6 +17,8 @@ use JayI\Atrium\Domains\Search\Data\SearchSource;
 use JayI\Atrium\Domains\Search\Services\SearchRegistry;
 use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
 use JayI\Atrium\Domains\Settings\Services\SettingsRegistry;
+use JayI\Atrium\Domains\Themes\Data\Theme;
+use JayI\Atrium\Domains\Themes\Services\ThemeRegistry;
 use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
 use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
 use JayI\Atrium\Support\StyleRegistry;
@@ -31,7 +33,27 @@ class Atrium
         protected SearchRegistry $search,
         protected Gatekeeper $gatekeeper,
         protected StyleRegistry $styles,
+        protected ThemeRegistry $themes,
     ) {}
+
+    /**
+     * Offer a theme in the dashboard's theme switcher, or replace the one
+     * with the same key.
+     */
+    public function theme(Theme $theme): static
+    {
+        $this->themes->register($theme);
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, Theme>
+     */
+    public function themes(): array
+    {
+        return $this->themes->all();
+    }
 
     /**
      * Link a stylesheet in the dashboard's <head>, after Atrium's own.

@@ -213,17 +213,54 @@ Every region is a slot: `brand`, `topbar`, `topbarEnd`, `breadcrumbs`, `header`,
 
 Atrium ships one compiled stylesheet built with Tailwind CSS 4. **No Tailwind build is required in your application** — the package compiles its own, and a host application's Tailwind setup is untouched.
 
-Every color and radius is a design token expressed as a CSS custom property, so retheming means overriding variables rather than rebuilding assets:
+Every color and radius is a design token expressed as a CSS custom property, so a theme is a set of token values applied at runtime rather than a rebuilt stylesheet. The full token list is in `resources/css/atrium.css`; `canvas` / `canvas-dark` color the area behind the sidebar and content panel.
+
+### Themes and the theme switcher
+
+Atrium ships two themes: **Atrium** (indigo on zinc, the default) and **Harbor** (teal on slate, with softer corners). People pick one from the switcher beside the light/dark toggle; the choice is kept in their browser and applied before paint, and each theme has its own light and dark tokens, so the two choices combine.
 
 ```php
 // config/atrium.php
+'themes' => [
+    'default' => 'atrium',
+    'switcher_feature' => 'JayI\PennantPlus\Atrium\Features\ThemeSwitcherFeature',
+    'available' => [
+        'sunset' => [
+            'label' => 'Sunset',
+            'swatch' => '#ea580c',
+            'radius' => '0.5rem',
+            'colors' => ['primary' => '#ea580c', 'primary-dark' => '#fb923c'],
+        ],
+    ],
+],
+```
+
+Packages register themes in code:
+
+```php
+use JayI\Atrium\Domains\Themes\Data\Theme;
+use JayI\Atrium\Facades\Atrium;
+
+Atrium::theme(Theme::make('forest')->label('Forest')->swatch('#15803d')->colors([
+    'primary' => '#15803d',
+    'primary-dark' => '#4ade80',
+]));
+```
+
+Set the `-dark` tokens as well as the light ones, so dark mode stays readable in your theme. Tokens a theme leaves out keep the compiled defaults.
+
+The switcher shows only when there is more than one theme and the feature named by `switcher_feature` is on, asked through Atrium's feature resolver. With [jayi/pennantplus](https://github.com/jayjfletcher/PennantPlus) installed, that is the `ThemeSwitcherFeature` Pennant feature: on until you turn it off, globally or for particular users, from PennantPlus's feature flags screen. Without PennantPlus the class is missing and the switcher always shows; set `switcher_feature` to `null` for the same, or to a feature name of your own. While the switcher is hidden, everyone sees the default theme.
+
+### Retuning the built-in theme
+
+`atrium.theme` overrides tokens of the built-in `atrium` theme without defining a new one:
+
+```php
 'theme' => [
     'primary' => '#0f766e',
     'on-primary' => '#ffffff',
 ],
 ```
-
-Anything you add here is emitted as `--color-{key}` on the dashboard. The full token list is in `resources/css/atrium.css`; `canvas` / `canvas-dark` color the area behind the sidebar and content panel.
 
 Dark mode follows a `dark` class on `<html>`. The topbar's appearance menu switches between light, dark and following the system, and the choice is kept in `localStorage` and applied before paint.
 

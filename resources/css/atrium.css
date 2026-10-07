@@ -95,6 +95,7 @@
 @source '../views/partials/nav-item.blade.php';
 @source '../views/partials/navigation.blade.php';
 @source '../views/partials/search.blade.php';
+@source '../views/partials/theme-switcher.blade.php';
 @source '../views/partials/theme.blade.php';
 @source '../views/settings/index.blade.php';
 @source '../views/settings/show.blade.php';

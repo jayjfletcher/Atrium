@@ -207,6 +207,29 @@
         }
     }
 
+    /**
+     * The theme switcher beside the light/dark toggle. The choice is kept in
+     * this browser; the pre-paint script in the theme partial applies it on
+     * the next load.
+     */
+    window.atriumPalette = function (themes, fallback) {
+        var stored = recall('atrium.palette')
+
+        return {
+            palette: themes.indexOf(stored) !== -1 ? stored : fallback,
+
+            choose: function (theme) {
+                if (themes.indexOf(theme) === -1) return
+
+                this.palette = theme
+
+                remember('atrium.palette', theme === fallback ? null : theme)
+
+                document.documentElement.dataset.atriumTheme = theme
+            },
+        }
+    }
+
     window.atriumDashboard = function (config) {
         return {
             editing: false,

@@ -2,7 +2,7 @@
 
 architecture:
   domain-modules:
-    description: "Code lives in src/Domains/{Domain} modules (Access, Dashboard, Navigation, Plugins, Search, Settings, Widgets), each with its own provider registered by Domains\\DomainServiceProvider; models are {Entity}Model; moved models keep their old class name as a morph alias"
+    description: "Code lives in src/Domains/{Domain} modules (Access, Dashboard, Navigation, Plugins, Search, Settings, Themes, Widgets), each with its own provider registered by Domains\\DomainServiceProvider; models are {Entity}Model; moved models keep their old class name as a morph alias"
   actions-events:
     description: "Action execute()/handle() split; starting + finished ActionEvent pair per action; DB::transaction in perform(); finished events after commit; concrete return types; no model constructor DI"
   request-persist:

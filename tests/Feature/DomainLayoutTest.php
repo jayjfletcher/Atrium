@@ -12,6 +12,7 @@ use JayI\Atrium\Domains\Navigation\NavigationServiceProvider;
 use JayI\Atrium\Domains\Plugins\PluginsServiceProvider;
 use JayI\Atrium\Domains\Search\SearchServiceProvider;
 use JayI\Atrium\Domains\Settings\SettingsServiceProvider;
+use JayI\Atrium\Domains\Themes\ThemesServiceProvider;
 use JayI\Atrium\Domains\Widgets\WidgetsServiceProvider;
 
 it('registers every domain service provider', function (string $provider): void {
@@ -24,6 +25,7 @@ it('registers every domain service provider', function (string $provider): void 
     PluginsServiceProvider::class,
     SearchServiceProvider::class,
     SettingsServiceProvider::class,
+    ThemesServiceProvider::class,
     WidgetsServiceProvider::class,
 ]);
 

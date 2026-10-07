@@ -120,6 +120,7 @@
                 @endif
 
                 <div class="ml-auto flex items-center gap-1.5">
+                    @include('atrium::partials.theme-switcher')
                     @include('atrium::partials.appearance')
 
                     @if (! empty($topbarEnd))
