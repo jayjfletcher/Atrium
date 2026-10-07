@@ -6,6 +6,7 @@ use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
 use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
 use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
 use JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
+use JayI\Atrium\Domains\Themes\Features\ThemeSwitcherFeature;
 
 return [
 
@@ -183,11 +184,12 @@ return [
     |
     | default:          The theme shown until someone picks another.
     | switcher_feature: A feature the switcher shows behind, checked through
-    |                   Atrium's feature resolver. With jayi/pennantplus it is
-    |                   a Pennant feature, on until you turn it off, globally
-    |                   or for some users. Without PennantPlus the class is
-    |                   missing and the switcher always shows. Null always
-    |                   shows it too; a feature name of your own gates it.
+    |                   Atrium's feature resolver. ThemeSwitcherFeature is a
+    |                   Pennant feature: with jayi/pennantplus it is on until
+    |                   you turn it off, globally or for some users. With no
+    |                   feature resolver every feature is on, so the switcher
+    |                   always shows. Null always shows it too; a feature name
+    |                   of your own gates it.
     | available:        Your own themes. Each key is a token from
     |                   resources/css/atrium.css without `--color-`; set the
     |                   `-dark` tokens too so dark mode stays readable.
@@ -200,7 +202,7 @@ return [
     'themes' => [
         'default' => 'atrium',
 
-        'switcher_feature' => 'JayI\PennantPlus\Atrium\Features\ThemeSwitcherFeature',
+        'switcher_feature' => ThemeSwitcherFeature::class,
 
         'available' => [
             // 'dusk' => [

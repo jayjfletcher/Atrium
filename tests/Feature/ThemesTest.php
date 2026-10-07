@@ -5,8 +5,11 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Blade;
 use JayI\Atrium\Domains\Access\Services\Gatekeeper;
 use JayI\Atrium\Domains\Themes\Data\Theme;
+use JayI\Atrium\Domains\Themes\Features\ThemeSwitcherFeature;
 use JayI\Atrium\Domains\Themes\Services\ThemeRegistry;
 use JayI\Atrium\Facades\Atrium;
+use Laravel\Pennant\Feature;
+use Laravel\Pennant\PennantServiceProvider;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');
@@ -84,11 +87,28 @@ it('shows the switcher only while its feature is on', function (): void {
         ->not->toContain('harbor');
 });
 
-it('shows the switcher when the pennantplus feature is not installed', function (): void {
+it('shows the switcher when its feature class is not installed', function (): void {
     config()->set('atrium.themes.switcher_feature', 'Missing\\ThemeSwitcherFeature');
     app(Gatekeeper::class)->resolveFeaturesUsing(fn (): bool => false);
 
     expect(app(ThemeRegistry::class)->switchable(request()))->toBeTrue();
+});
+
+it('shows the switcher behind its own feature, on while no feature resolver is registered', function (): void {
+    expect(config('atrium.themes.switcher_feature'))->toBe(ThemeSwitcherFeature::class)
+        ->and(app(ThemeRegistry::class)->switchable(request()))->toBeTrue();
+});
+
+it('resolves the switcher feature on globally, and to the global value for any other scope', function (): void {
+    app()->register(PennantServiceProvider::class);
+    config()->set('pennant.default', 'array');
+
+    expect(Feature::for(null)->active(ThemeSwitcherFeature::class))->toBeTrue()
+        ->and(Feature::for('ada')->active(ThemeSwitcherFeature::class))->toBeTrue();
+
+    Feature::for(null)->deactivate(ThemeSwitcherFeature::class);
+
+    expect(Feature::for('bob')->active(ThemeSwitcherFeature::class))->toBeFalse();
 });
 
 it('hides the switcher with a single theme', function (): void {

@@ -72,8 +72,7 @@ class ThemeRegistry
     /**
      * Whether the theme switcher shows: there is more than one theme, and
      * the feature `atrium.themes.switcher_feature` names is on. A feature
-     * class whose package is missing - the PennantPlus feature without
-     * jayi/pennantplus - gates nothing, as plugin features do.
+     * class whose package is missing gates nothing, as plugin features do.
      */
     public function switchable(Request $request): bool
     {

@@ -25,6 +25,7 @@
         "larastan/larastan": "^3.12",
         "laravel/ai": "^1.0",
         "laravel/pao": "^1.0",
+        "laravel/pennant": "^1.26",
         "laravel/pint": "^1.29",
         "orchestra/testbench": "^11.0",
         "pestphp/pest": "^5.0",
@@ -34,7 +35,8 @@
         "phpstan/extension-installer": "^1.4"
     },
     "suggest": {
-        "laravel/ai": "Required to classify global search queries and only run the most relevant search sources (^1.0)."
+        "laravel/ai": "Required to classify global search queries and only run the most relevant search sources (^1.0).",
+        "laravel/pennant": "Turn the theme switcher on or off per user with Atrium's ThemeSwitcherFeature, through a feature resolver such as jayi/pennantplus (^1.26)."
     },
     "autoload": {
         "psr-4": {

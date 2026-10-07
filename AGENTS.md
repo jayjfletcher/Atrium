@@ -20,7 +20,7 @@ These are recorded in full under `agent-os/standards/`; the short form:
 - **Events are final classes using `Dispatchable` and `SerializesModels`.** Action events live in the domain's `Events/` and implement `JayI\Foundation\Contracts\ActionStartingEvent` or `ActionFinishedEvent` (after commit); every action has one of each. Model events live beside them, are named `{Entity}{Hook}Event`, implement `JayI\Foundation\Contracts\ModelLifecycleEvent`, and are mapped by the `JayI\Foundation\Models\Concerns\DispatchesModelEvents` trait every model uses.
 - **Shared runtime lives in `jayi/foundation`.** The `Action` and `Request` bases, event contracts, `DispatchesModelEvents`, the package registry and the audit seams come from Foundation, which every package in the suite requires. Atrium registers itself as the `atrium` package from `AtriumServiceProvider::definition()`.
 - **Requests authorize through policies.** `authorize()` calls `$this->allows()` / `allowsEach()`: `viewAny`/`create` on the model class, `view`/`update`/`delete` on the instance. Policies extend `Domains\Dashboard\Policies\Policy`, are registered from `atrium.policies`, and child-model policies defer to the dashboard through the Gate.
-- Do not require a feature-flag package such as Pennant; gating is the host application's concern. Feature-flag management lives in `jayi/pennantplus`, which plugs into Atrium like any other package.
+- Do not require a feature-flag package such as Pennant; gating is the host application's concern. Pennant is a dev dependency only, for `Domains\Themes\Features\ThemeSwitcherFeature`, which only Pennant resolves. Feature-flag management lives in `jayi/pennantplus`, which plugs into Atrium like any other package.
 
 ## PHP Conventions
 

@@ -250,7 +250,7 @@ A theme also chooses the shell's layout from the `lg` breakpoint up. `sidebar` i
 // config/atrium.php
 'themes' => [
     'default' => 'atrium',
-    'switcher_feature' => 'JayI\PennantPlus\Atrium\Features\ThemeSwitcherFeature',
+    'switcher_feature' => \JayI\Atrium\Domains\Themes\Features\ThemeSwitcherFeature::class,
     'available' => [
         'dusk' => [
             'label' => 'Dusk',
@@ -277,7 +277,7 @@ Atrium::theme(Theme::make('grove')->label('Grove')->swatch('#15803d')->layout('t
 
 Set the `-dark` tokens as well as the light ones, so dark mode stays readable in your theme. Tokens a theme leaves out keep the compiled defaults.
 
-The switcher shows only when there is more than one theme and the feature named by `switcher_feature` is on, asked through Atrium's feature resolver. With [jayi/pennantplus](https://github.com/jayjfletcher/PennantPlus) installed, that is the `ThemeSwitcherFeature` Pennant feature: on until you turn it off, globally or for particular users, from PennantPlus's feature flags screen. Without PennantPlus the class is missing and the switcher always shows; set `switcher_feature` to `null` for the same, or to a feature name of your own. While the switcher is hidden, everyone sees the default theme.
+The switcher shows only when there is more than one theme and the feature named by `switcher_feature` is on, asked through Atrium's feature resolver. By default that is Atrium's `ThemeSwitcherFeature`, a Pennant feature that is on globally until you set its global value, and that every user follows until they are given their own. With [jayi/pennantplus](https://github.com/jayjfletcher/PennantPlus) installed you turn it off, globally or for particular users, from its feature flags screen. Atrium does not require Pennant: with no feature resolver registered every feature is on, so the switcher always shows. Set `switcher_feature` to `null` for the same, or to a feature name of your own. While the switcher is hidden, everyone sees the default theme.
 
 ### Retuning the built-in theme
 
