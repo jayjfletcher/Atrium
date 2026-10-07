@@ -56,7 +56,7 @@ it('renders a package history from the installed audit log', function (): void {
     $user = new User;
     $user->id = 3;
 
-    $html = Blade::render('<x-atrium::audit-trail source="keystone" :subject="$subject" :limit="5" action="product." />', ['subject' => $user]);
+    $html = Blade::render('<x-atrium::audit-trail source="keystone" :subject="$subject" :scope="$subject" :limit="5" action="product." />', ['subject' => $user]);
 
     expect($html)->toContain('data-testid="audit-trail"')
         ->toContain('product.updated')
@@ -67,7 +67,8 @@ it('renders a package history from the installed audit log', function (): void {
         ->and($trail->filter?->source)->toBe('keystone')
         ->and($trail->filter?->subjectId)->toBe('3')
         ->and($trail->filter?->limit)->toBe(5)
-        ->and($trail->filter?->action)->toBe('product.');
+        ->and($trail->filter?->action)->toBe('product.')
+        ->and($trail->filter?->scopeId)->toBe('3');
 });
 
 it('marks entries the application recorded itself', function (): void {
