@@ -6,7 +6,7 @@ namespace RefactorCircus\Atrium\Http\Controllers\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use RefactorCircus\Atrium\Support\ScreenAccess;
-use RefactorCircus\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Keystone\Packages\PackageRegistry;
 
 /**
  * For a package's Atrium screen controllers: refuse with the same policy check

@@ -23,9 +23,9 @@ use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
 use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
 use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
 use RefactorCircus\Atrium\Tests\Fixtures\Models\TeamDashboard;
-use RefactorCircus\Foundation\Contracts\ActionFinishedEvent;
-use RefactorCircus\Foundation\Contracts\ActionStartingEvent;
-use RefactorCircus\Foundation\Contracts\ModelLifecycleEvent;
+use RefactorCircus\Keystone\Contracts\ActionFinishedEvent;
+use RefactorCircus\Keystone\Contracts\ActionStartingEvent;
+use RefactorCircus\Keystone\Contracts\ModelLifecycleEvent;
 use Workbench\App\Models\User;
 
 /**

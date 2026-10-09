@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardUpdatedActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardUpdatingActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
-use RefactorCircus\Foundation\Actions\Action;
+use RefactorCircus\Keystone\Actions\Action;
 
 class UpdateDashboardAction extends Action
 {

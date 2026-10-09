@@ -1,5 +1,5 @@
 @props([
-    // list<\RefactorCircus\Foundation\Audit\Data\AuditEntry>
+    // list<\RefactorCircus\Keystone\Audit\Data\AuditEntry>
     'entries' => [],
     // Hide the subject column, for a single record's history.
     'withoutSubject' => false,

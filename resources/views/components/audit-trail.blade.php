@@ -13,24 +13,24 @@
 
 {{--
     A package's own history, read from whichever audit log is installed
-    through refactor-circus/foundation's AuditTrail. Renders nothing until one is
+    through refactor-circus/keystone's AuditTrail. Renders nothing until one is
     (refactor-circus/keen), so packages can place it unconditionally:
 
         <x-atrium::audit-trail source="showroom" :subject="$product" />
 --}}
 
 @php
-    $trail = app(\RefactorCircus\Foundation\Audit\Contracts\AuditTrail::class);
-    $package = $source === null ? null : app(\RefactorCircus\Foundation\Packages\PackageRegistry::class)->find($source);
+    $trail = app(\RefactorCircus\Keystone\Audit\Contracts\AuditTrail::class);
+    $package = $source === null ? null : app(\RefactorCircus\Keystone\Packages\PackageRegistry::class)->find($source);
 
     // Shown only to those the package's history endpoint would answer.
-    $allowed = $package === null || app(\RefactorCircus\Foundation\Audit\History::class)->allows($package, auth()->user(), array_filter([
+    $allowed = $package === null || app(\RefactorCircus\Keystone\Audit\History::class)->allows($package, auth()->user(), array_filter([
         'subject_type' => $subject?->getMorphClass(),
         'subject_id' => $subject === null ? null : (string) $subject->getKey(),
     ]));
 
     $page = $allowed && $trail->available()
-        ? $trail->entries(\RefactorCircus\Foundation\Audit\Data\AuditFilter::make()->source($source)->subject($subject)->scope($scope)->action($action)->limit((int) $limit))
+        ? $trail->entries(\RefactorCircus\Keystone\Audit\Data\AuditFilter::make()->source($source)->subject($subject)->scope($scope)->action($action)->limit((int) $limit))
         : null;
 @endphp
 

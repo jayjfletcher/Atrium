@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardDeletedActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardDeletingActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
-use RefactorCircus\Foundation\Actions\Action;
+use RefactorCircus\Keystone\Actions\Action;
 
 class DeleteDashboardAction extends Action
 {

@@ -427,7 +427,7 @@ Event::listen(DashboardSavingEvent::class, function (DashboardSavingEvent $event
 });
 ```
 
-They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `RefactorCircus\Foundation\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
+They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `RefactorCircus\Keystone\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
 
 ### Action events
 
@@ -461,7 +461,7 @@ Each family implements an interface in `RefactorCircus\Atrium\Contracts`, and La
 | `ActionFinishedEvent` | every action finish |
 
 ```php
-use RefactorCircus\Foundation\Contracts\ActionFinishedEvent;
+use RefactorCircus\Keystone\Contracts\ActionFinishedEvent;
 
 Event::listen(ActionFinishedEvent::class, fn (ActionFinishedEvent $event) => Log::info(class_basename($event)));
 ```
@@ -534,7 +534,7 @@ The code is organised into domain modules under `src/Domains/{Domain}`, namespac
 | `Settings` | `Data\SettingsPanel`, `Services\SettingsRegistry` and the settings pages |
 | `Widgets` | `Data\WidgetDefinition` and `Services\WidgetRegistry` |
 
-Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Http\Requests\Request` base class, and `Support` (`Icons`, `StyleRegistry`). The `Action` base, the event contracts and the `DispatchesModelEvents` trait come from [refactor-circus/foundation](https://github.com/Refactor-Circus/Foundation), the shared runtime of the suite. Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
+Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Http\Requests\Request` base class, and `Support` (`Icons`, `StyleRegistry`). The `Action` base, the event contracts and the `DispatchesModelEvents` trait come from [refactor-circus/keystone](https://github.com/Refactor-Circus/Keystone), the shared runtime of the suite. Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
 
 The models keep the class names they had before the move (`RefactorCircus\Atrium\Models\Dashboard`, `RefactorCircus\Atrium\Models\DashboardWidget`) as their morph aliases, so any polymorphic column or audit record that stored those names still resolves, and new records store the same values.
 

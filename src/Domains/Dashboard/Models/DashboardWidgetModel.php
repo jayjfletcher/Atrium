@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
 use RefactorCircus\Atrium\Facades\Atrium;
-use RefactorCircus\Foundation\Models\Concerns\DispatchesModelEvents;
+use RefactorCircus\Keystone\Models\Concerns\DispatchesModelEvents;
 
 /**
  * @property int $id

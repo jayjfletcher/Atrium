@@ -92,7 +92,7 @@ The gate decides who reaches Atrium at all. Each dashboard request is then check
 
 - Model events: `RefactorCircus\Atrium\Domains\Dashboard\Events\{Entity}{Hook}Event` (e.g. `DashboardCreatedEvent`, `DashboardWidgetDeletedEvent`), synchronous, with `$event->dashboard` / `$event->widget`, `model()` and `hook()`.
 - Action events: `RefactorCircus\Atrium\Domains\Dashboard\Events\*ActionEvent` pairs per action, a start event carrying the input (`DashboardLayoutSavingActionEvent`) and a finish event carrying the result (`DashboardLayoutSavedActionEvent`), which fires only after commit.
-- Listen to a whole family through `RefactorCircus\Foundation\Contracts\ModelLifecycleEvent`, `ActionStartingEvent` or `ActionFinishedEvent`.
+- Listen to a whole family through `RefactorCircus\Keystone\Contracts\ModelLifecycleEvent`, `ActionStartingEvent` or `ActionFinishedEvent`.
 
 ```php
 Event::listen(DashboardCreatedActionEvent::class, fn ($event) => Log::info('Dashboard created', ['id' => $event->dashboard->id]));

@@ -11,8 +11,8 @@ use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
 use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
 use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
 use RefactorCircus\Atrium\Support\Icons;
-use RefactorCircus\Foundation\Audit\History;
-use RefactorCircus\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Keystone\Audit\History;
+use RefactorCircus\Keystone\Packages\PackageRegistry;
 use Throwable;
 
 /**

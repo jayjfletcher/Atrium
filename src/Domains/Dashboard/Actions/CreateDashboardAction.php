@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
-use RefactorCircus\Foundation\Actions\Action;
+use RefactorCircus\Keystone\Actions\Action;
 
 class CreateDashboardAction extends Action
 {

@@ -8,7 +8,7 @@ use RefactorCircus\Atrium\Support\ServiceProvider;
 
 /**
  * Each package's own audit log in the dashboard, read from whichever audit
- * log is installed through refactor-circus/foundation's AuditTrail.
+ * log is installed through refactor-circus/keystone's AuditTrail.
  */
 class HistoryServiceProvider extends ServiceProvider
 {

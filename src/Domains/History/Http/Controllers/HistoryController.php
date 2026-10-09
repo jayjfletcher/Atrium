@@ -6,8 +6,8 @@ namespace RefactorCircus\Atrium\Domains\History\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use RefactorCircus\Foundation\Audit\History;
-use RefactorCircus\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Keystone\Audit\History;
+use RefactorCircus\Keystone\Packages\PackageRegistry;
 
 /**
  * One package's audit log: its entries, newest first, filtered by action or

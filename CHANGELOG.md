@@ -13,7 +13,7 @@
 - A per-package audit log page at `atrium.history.show` (`/atrium/history/{package}`), with filters and paging, and `Plugin::historyNavItem()` to link it from a plugin's sidebar group. History panels link to it.
 - Themes: a second built-in theme, **Harbor**, beside the default **Atrium**; themes from `atrium.themes.available` and `Atrium::theme()`; and a theme switcher beside the light/dark toggle, shown behind the `atrium.themes.switcher_feature` feature (Atrium's own `Domains\Themes\Features\ThemeSwitcherFeature` by default, a Pennant feature that is on until turned off, globally or per user, once a feature resolver such as refactor-circus/pennantplus is registered).
 - Shared components so the packages of the suite need no markup or styles of their own: `description-list`, `chip`, `search-input`, `flash`, `banner`, `guest`, `form.combobox`, `form.actions`, a `bare` mode for form controls, and `prefix`/`suffix` slots on `form.input`.
-- History components that read the audit log through refactor-circus/foundation's `AuditTrail`: `audit-trail`, `audit.entries` and `audit.changes`. `audit-trail` renders nothing until an audit log (refactor-circus/keen) is installed.
+- History components that read the audit log through refactor-circus/keystone's `AuditTrail`: `audit-trail`, `audit.entries` and `audit.changes`. `audit-trail` renders nothing until an audit log (refactor-circus/keen) is installed.
 - `Plugin::featuresFromConfig()`, `RefactorCircus\Atrium\Support\ScreenAccess` and the `AuthorizesScreens` controller trait, so a package's plugin and screens stop copying the same feature loading and policy checks.
 - A safelist of layout utilities in the compiled stylesheet, and `RefactorCircus\Atrium\Testing\AtriumStyles` for checking a package's views use only Atrium's styles.
 
@@ -26,7 +26,7 @@
 
 ### Changed
 
-- Atrium now stands on [refactor-circus/foundation](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. The `Action` base, the `ActionStartingEvent`, `ActionFinishedEvent` and `ModelLifecycleEvent` contracts and the `DispatchesModelEvents` trait moved there: import them from `RefactorCircus\Foundation\...` instead of `RefactorCircus\Atrium\...`. Atrium registers itself as the `atrium` package.
+- Atrium now stands on [refactor-circus/keystone](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. The `Action` base, the `ActionStartingEvent`, `ActionFinishedEvent` and `ModelLifecycleEvent` contracts and the `DispatchesModelEvents` trait moved there: import them from `RefactorCircus\Keystone\...` instead of `RefactorCircus\Atrium\...`. Atrium registers itself as the `atrium` package.
 
 ### Fixed
 

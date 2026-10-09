@@ -5,12 +5,12 @@ declare(strict_types=1);
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Blade;
-use RefactorCircus\Foundation\Audit\Contracts\AuditTrail;
-use RefactorCircus\Foundation\Audit\Data\AuditEntry;
-use RefactorCircus\Foundation\Audit\Data\AuditFilter;
-use RefactorCircus\Foundation\Audit\Data\AuditPage;
-use RefactorCircus\Foundation\Packages\Package;
-use RefactorCircus\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Keystone\Audit\Contracts\AuditTrail;
+use RefactorCircus\Keystone\Audit\Data\AuditEntry;
+use RefactorCircus\Keystone\Audit\Data\AuditFilter;
+use RefactorCircus\Keystone\Audit\Data\AuditPage;
+use RefactorCircus\Keystone\Packages\Package;
+use RefactorCircus\Keystone\Packages\PackageRegistry;
 
 function auditEntry(string $source = 'showroom', array $changes = []): AuditEntry
 {

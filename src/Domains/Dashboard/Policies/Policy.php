@@ -6,7 +6,7 @@ namespace RefactorCircus\Atrium\Domains\Dashboard\Policies;
 
 use Illuminate\Database\Eloquent\Model;
 use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
-use RefactorCircus\Foundation\Policies\Policy as BasePolicy;
+use RefactorCircus\Keystone\Policies\Policy as BasePolicy;
 
 /**
  * Shared checks for the bundled policies.

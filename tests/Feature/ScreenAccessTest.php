@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
 use RefactorCircus\Atrium\Support\ScreenAccess;
 use RefactorCircus\Atrium\Tests\Fixtures\Billing\RefundController;
-use RefactorCircus\Foundation\Packages\Package;
-use RefactorCircus\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Keystone\Packages\Package;
+use RefactorCircus\Keystone\Packages\PackageRegistry;
 
 it('asks the package policies the way its api does', function (): void {
     app(PackageRegistry::class)->register(Package::make('billing', 'Billing')->authorization());

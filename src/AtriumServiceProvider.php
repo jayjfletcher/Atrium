@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Blade;
 use RefactorCircus\Atrium\Console\Commands\InstallCommand;
 use RefactorCircus\Atrium\Domains\DomainServiceProvider;
 use RefactorCircus\Atrium\Support\StyleRegistry;
-use RefactorCircus\Foundation\Packages\Package;
-use RefactorCircus\Foundation\Support\PackageServiceProvider;
+use RefactorCircus\Keystone\Packages\Package;
+use RefactorCircus\Keystone\Support\PackageServiceProvider;
 
 class AtriumServiceProvider extends PackageServiceProvider
 {

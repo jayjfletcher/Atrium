@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent;
 use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
-use RefactorCircus\Foundation\Actions\Action;
+use RefactorCircus\Keystone\Actions\Action;
 
 class SaveDashboardLayoutAction extends Action
 {
