@@ -12,7 +12,7 @@ use RefactorCircus\Foundation\Audit\Data\AuditPage;
 use RefactorCircus\Foundation\Packages\Package;
 use RefactorCircus\Foundation\Packages\PackageRegistry;
 
-function auditEntry(string $source = 'keystone', array $changes = []): AuditEntry
+function auditEntry(string $source = 'showroom', array $changes = []): AuditEntry
 {
     return new AuditEntry(
         id: 7,
@@ -30,7 +30,7 @@ function auditEntry(string $source = 'keystone', array $changes = []): AuditEntr
 }
 
 it('renders nothing for the history while no audit log is installed', function (): void {
-    expect(trim(Blade::render('<x-atrium::audit-trail source="keystone" />')))->toBe('');
+    expect(trim(Blade::render('<x-atrium::audit-trail source="showroom" />')))->toBe('');
 });
 
 it('renders a package history from the installed audit log', function (): void {
@@ -56,7 +56,7 @@ it('renders a package history from the installed audit log', function (): void {
     $user = new User;
     $user->id = 3;
 
-    $html = Blade::render('<x-atrium::audit-trail source="keystone" :subject="$subject" :scope="$subject" :limit="5" action="product." />', ['subject' => $user]);
+    $html = Blade::render('<x-atrium::audit-trail source="showroom" :subject="$subject" :scope="$subject" :limit="5" action="product." />', ['subject' => $user]);
 
     expect($html)->toContain('data-testid="audit-trail"')
         ->toContain('product.updated')
@@ -64,7 +64,7 @@ it('renders a package history from the installed audit log', function (): void {
         ->toContain('atrium')
         // One record's history leaves out the record column.
         ->not->toContain('Widget')
-        ->and($trail->filter?->source)->toBe('keystone')
+        ->and($trail->filter?->source)->toBe('showroom')
         ->and($trail->filter?->subjectId)->toBe('3')
         ->and($trail->filter?->limit)->toBe(5)
         ->and($trail->filter?->action)->toBe('product.')
@@ -110,8 +110,8 @@ it('hides a package history from those its history endpoint would refuse', funct
     });
 
     app(PackageRegistry::class)->register(
-        Package::make('keystone', 'Keystone')->authorizeHistory(fn (): bool => false),
+        Package::make('showroom', 'Showroom')->authorizeHistory(fn (): bool => false),
     );
 
-    expect(trim(Blade::render('<x-atrium::audit-trail source="keystone" />')))->toBe('');
+    expect(trim(Blade::render('<x-atrium::audit-trail source="showroom" />')))->toBe('');
 });

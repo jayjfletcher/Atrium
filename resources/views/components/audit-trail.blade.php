@@ -1,5 +1,5 @@
 @props([
-    // The package key whose history to show, such as `keystone`.
+    // The package key whose history to show, such as `showroom`.
     'source' => null,
     // One record's history; omit for the whole package's.
     'subject' => null,
@@ -16,7 +16,7 @@
     through refactor-circus/foundation's AuditTrail. Renders nothing until one is
     (refactor-circus/keen), so packages can place it unconditionally:
 
-        <x-atrium::audit-trail source="keystone" :subject="$product" />
+        <x-atrium::audit-trail source="showroom" :subject="$product" />
 --}}
 
 @php

@@ -45,7 +45,7 @@ abstract class Plugin implements PluginContract
     }
 
     /**
-     * The features listed under a config key, such as `keystone.atrium.features`,
+     * The features listed under a config key, such as `showroom.atrium.features`,
      * that can be loaded. A feature class whose package is missing - a
      * PennantPlus feature without refactor-circus/pennantplus - fails to load with an
      * Error rather than class_exists() answering false, so it is skipped.
