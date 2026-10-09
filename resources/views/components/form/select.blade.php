@@ -30,7 +30,7 @@
         </label>
     @endif
 
-    <div @class(['relative', $wrapper => $bare && $wrapper])>
+    <div @class(['relative', (string) $wrapper => $bare && $wrapper])>
         <select
             id="{{ $id }}"
             name="{{ $name }}"

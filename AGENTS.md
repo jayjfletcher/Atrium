@@ -24,7 +24,7 @@ These are recorded in full under `agent-os/standards/`; the short form:
 
 ## PHP Conventions
 
-- The package targets PHP 8.4. Use its syntax where it earns its place.
+- The package targets PHP 8.5. Use its syntax where it earns its place.
 - Value objects (`NavItem`, `WidgetDefinition`, `SettingsPanel`, `SearchSource`, `SearchResult`, `Theme`) expose state as `public private(set)` properties rather than getter methods, so they read as `$item->label` and stay immutable from the outside. Configure them through the fluent setters, which share the property's name.
 - Closures and other internals stay `private`; only meaningful state is publicly readable.
 

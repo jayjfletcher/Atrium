@@ -37,7 +37,7 @@
         </label>
     @endif
 
-    <div @class(['relative', 'flex' => $hasPrefix || $hasSuffix, $wrapper => $bare && $wrapper])>
+    <div @class(['relative', 'flex' => $hasPrefix || $hasSuffix, (string) $wrapper => $bare && $wrapper])>
         @if ($hasPrefix)
             <span class="{{ $addon }} rounded-l-radius border-r-0">{{ $prefix }}</span>
         @endif

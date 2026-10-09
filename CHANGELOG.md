@@ -23,10 +23,12 @@
 - Ledger's top bar no longer has a hover menu as well as its row of tabs.
 - Form controls no longer render an `id` twice when one is passed.
 - `audit-trail` shows a package's history only to those its history endpoint would answer.
+- `form.input` and `form.select` no longer use `null` as an array offset when no `wrapper` is passed, which PHP 8.5 deprecates.
 
 ### Changed
 
 - Atrium now stands on [refactor-circus/keystone](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. The `Action` base, the `ActionStartingEvent`, `ActionFinishedEvent` and `ModelLifecycleEvent` contracts and the `DispatchesModelEvents` trait moved there: import them from `RefactorCircus\Keystone\...` instead of `RefactorCircus\Atrium\...`. Atrium registers itself as the `atrium` package.
+- Atrium now requires PHP 8.5. CI runs on PHP 8.5 only, and the development dependencies are raised to their latest releases (Playwright 1.64, Alpine.js 3.17.4).
 
 ### Fixed
 
