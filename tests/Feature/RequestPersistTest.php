@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Http\Requests\Request;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Http\Requests\Request;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
 use Workbench\App\Models\User;
 
 beforeEach(function (): void {
@@ -76,7 +76,7 @@ it('every atrium request declares how it persists', function (): void {
     expect($requests)->not->toBeEmpty();
 
     foreach ($requests as $file) {
-        $class = 'JayI\\Atrium\\Domains\\'.basename(dirname($file, 3)).'\\Http\\Requests\\'.basename($file, '.php');
+        $class = 'RefactorCircus\\Atrium\\Domains\\'.basename(dirname($file, 3)).'\\Http\\Requests\\'.basename($file, '.php');
 
         expect(is_subclass_of($class, Request::class))->toBeTrue();
 

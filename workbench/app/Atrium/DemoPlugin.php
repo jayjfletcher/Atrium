@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Workbench\App\Atrium;
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
-use JayI\Atrium\Domains\Search\Data\SearchResult;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
-use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
-use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
-use JayI\Atrium\Support\Icons;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchResult;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
+use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use RefactorCircus\Atrium\Support\Icons;
 use Workbench\App\Models\User;
 
 /**

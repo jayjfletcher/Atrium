@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Navigation;
+namespace RefactorCircus\Atrium\Domains\Navigation;
 
-use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Navigation\Services\NavigationRegistry;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 class NavigationServiceProvider extends ServiceProvider
 {

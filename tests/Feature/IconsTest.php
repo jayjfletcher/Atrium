@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Blade;
-use JayI\Atrium\Support\Icons;
+use RefactorCircus\Atrium\Support\Icons;
 
 it('serves any heroicons outline icon by name', function (): void {
     expect(Icons::svg('users'))->toStartWith('<svg')->toContain('aria-hidden="true"')

@@ -5,11 +5,11 @@ declare(strict_types=1);
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
-use JayI\Atrium\Support\ScreenAccess;
-use JayI\Atrium\Tests\Fixtures\Billing\RefundController;
-use JayI\Foundation\Packages\Package;
-use JayI\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Support\ScreenAccess;
+use RefactorCircus\Atrium\Tests\Fixtures\Billing\RefundController;
+use RefactorCircus\Foundation\Packages\Package;
+use RefactorCircus\Foundation\Packages\PackageRegistry;
 
 it('asks the package policies the way its api does', function (): void {
     app(PackageRegistry::class)->register(Package::make('billing', 'Billing')->authorization());
@@ -45,7 +45,7 @@ it('reads the loadable features from config', function (): void {
 });
 
 it('refuses a screen for the package its controller belongs to', function (): void {
-    app(PackageRegistry::class)->register(Package::make('billing', 'JayI\Atrium\Tests\Fixtures\Billing')->authorization());
+    app(PackageRegistry::class)->register(Package::make('billing', 'RefactorCircus\Atrium\Tests\Fixtures\Billing')->authorization());
     Gate::define('refund', fn (): bool => false);
     Route::get('refund', RefundController::class);
 

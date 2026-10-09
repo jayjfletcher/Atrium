@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Http\Requests;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Http\Requests;
 
 use Illuminate\Http\JsonResponse;
-use JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
-use JayI\Atrium\Http\Requests\Request;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use RefactorCircus\Atrium\Http\Requests\Request;
 
 class SaveDashboardLayoutRequest extends Request
 {

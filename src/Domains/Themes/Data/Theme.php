@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Themes\Data;
+namespace RefactorCircus\Atrium\Domains\Themes\Data;
 
 use InvalidArgumentException;
 

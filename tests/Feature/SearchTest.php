@@ -11,16 +11,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Concurrency;
 use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Process;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Search\Data\SearchResult;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
-use JayI\Atrium\Domains\Search\Services\SearchRegistry;
-use JayI\Atrium\Tests\Fixtures\FullPlugin;
-use JayI\Atrium\Tests\Fixtures\MultiSourcePlugin;
 use Laravel\Ai\AiServiceProvider;
 use Laravel\Ai\Classification;
 use Laravel\Ai\Responses\Data\ChoiceAnswer;
 use Orchestra\Testbench\Attributes\UsesVendor;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchResult;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Search\Services\SearchRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\FullPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\MultiSourcePlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

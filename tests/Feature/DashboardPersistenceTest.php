@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
 use Workbench\App\Models\User;
 
 it('creates the dashboard tables', function (): void {

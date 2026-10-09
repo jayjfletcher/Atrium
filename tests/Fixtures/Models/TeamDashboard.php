@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures\Models;
+namespace RefactorCircus\Atrium\Tests\Fixtures\Models;
 
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
 
 /**
  * An application's own dashboard model.

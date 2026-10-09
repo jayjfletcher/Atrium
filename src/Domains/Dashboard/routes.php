@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Dashboard\Http\Controllers\DashboardController;
-use JayI\Atrium\Domains\Dashboard\Http\Controllers\DashboardCrudController;
-use JayI\Atrium\Domains\Dashboard\Http\Controllers\DashboardLayoutController;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Controllers\DashboardController;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Controllers\DashboardCrudController;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Controllers\DashboardLayoutController;
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 

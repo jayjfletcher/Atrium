@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Access\Concerns;
+namespace RefactorCircus\Atrium\Domains\Access\Concerns;
 
 use Closure;
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
 
 /**
  * Visibility rules shared by navigation items and groups. Every rule must

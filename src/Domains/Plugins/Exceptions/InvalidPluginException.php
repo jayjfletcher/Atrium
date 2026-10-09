@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins\Exceptions;
+namespace RefactorCircus\Atrium\Domains\Plugins\Exceptions;
 
 use InvalidArgumentException;
-use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
+use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin;
 
 class InvalidPluginException extends InvalidArgumentException
 {

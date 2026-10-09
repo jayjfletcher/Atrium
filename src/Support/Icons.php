@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Support;
+namespace RefactorCircus\Atrium\Support;
 
 use InvalidArgumentException;
 

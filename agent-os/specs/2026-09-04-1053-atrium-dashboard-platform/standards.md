@@ -13,7 +13,7 @@ Package conventions come from `AGENTS.md` and the repository's local skills. The
 ### From `AGENTS.md`
 
 - Use Laravel-native package APIs and the existing service provider shape before adding abstractions.
-- Keep package names, namespaces, Composer metadata, publish tags, documentation, and examples aligned with `jayi/atrium`.
+- Keep package names, namespaces, Composer metadata, publish tags, documentation, and examples aligned with `refactor-circus/atrium`.
 - Add only the files and dependencies needed for the behavior being implemented.
 - Prefer explicit Laravel package code over helper abstractions unless the extension point is real.
 - Keep tests focused on observable behavior through public APIs, provider wiring, commands, routes, published resources, and documentation promises.
@@ -37,7 +37,7 @@ Package conventions come from `AGENTS.md` and the repository's local skills. The
 
 ### Enforced automatically
 
-- `tests/ArchTest.php` requires `declare(strict_types=1)` across `JayI\Atrium` and forbids `dd()`, `ddd()`, `env()`, and `exit()`.
+- `tests/ArchTest.php` requires `declare(strict_types=1)` across `RefactorCircus\Atrium` and forbids `dd()`, `ddd()`, `env()`, and `exit()`.
 - `composer test:types` requires 100% type coverage.
 - `composer analyse` runs Larastan; `composer lint:check` runs Pint.
 

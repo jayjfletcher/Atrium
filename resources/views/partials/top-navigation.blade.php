@@ -1,5 +1,5 @@
 @php
-    $sections ??= \JayI\Atrium\Facades\Atrium::navigationSections(request());
+    $sections ??= \RefactorCircus\Atrium\Facades\Atrium::navigationSections(request());
     $currentSection ??= null;
 
     $tab = 'inline-flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-radius px-2.5 text-sm font-medium transition-colors [&_svg]:size-4';

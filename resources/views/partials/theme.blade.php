@@ -1,5 +1,5 @@
 @php
-    $atriumThemes = app(\JayI\Atrium\Domains\Themes\Services\ThemeRegistry::class);
+    $atriumThemes = app(\RefactorCircus\Atrium\Domains\Themes\Services\ThemeRegistry::class);
     $atriumDefaultTheme = $atriumThemes->default()?->key;
     // Without the switcher only the default theme is ever applied, whatever
     // a browser remembers from when it was on.

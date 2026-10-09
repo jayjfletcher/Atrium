@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures\Policies;
+namespace RefactorCircus\Atrium\Tests\Fixtures\Policies;
 
 use Illuminate\Database\Eloquent\Model;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
 
 /**
  * Widget placements may be added but never removed.

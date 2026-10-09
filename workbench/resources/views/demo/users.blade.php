@@ -3,7 +3,7 @@
         <x-atrium::page-header title="Team" description="Everyone with access to the shop, read from the users table.">
             <x-slot:actions>
                 <x-atrium::button variant="outline">
-                    {!! \JayI\Atrium\Support\Icons::svg('user-plus') !!}
+                    {!! \RefactorCircus\Atrium\Support\Icons::svg('user-plus') !!}
                     Invite someone
                 </x-atrium::button>
             </x-slot:actions>

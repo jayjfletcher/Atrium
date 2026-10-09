@@ -1,13 +1,13 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "jayi/atrium",
+    "name": "refactor-circus/atrium",
     "description": "A plug-and-play dashboard for Laravel that other packages can extend.",
     "keywords": [
         "laravel",
-        "jayi",
+        "refactor-circus",
         "atrium"
     ],
-    "homepage": "https://github.com/jayi/atrium",
+    "homepage": "https://github.com/refactor-circus/atrium",
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "jayi/foundation": "dev-main",
+        "refactor-circus/foundation": "dev-main",
         "laravel/framework": "^13.0"
     },
     "require-dev": {
@@ -36,16 +36,16 @@
     },
     "suggest": {
         "laravel/ai": "Required to classify global search queries and only run the most relevant search sources (^1.0).",
-        "laravel/pennant": "Turn the theme switcher on or off per user with Atrium's ThemeSwitcherFeature, through a feature resolver such as jayi/pennantplus (^1.26)."
+        "laravel/pennant": "Turn the theme switcher on or off per user with Atrium's ThemeSwitcherFeature, through a feature resolver such as refactor-circus/pennantplus (^1.26)."
     },
     "autoload": {
         "psr-4": {
-            "JayI\\Atrium\\": "src/"
+            "RefactorCircus\\Atrium\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JayI\\Atrium\\Tests\\": "tests/",
+            "RefactorCircus\\Atrium\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
             "Workbench\\Database\\Factories\\": "workbench/database/factories/",
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
@@ -99,10 +99,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "JayI\\Atrium\\AtriumServiceProvider"
+                "RefactorCircus\\Atrium\\AtriumServiceProvider"
             ],
             "aliases": {
-                "Atrium": "JayI\\Atrium\\Facades\\Atrium"
+                "Atrium": "RefactorCircus\\Atrium\\Facades\\Atrium"
             }
         }
     },
@@ -118,7 +118,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/jayjfletcher/Foundation.git"
+            "url": "https://github.com/Refactor-Circus/Foundation.git"
         }
     ]
 }

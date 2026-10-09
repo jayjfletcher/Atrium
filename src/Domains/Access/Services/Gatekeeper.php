@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Access\Services;
+namespace RefactorCircus\Atrium\Domains\Access\Services;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Gate;
  * Answers the two questions that decide what a request may see: does the
  * user hold a permission, and is a feature on. Atrium ships no opinion on
  * either beyond Laravel's Gate, so applications and packages (such as
- * jayi/pennantplus) swap in their own answers.
+ * refactor-circus/pennantplus) swap in their own answers.
  */
 class Gatekeeper
 {

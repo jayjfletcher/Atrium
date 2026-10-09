@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Widgets;
+namespace RefactorCircus\Atrium\Domains\Widgets;
 
-use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 class WidgetsServiceProvider extends ServiceProvider
 {

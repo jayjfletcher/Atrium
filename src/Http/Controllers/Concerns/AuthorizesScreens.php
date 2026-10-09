@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Http\Controllers\Concerns;
+namespace RefactorCircus\Atrium\Http\Controllers\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
-use JayI\Atrium\Support\ScreenAccess;
-use JayI\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Atrium\Support\ScreenAccess;
+use RefactorCircus\Foundation\Packages\PackageRegistry;
 
 /**
  * For a package's Atrium screen controllers: refuse with the same policy check

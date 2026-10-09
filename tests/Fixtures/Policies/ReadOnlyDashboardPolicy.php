@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures\Policies;
+namespace RefactorCircus\Atrium\Tests\Fixtures\Policies;
 
 use Illuminate\Database\Eloquent\Model;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
 
 /**
  * Nobody may change a dashboard, not even its owner.

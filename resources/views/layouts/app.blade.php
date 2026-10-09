@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/atrium/atrium.css') }}">
 
     {{-- Styles packages added with Atrium::stylesheet() and Atrium::css(). --}}
-    @php($atriumStyles = app(\JayI\Atrium\Support\StyleRegistry::class))
+    @php($atriumStyles = app(\RefactorCircus\Atrium\Support\StyleRegistry::class))
     @foreach ($atriumStyles->stylesheets() as $href)
         <link rel="stylesheet" href="{{ $href }}">
     @endforeach
@@ -25,7 +25,7 @@
     @stack('atrium-head')
 </head>
 <body class="bg-canvas text-on-surface antialiased dark:bg-canvas-dark dark:text-on-surface-dark">
-@php($atriumSections = \JayI\Atrium\Facades\Atrium::navigationSections(request()))
+@php($atriumSections = \RefactorCircus\Atrium\Facades\Atrium::navigationSections(request()))
 @php($atriumCurrentSection = collect($atriumSections)->first(fn ($section) => $section->grouped && $section->isActive(request()))?->key)
 <div class="flex h-dvh" x-data="atriumShell(@js($atriumCurrentSection))" x-on:keydown.escape.window="drawer = false" x-on:atrium-theme-changed.window="flyout = null">
     <a class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-radius focus:bg-surface focus:px-3 focus:py-2 dark:focus:bg-surface-dark" href="#atrium-main">

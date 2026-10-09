@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Testing;
+namespace RefactorCircus\Atrium\Testing;
 
 use Symfony\Component\Finder\Finder;
 

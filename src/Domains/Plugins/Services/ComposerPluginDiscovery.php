@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins\Services;
+namespace RefactorCircus\Atrium\Domains\Plugins\Services;
 
 use Illuminate\Filesystem\Filesystem;
 

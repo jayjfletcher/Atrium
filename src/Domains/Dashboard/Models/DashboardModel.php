@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Models;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
-use JayI\Foundation\Models\Concerns\DispatchesModelEvents;
+use RefactorCircus\Foundation\Models\Concerns\DispatchesModelEvents;
 
 /**
  * @property int $id

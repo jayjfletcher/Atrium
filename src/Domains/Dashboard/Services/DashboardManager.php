@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Services;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Services;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
 
 class DashboardManager
 {

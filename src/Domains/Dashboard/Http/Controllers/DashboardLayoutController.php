@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Http\Controllers;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use JayI\Atrium\Domains\Dashboard\Http\Requests\SaveDashboardLayoutRequest;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Requests\SaveDashboardLayoutRequest;
 
 class DashboardLayoutController
 {

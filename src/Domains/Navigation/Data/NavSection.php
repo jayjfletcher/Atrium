@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Navigation\Data;
+namespace RefactorCircus\Atrium\Domains\Navigation\Data;
 
 use Illuminate\Http\Request;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins\Services;
+namespace RefactorCircus\Atrium\Domains\Plugins\Services;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
-use JayI\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
-use JayI\Atrium\Domains\Plugins\Exceptions\InvalidPluginException;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
+use RefactorCircus\Atrium\Domains\Plugins\Exceptions\InvalidPluginException;
 
 class PluginRegistry
 {

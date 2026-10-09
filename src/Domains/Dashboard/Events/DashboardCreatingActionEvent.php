@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Events;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Events;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use JayI\Foundation\Contracts\ActionStartingEvent;
+use RefactorCircus\Foundation\Contracts\ActionStartingEvent;
 
 /**
  * A dashboard is about to be created.

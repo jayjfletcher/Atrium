@@ -1,8 +1,8 @@
 # Atrium
 
-[![Tests](https://github.com/jayi/atrium/actions/workflows/tests.yml/badge.svg)](https://github.com/jayi/atrium/actions/workflows/tests.yml)
-[![Latest Version](https://img.shields.io/packagist/v/jayi/atrium.svg)](https://packagist.org/packages/jayi/atrium)
-[![License](https://img.shields.io/packagist/l/jayi/atrium.svg)](LICENSE.md)
+[![Tests](https://github.com/refactor-circus/atrium/actions/workflows/tests.yml/badge.svg)](https://github.com/refactor-circus/atrium/actions/workflows/tests.yml)
+[![Latest Version](https://img.shields.io/packagist/v/refactor-circus/atrium.svg)](https://packagist.org/packages/refactor-circus/atrium)
+[![License](https://img.shields.io/packagist/l/refactor-circus/atrium.svg)](LICENSE.md)
 
 A plug-and-play dashboard for Laravel that other packages can extend.
 
@@ -11,7 +11,7 @@ Atrium gives you a dashboard shell and a shared component library. Packages regi
 ## Installation
 
 ```bash
-composer require jayi/atrium
+composer require refactor-circus/atrium
 php artisan atrium:install
 ```
 
@@ -36,9 +36,9 @@ php artisan atrium:plugin BillingPlugin
 Every method is optional. A plugin that only adds one sidebar link implements one method.
 
 ```php
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
-use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
 use Illuminate\Support\Facades\Route;
 
 class BillingPlugin extends Plugin
@@ -76,13 +76,13 @@ class BillingPlugin extends Plugin
 
 ### Shared plugin helpers
 
-- `$this->featuresFromConfig('billing.atrium.features')` in `features()` returns the features listed under a config key that can be loaded, skipping feature classes whose package (such as jayi/pennantplus) is missing.
-- `JayI\Atrium\Support\ScreenAccess::allows('billing', 'refund', $invoice)` asks a package's policies exactly as its JSON API and MCP tools do, honouring its `authorization` switch. Use it to hide controls.
-- The `JayI\Atrium\Http\Controllers\Concerns\AuthorizesScreens` trait gives a screen controller `$this->authorizeScreen('refund', $invoice)`, which answers 403 the same way for the package the controller belongs to.
+- `$this->featuresFromConfig('billing.atrium.features')` in `features()` returns the features listed under a config key that can be loaded, skipping feature classes whose package (such as refactor-circus/pennantplus) is missing.
+- `RefactorCircus\Atrium\Support\ScreenAccess::allows('billing', 'refund', $invoice)` asks a package's policies exactly as its JSON API and MCP tools do, honouring its `authorization` switch. Use it to hide controls.
+- The `RefactorCircus\Atrium\Http\Controllers\Concerns\AuthorizesScreens` trait gives a screen controller `$this->authorizeScreen('refund', $invoice)`, which answers 403 the same way for the package the controller belongs to.
 
 ### A package's own audit log
 
-With an audit log installed ([jayi/keen](https://github.com/jayjfletcher/Keen)), every package has its own log at `/atrium/history/{package}`: its entries, newest first, filtered by action or record. Add a link to it in your plugin's sidebar group:
+With an audit log installed ([refactor-circus/keen](https://github.com/Refactor-Circus/Keen)), every package has its own log at `/atrium/history/{package}`: its entries, newest first, filtered by action or record. Add a link to it in your plugin's sidebar group:
 
 ```php
 public function navigation(): array
@@ -120,7 +120,7 @@ Host applications stay in control. Add plugin classes to `plugins` in `config/at
 
 ## Managing Pennant feature flags
 
-The Feature flags page moved to [jayi/pennantplus](https://github.com/jayjfletcher/PennantPlus), which registers it as an Atrium plugin when both are installed.
+The Feature flags page moved to [refactor-circus/pennantplus](https://github.com/Refactor-Circus/PennantPlus), which registers it as an Atrium plugin when both are installed.
 
 ## Widgets are offered, never placed
 
@@ -173,16 +173,16 @@ Packages built on Atrium share one look, so a dashboard reads the same whichever
 - **Navigation items have icons**: `NavItem::make('Users')->icon(Icons::svg('users'))`.
 - **Only what the viewer may use is shown**: gate navigation with `can()`, `feature()` or `authorize()`, and hide each control unless its action would be allowed - asked exactly as the action asks.
 
-Icons are the [Heroicons](https://heroicons.com) outline set (MIT), by name, through `JayI\Atrium\Support\Icons::svg('users')` or `<x-atrium::icon name="users" />`. Register your own with `Icons::register('my-icon', $svg)`.
+Icons are the [Heroicons](https://heroicons.com) outline set (MIT), by name, through `RefactorCircus\Atrium\Support\Icons::svg('users')` or `<x-atrium::icon name="users" />`. Register your own with `Icons::register('my-icon', $svg)`.
 
 Tooltips are drawn on `<body>`, so tables and scrolling containers never clip them.
 
 ### Package styles
 
-Atrium ships one precompiled stylesheet built from its own views plus a safelist of layout utilities (grid columns, gaps, spacing, widths, text sizes and so on; see `resources/css/atrium.css`). The packages of the jayi suite ship no stylesheet or components of their own: their screens use Atrium's components and those utilities only, and each checks it with `JayI\Atrium\Testing\AtriumStyles`:
+Atrium ships one precompiled stylesheet built from its own views plus a safelist of layout utilities (grid columns, gaps, spacing, widths, text sizes and so on; see `resources/css/atrium.css`). The packages of the Refactor Circus suite ship no stylesheet or components of their own: their screens use Atrium's components and those utilities only, and each checks it with `RefactorCircus\Atrium\Testing\AtriumStyles`:
 
 ```php
-use JayI\Atrium\Testing\AtriumStyles;
+use RefactorCircus\Atrium\Testing\AtriumStyles;
 
 it('uses only atrium styles', function (): void {
     $views = dirname(__DIR__, 2).'/resources/views';
@@ -195,7 +195,7 @@ it('uses only atrium styles', function (): void {
 A third-party package may add its own styles instead. Add what you need from your service provider's `boot()`; it is emitted in the dashboard's `<head>`, after Atrium's stylesheet:
 
 ```php
-use JayI\Atrium\Facades\Atrium;
+use RefactorCircus\Atrium\Facades\Atrium;
 
 Atrium::css(file_get_contents(__DIR__.'/../resources/css/atrium.css'), 'billing'); // inline, once per key
 Atrium::stylesheet(asset('vendor/billing/billing.css'));                           // or a published file
@@ -250,7 +250,7 @@ A theme also chooses the shell's layout from the `lg` breakpoint up. `sidebar` i
 // config/atrium.php
 'themes' => [
     'default' => 'atrium',
-    'switcher_feature' => \JayI\Atrium\Domains\Themes\Features\ThemeSwitcherFeature::class,
+    'switcher_feature' => \RefactorCircus\Atrium\Domains\Themes\Features\ThemeSwitcherFeature::class,
     'available' => [
         'dusk' => [
             'label' => 'Dusk',
@@ -266,8 +266,8 @@ A theme also chooses the shell's layout from the `lg` breakpoint up. `sidebar` i
 Packages register themes in code:
 
 ```php
-use JayI\Atrium\Domains\Themes\Data\Theme;
-use JayI\Atrium\Facades\Atrium;
+use RefactorCircus\Atrium\Domains\Themes\Data\Theme;
+use RefactorCircus\Atrium\Facades\Atrium;
 
 Atrium::theme(Theme::make('grove')->label('Grove')->swatch('#15803d')->layout('top')->colors([
     'primary' => '#15803d',
@@ -277,7 +277,7 @@ Atrium::theme(Theme::make('grove')->label('Grove')->swatch('#15803d')->layout('t
 
 Set the `-dark` tokens as well as the light ones, so dark mode stays readable in your theme. Tokens a theme leaves out keep the compiled defaults.
 
-The switcher shows only when there is more than one theme and the feature named by `switcher_feature` is on, asked through Atrium's feature resolver. By default that is Atrium's `ThemeSwitcherFeature`, a Pennant feature that is on globally until you set its global value, and that every user follows until they are given their own. With [jayi/pennantplus](https://github.com/jayjfletcher/PennantPlus) installed you turn it off, globally or for particular users, from its feature flags screen. Atrium does not require Pennant: with no feature resolver registered every feature is on, so the switcher always shows. Set `switcher_feature` to `null` for the same, or to a feature name of your own. While the switcher is hidden, everyone sees the default theme.
+The switcher shows only when there is more than one theme and the feature named by `switcher_feature` is on, asked through Atrium's feature resolver. By default that is Atrium's `ThemeSwitcherFeature`, a Pennant feature that is on globally until you set its global value, and that every user follows until they are given their own. With [refactor-circus/pennantplus](https://github.com/Refactor-Circus/PennantPlus) installed you turn it off, globally or for particular users, from its feature flags screen. Atrium does not require Pennant: with no feature resolver registered every feature is on, so the switcher always shows. Set `switcher_feature` to `null` for the same, or to a feature name of your own. While the switcher is hidden, everyone sees the default theme.
 
 ### Retuning the built-in theme
 
@@ -303,8 +303,8 @@ The sidebar has two levels, so a dashboard with many packages stays readable:
 Items join a section with `NavItem::group('Billing')`. Describe the group to give its section an icon and a place in the rail; otherwise it uses its first page's icon and sorts by its first page:
 
 ```php
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Support\Icons;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Support\Icons;
 
 // In a plugin
 public function navigationGroups(): array
@@ -320,8 +320,8 @@ Give nav items an `icon()` (any inline SVG); a section without one shows its ini
 Navigation is filtered per request. An item, a whole group, or a whole plugin can be gated by permissions, by feature flags, or by any callback, and every rule must pass:
 
 ```php
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
 
 class BillingPlugin extends Plugin
 {
@@ -360,7 +360,7 @@ Hidden children are removed from their parent, and a parent with no link of its 
 Atrium has no feature-flag or permission system of its own; it asks resolvers you can replace, typically from a service provider:
 
 ```php
-use JayI\Atrium\Facades\Atrium;
+use RefactorCircus\Atrium\Facades\Atrium;
 
 // Permissions default to Laravel's Gate. Replace them with any system.
 Atrium::resolvePermissionsUsing(fn (string $ability, array $arguments, Request $request): bool =>
@@ -371,7 +371,7 @@ Atrium::resolveFeaturesUsing(fn (string $feature, Request $request): bool =>
     Feature::for($request->user())->active($feature));
 ```
 
-[jayi/pennantplus](https://github.com/jayjfletcher/pennantplus) registers a feature resolver backed by Pennant when both packages are installed. Hiding a link does not protect the page behind it: plugin routes follow the plugin's `features()`, `atrium.feature:billing,billing-v2` guards any other route the same way, and permissions still belong in your routes, requests, or policies.
+[refactor-circus/pennantplus](https://github.com/Refactor-Circus/pennantplus) registers a feature resolver backed by Pennant when both packages are installed. Hiding a link does not protect the page behind it: plugin routes follow the plugin's `features()`, `atrium.feature:billing,billing-v2` guards any other route the same way, and permissions still belong in your routes, requests, or policies.
 
 To rebuild the stylesheet while working on the package itself:
 
@@ -385,8 +385,8 @@ npm run build:css
 A plugin's `search()` returns a `SearchSource`, or a list of them, and the topbar's command palette queries every source the user may see. Return one source per kind of thing the plugin finds: each gets its own `results.per_source`, and classification can choose between them.
 
 ```php
-use JayI\Atrium\Domains\Search\Data\SearchResult;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchResult;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
 
 public function search(): ?SearchSource
 {
@@ -417,17 +417,17 @@ Atrium announces everything it does, so a host application can react without pat
 
 ### Model events
 
-`DashboardModel` and `DashboardWidgetModel` fire a class-based event for every Eloquent hook: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, and `replicating`. They live beside the models in `JayI\Atrium\Domains\Dashboard\Events` and are named `{Entity}{Hook}Event`, such as `DashboardCreatingEvent` or `DashboardWidgetDeletedEvent`. The model is a typed property (`$event->dashboard`, `$event->widget`) and is also available as `$event->model()`, alongside `$event->hook()`.
+`DashboardModel` and `DashboardWidgetModel` fire a class-based event for every Eloquent hook: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, and `replicating`. They live beside the models in `RefactorCircus\Atrium\Domains\Dashboard\Events` and are named `{Entity}{Hook}Event`, such as `DashboardCreatingEvent` or `DashboardWidgetDeletedEvent`. The model is a typed property (`$event->dashboard`, `$event->widget`) and is also available as `$event->model()`, alongside `$event->hook()`.
 
 ```php
-use JayI\Atrium\Domains\Dashboard\Events\DashboardSavingEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardSavingEvent;
 
 Event::listen(DashboardSavingEvent::class, function (DashboardSavingEvent $event) {
     $event->dashboard->name = trim($event->dashboard->name);
 });
 ```
 
-They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `JayI\Foundation\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
+They fire synchronously, as Eloquent's own events do, so a `creating`, `updating`, `saving` or `deleting` listener that returns `false` stops the write. A subclass of a package model, such as your `TeamDashboard extends DashboardModel`, fires the `Dashboard*` events. The mapping comes from the `RefactorCircus\Foundation\Models\Concerns\DispatchesModelEvents` trait; entries a subclass declares on `$dispatchesEvents` win over the derived ones.
 
 ### Action events
 
@@ -441,7 +441,7 @@ Every action dispatches a start event before it does any work, carrying the inpu
 | `SaveDashboardLayoutAction` | `DashboardLayoutSavingActionEvent` (`dashboard`, `widgets`) | `DashboardLayoutSavedActionEvent` (`dashboard`, `widgetKeys`) |
 
 ```php
-use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
 
 Event::listen(DashboardLayoutSavedActionEvent::class, function (DashboardLayoutSavedActionEvent $event) {
     // $event->dashboard, $event->widgetKeys
@@ -452,7 +452,7 @@ Start events fire immediately. Finish events wait for the surrounding transactio
 
 ### Listening to a whole family
 
-Each family implements an interface in `JayI\Atrium\Contracts`, and Laravel delivers an event to listeners of the interfaces it implements:
+Each family implements an interface in `RefactorCircus\Atrium\Contracts`, and Laravel delivers an event to listeners of the interfaces it implements:
 
 | Interface | Receives |
 | --- | --- |
@@ -461,7 +461,7 @@ Each family implements an interface in `JayI\Atrium\Contracts`, and Laravel deli
 | `ActionFinishedEvent` | every action finish |
 
 ```php
-use JayI\Foundation\Contracts\ActionFinishedEvent;
+use RefactorCircus\Foundation\Contracts\ActionFinishedEvent;
 
 Event::listen(ActionFinishedEvent::class, fn (ActionFinishedEvent $event) => Log::info(class_basename($event)));
 ```
@@ -497,8 +497,8 @@ Swap a policy by pointing the model at your own class, typically one extending t
 ```
 
 ```php
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
 use Illuminate\Database\Eloquent\Model;
 
 class AtriumDashboardPolicy extends DashboardPolicy
@@ -522,7 +522,7 @@ Actions expose `execute()` and keep `handle()` protected, so there is one entry 
 
 ## Package layout
 
-The code is organised into domain modules under `src/Domains/{Domain}`, namespace `JayI\Atrium\Domains\{Domain}`. Each has its own service provider, registered by `JayI\Atrium\Domains\DomainServiceProvider`, which `AtriumServiceProvider` registers in turn.
+The code is organised into domain modules under `src/Domains/{Domain}`, namespace `RefactorCircus\Atrium\Domains\{Domain}`. Each has its own service provider, registered by `RefactorCircus\Atrium\Domains\DomainServiceProvider`, which `AtriumServiceProvider` registers in turn.
 
 | Domain | What lives there |
 | --- | --- |
@@ -534,9 +534,9 @@ The code is organised into domain modules under `src/Domains/{Domain}`, namespac
 | `Settings` | `Data\SettingsPanel`, `Services\SettingsRegistry` and the settings pages |
 | `Widgets` | `Data\WidgetDefinition` and `Services\WidgetRegistry` |
 
-Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Http\Requests\Request` base class, and `Support` (`Icons`, `StyleRegistry`). The `Action` base, the event contracts and the `DispatchesModelEvents` trait come from [jayi/foundation](https://github.com/jayjfletcher/Foundation), the shared runtime of the suite. Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
+Package-wide pieces stay at the top level: the `Atrium` class and facade, the `Http\Requests\Request` base class, and `Support` (`Icons`, `StyleRegistry`). The `Action` base, the event contracts and the `DispatchesModelEvents` trait come from [refactor-circus/foundation](https://github.com/Refactor-Circus/Foundation), the shared runtime of the suite. Config keys, route names, view and component names, translation keys and publish tags are the same whichever domain a class lives in.
 
-The models keep the class names they had before the move (`JayI\Atrium\Models\Dashboard`, `JayI\Atrium\Models\DashboardWidget`) as their morph aliases, so any polymorphic column or audit record that stored those names still resolves, and new records store the same values.
+The models keep the class names they had before the move (`RefactorCircus\Atrium\Models\Dashboard`, `RefactorCircus\Atrium\Models\DashboardWidget`) as their morph aliases, so any polymorphic column or audit record that stored those names still resolves, and new records store the same values.
 
 ## Configuration
 

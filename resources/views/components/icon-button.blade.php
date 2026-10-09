@@ -16,6 +16,6 @@
 <x-atrium::tooltip :text="$label" :position="$tooltip">
     <x-atrium::button :variant="$variant" :size="$size" :type="$type" :href="$href"
         {{ $attributes->merge(['aria-label' => $label])->class(['px-0!', 'w-9' => $size === 'md', 'w-8' => $size === 'sm', 'w-10' => $size === 'lg']) }}>
-        {!! \JayI\Atrium\Support\Icons::svg($icon) !!}
+        {!! \RefactorCircus\Atrium\Support\Icons::svg($icon) !!}
     </x-atrium::button>
 </x-atrium::tooltip>

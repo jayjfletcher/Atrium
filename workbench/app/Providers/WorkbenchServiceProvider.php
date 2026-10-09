@@ -6,7 +6,7 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use JayI\Atrium\Facades\Atrium;
+use RefactorCircus\Atrium\Facades\Atrium;
 use Workbench\App\Atrium\DemoData;
 use Workbench\App\Atrium\DemoPlugin;
 use Workbench\App\Http\Middleware\SignInWorkbenchUser;

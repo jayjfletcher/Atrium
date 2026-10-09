@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Settings\Http\Controllers\SettingsController;
+use RefactorCircus\Atrium\Domains\Settings\Http\Controllers\SettingsController;
 
 Route::get('settings', [SettingsController::class, 'index'])->name('settings');
 Route::get('settings/{panel}', [SettingsController::class, 'show'])->name('settings.show');

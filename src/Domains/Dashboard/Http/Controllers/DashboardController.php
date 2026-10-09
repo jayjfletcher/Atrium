@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Http\Controllers;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Services\DashboardManager;
-use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Services\DashboardManager;
+use RefactorCircus\Atrium\Domains\Widgets\Services\WidgetRegistry;
 
 class DashboardController
 {

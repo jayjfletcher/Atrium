@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Blade;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
-use JayI\Atrium\Domains\Themes\Data\Theme;
-use JayI\Atrium\Domains\Themes\Features\ThemeSwitcherFeature;
-use JayI\Atrium\Domains\Themes\Services\ThemeRegistry;
-use JayI\Atrium\Facades\Atrium;
 use Laravel\Pennant\Feature;
 use Laravel\Pennant\PennantServiceProvider;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Domains\Themes\Data\Theme;
+use RefactorCircus\Atrium\Domains\Themes\Features\ThemeSwitcherFeature;
+use RefactorCircus\Atrium\Domains\Themes\Services\ThemeRegistry;
+use RefactorCircus\Atrium\Facades\Atrium;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

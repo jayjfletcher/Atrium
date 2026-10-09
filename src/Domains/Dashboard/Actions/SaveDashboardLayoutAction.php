@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Actions;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Actions;
 
 use Illuminate\Support\Facades\DB;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Foundation\Actions\Action;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Foundation\Actions\Action;
 
 class SaveDashboardLayoutAction extends Action
 {

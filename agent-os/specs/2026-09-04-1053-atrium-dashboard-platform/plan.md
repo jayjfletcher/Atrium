@@ -2,7 +2,7 @@
 
 ## Context
 
-`jayi/atrium` is currently a bare Laravel package skeleton (placeholder command, placeholder view, placeholder migration, empty `Atrium` class). The goal is to turn it into a plug-and-play admin dashboard platform in the spirit of Laravel Nova, without Nova's central constraint: Nova forces every screen through its resource/field abstraction and a single fixed layout.
+`refactor-circus/atrium` is currently a bare Laravel package skeleton (placeholder command, placeholder view, placeholder migration, empty `Atrium` class). The goal is to turn it into a plug-and-play admin dashboard platform in the spirit of Laravel Nova, without Nova's central constraint: Nova forces every screen through its resource/field abstraction and a single fixed layout.
 
 Atrium inverts that. It ships a **dashboard shell** (chrome, navigation, auth gate) plus a **shared Blade component library** that developers can use anywhere — inside the shell or in their own pages. Third-party packages register an Atrium plugin and their nav items, pages, settings panels, widgets, and search sources appear automatically. Developers are never forced into a layout; the components are the product, the shell is opt-in scaffolding around them.
 
@@ -32,7 +32,7 @@ Atrium (singleton, src/Atrium.php)
 └── SearchRegistry      — search sources for the command palette
 ```
 
-A plugin is a class implementing `JayI\Atrium\Contracts\Plugin`:
+A plugin is a class implementing `RefactorCircus\Atrium\Contracts\Plugin`:
 
 ```php
 interface Plugin
@@ -48,7 +48,7 @@ interface Plugin
 }
 ```
 
-An abstract `JayI\Atrium\Plugins\Plugin` base class provides no-op defaults for every optional method, so a plugin that only adds one nav item implements two methods.
+An abstract `RefactorCircus\Atrium\Plugins\Plugin` base class provides no-op defaults for every optional method, so a plugin that only adds one nav item implements two methods.
 
 **Discovery:** plugin packages declare their plugin class in `composer.json` under `extra.atrium.plugins`. Atrium reads the Composer installed-packages manifest at boot, caches the resolved list, and merges with `config('atrium.plugins')`. Host apps can add, remove, or reorder there. A `atrium:cache` / `atrium:clear` command pair mirrors Laravel's own caching conventions.
 
@@ -177,7 +177,7 @@ These placeholder files from the skeleton go away:
 
 From `AGENTS.md` and the `package-scaffold` skill:
 
-- Namespace stays `JayI\Atrium\`; publish tags stay `atrium-*`
+- Namespace stays `RefactorCircus\Atrium\`; publish tags stay `atrium-*`
 - Container bindings and `mergeConfigFrom` in `register()`; resource loading in `boot()`
 - Keep `publishes`, `publishesMigrations`, and `commands` inside the existing `runningInConsole()` guard
 - No `env()` outside config files; `declare(strict_types=1)` everywhere (enforced by `tests/ArchTest.php`)

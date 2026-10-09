@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains;
+namespace RefactorCircus\Atrium\Domains;
 
 use Illuminate\Support\ServiceProvider;
-use JayI\Atrium\Domains\Access\AccessServiceProvider;
-use JayI\Atrium\Domains\Dashboard\DashboardServiceProvider;
-use JayI\Atrium\Domains\History\HistoryServiceProvider;
-use JayI\Atrium\Domains\Navigation\NavigationServiceProvider;
-use JayI\Atrium\Domains\Plugins\PluginsServiceProvider;
-use JayI\Atrium\Domains\Search\SearchServiceProvider;
-use JayI\Atrium\Domains\Settings\SettingsServiceProvider;
-use JayI\Atrium\Domains\Themes\ThemesServiceProvider;
-use JayI\Atrium\Domains\Widgets\WidgetsServiceProvider;
+use RefactorCircus\Atrium\Domains\Access\AccessServiceProvider;
+use RefactorCircus\Atrium\Domains\Dashboard\DashboardServiceProvider;
+use RefactorCircus\Atrium\Domains\History\HistoryServiceProvider;
+use RefactorCircus\Atrium\Domains\Navigation\NavigationServiceProvider;
+use RefactorCircus\Atrium\Domains\Plugins\PluginsServiceProvider;
+use RefactorCircus\Atrium\Domains\Search\SearchServiceProvider;
+use RefactorCircus\Atrium\Domains\Settings\SettingsServiceProvider;
+use RefactorCircus\Atrium\Domains\Themes\ThemesServiceProvider;
+use RefactorCircus\Atrium\Domains\Widgets\WidgetsServiceProvider;
 
 class DomainServiceProvider extends ServiceProvider
 {

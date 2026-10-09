@@ -3,10 +3,10 @@
 namespace Workbench\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
-use JayI\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
 use Workbench\App\Models\User;
 use Workbench\Database\Factories\UserFactory;
 

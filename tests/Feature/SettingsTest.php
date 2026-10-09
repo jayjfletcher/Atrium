@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
-use JayI\Atrium\Domains\Settings\Services\SettingsRegistry;
-use JayI\Atrium\Tests\Fixtures\FullPlugin;
-use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
+use RefactorCircus\Atrium\Domains\Settings\Services\SettingsRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\FullPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

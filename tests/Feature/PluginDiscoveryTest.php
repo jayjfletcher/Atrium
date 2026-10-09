@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Filesystem\Filesystem;
-use JayI\Atrium\Domains\Plugins\PluginsServiceProvider;
-use JayI\Atrium\Domains\Plugins\Services\ComposerPluginDiscovery;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\BetaPlugin;
+use RefactorCircus\Atrium\Domains\Plugins\PluginsServiceProvider;
+use RefactorCircus\Atrium\Domains\Plugins\Services\ComposerPluginDiscovery;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\BetaPlugin;
 
 function fakeVendor(array $packages): string
 {

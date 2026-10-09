@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Search\Data\SearchResult;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
-use JayI\Atrium\Domains\Search\Services\SearchRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\BrowserPlugin;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchResult;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Search\Services\SearchRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\BrowserPlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

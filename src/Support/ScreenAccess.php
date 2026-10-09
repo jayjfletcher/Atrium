@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Support;
+namespace RefactorCircus\Atrium\Support;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use JayI\Foundation\Auth\Authorizer;
-use JayI\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Foundation\Auth\Authorizer;
+use RefactorCircus\Foundation\Packages\PackageRegistry;
 
 /**
  * Whether the signed-in user may perform an ability in a package, asked the

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Facades;
+namespace RefactorCircus\Atrium\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \JayI\Atrium\Atrium
+ * @see \RefactorCircus\Atrium\Atrium
  */
 class Atrium extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \JayI\Atrium\Atrium::class;
+        return \RefactorCircus\Atrium\Atrium::class;
     }
 }

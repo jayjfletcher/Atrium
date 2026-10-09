@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Themes\Services;
+namespace RefactorCircus\Atrium\Domains\Themes\Services;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
-use JayI\Atrium\Domains\Themes\Data\Theme;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Domains\Themes\Data\Theme;
 use Throwable;
 
 /**

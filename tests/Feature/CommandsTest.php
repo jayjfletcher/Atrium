@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
 
 it('publishes config and assets and explains the gate', function (): void {
     $this->artisan('atrium:install')

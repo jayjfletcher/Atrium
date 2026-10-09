@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins\Support;
+namespace RefactorCircus\Atrium\Domains\Plugins\Support;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
-use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
-use JayI\Atrium\Support\Icons;
-use JayI\Foundation\Audit\History;
-use JayI\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin as PluginContract;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
+use RefactorCircus\Atrium\Support\Icons;
+use RefactorCircus\Foundation\Audit\History;
+use RefactorCircus\Foundation\Packages\PackageRegistry;
 use Throwable;
 
 /**
@@ -47,7 +47,7 @@ abstract class Plugin implements PluginContract
     /**
      * The features listed under a config key, such as `keystone.atrium.features`,
      * that can be loaded. A feature class whose package is missing - a
-     * PennantPlus feature without jayi/pennantplus - fails to load with an
+     * PennantPlus feature without refactor-circus/pennantplus - fails to load with an
      * Error rather than class_exists() answering false, so it is skipped.
      *
      * @return array<int, string>
@@ -73,7 +73,7 @@ abstract class Plugin implements PluginContract
 
     /**
      * A navigation item for a package's own audit log, at
-     * `atrium.history.show`. It shows only while an audit log (jayi/keen) is
+     * `atrium.history.show`. It shows only while an audit log (refactor-circus/keen) is
      * installed and the user may read the package's history, as the
      * package's history endpoint decides:
      *

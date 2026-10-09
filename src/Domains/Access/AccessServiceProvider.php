@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Access;
+namespace RefactorCircus\Atrium\Domains\Access;
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Access\Http\Middleware\EnsureFeaturesAreEnabled;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Access\Http\Middleware\EnsureFeaturesAreEnabled;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 class AccessServiceProvider extends ServiceProvider
 {

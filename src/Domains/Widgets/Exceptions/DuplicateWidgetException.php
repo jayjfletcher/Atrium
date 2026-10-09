@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Widgets\Exceptions;
+namespace RefactorCircus\Atrium\Domains\Widgets\Exceptions;
 
 use InvalidArgumentException;
 

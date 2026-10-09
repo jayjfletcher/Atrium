@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins\Console\Commands;
+namespace RefactorCircus\Atrium\Domains\Plugins\Console\Commands;
 
 use Illuminate\Console\Command;
-use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Widgets\Services\WidgetRegistry;
 
 class PluginListCommand extends Command
 {

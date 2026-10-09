@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Settings;
+namespace RefactorCircus\Atrium\Domains\Settings;
 
-use JayI\Atrium\Domains\Settings\Services\SettingsRegistry;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Settings\Services\SettingsRegistry;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 class SettingsServiceProvider extends ServiceProvider
 {

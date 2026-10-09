@@ -1,4 +1,4 @@
-@php($atriumThemes = app(\JayI\Atrium\Domains\Themes\Services\ThemeRegistry::class))
+@php($atriumThemes = app(\RefactorCircus\Atrium\Domains\Themes\Services\ThemeRegistry::class))
 
 {{-- Beside the light/dark toggle: pick the dashboard's theme. Shown when
      there is more than one theme and `atrium.themes.switcher_feature` is on. --}}

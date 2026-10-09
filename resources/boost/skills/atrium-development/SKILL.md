@@ -15,13 +15,13 @@ Use this skill when a Laravel application needs to integrate the Atrium package,
 
 ## Primary Goal
 
-- apply the `jayi/atrium` public API in the smallest correct way
+- apply the `refactor-circus/atrium` public API in the smallest correct way
 
 ## Workflow
 
 ### 1. Inspect the Laravel app context
 
-- confirm the app is a Laravel project with `jayi/atrium` installed
+- confirm the app is a Laravel project with `refactor-circus/atrium` installed
 - read `config/atrium.php` if it has been published
 - check whether a `viewAtrium` gate is already defined
 
@@ -41,24 +41,24 @@ The dashboard serves from `config('atrium.path')`, which defaults to `/atrium`.
 
 ### 3. Add a plugin
 
-A plugin is how anything appears in the dashboard. Generate one with `php artisan atrium:plugin BillingPlugin`, then extend `JayI\Atrium\Domains\Plugins\Support\Plugin` and implement only the methods needed:
+A plugin is how anything appears in the dashboard. Generate one with `php artisan atrium:plugin BillingPlugin`, then extend `RefactorCircus\Atrium\Domains\Plugins\Support\Plugin` and implement only the methods needed:
 
-- `navigation()` returns `NavItem` objects (`JayI\Atrium\Domains\Navigation\Data\NavItem`) for the sidebar. Gate them with `->can($ability, $arguments)`, `->feature(...$features)`, or `->authorize(fn (Request $request) => bool)`; every rule must pass, and children are filtered the same way
+- `navigation()` returns `NavItem` objects (`RefactorCircus\Atrium\Domains\Navigation\Data\NavItem`) for the sidebar. Gate them with `->can($ability, $arguments)`, `->feature(...$features)`, or `->authorize(fn (Request $request) => bool)`; every rule must pass, and children are filtered the same way
 - `navigationGroups()` returns `NavGroup::make($name)` rules that hide a whole sidebar group
 - `features()` lists features that must all be on for the plugin to appear at all; its routes 404 otherwise
 - `routes()` registers routes inside Atrium's group, so the prefix, middleware, and route name prefix already apply
-- `widgets()` returns `WidgetDefinition` objects (`JayI\Atrium\Domains\Widgets\Data\WidgetDefinition`) offered in the widget picker
-- `settings()` returns a `SettingsPanel` (`JayI\Atrium\Domains\Settings\Data\SettingsPanel`) for the settings page
-- `search()` returns a `SearchSource` (`JayI\Atrium\Domains\Search\Data\SearchSource`, results are `Data\SearchResult`) for the command palette. Give it a `label()` and `description()`: sources run concurrently (at most `atrium.search.concurrency_limit` at once when classification is off), a source that throws or exceeds its timeout (`atrium.search.timeout`, or `->timeout($seconds)`) is reported and skipped, results are capped by `atrium.search.results.per_source` and `.total`, and with `atrium.search.classification.enabled` and laravel/ai installed only the `atrium.search.classification.sources` most likely sources run, chosen from those labels and descriptions
+- `widgets()` returns `WidgetDefinition` objects (`RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition`) offered in the widget picker
+- `settings()` returns a `SettingsPanel` (`RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel`) for the settings page
+- `search()` returns a `SearchSource` (`RefactorCircus\Atrium\Domains\Search\Data\SearchSource`, results are `Data\SearchResult`) for the command palette. Give it a `label()` and `description()`: sources run concurrently (at most `atrium.search.concurrency_limit` at once when classification is off), a source that throws or exceeds its timeout (`atrium.search.timeout`, or `->timeout($seconds)`) is reported and skipped, results are capped by `atrium.search.results.per_source` and `.total`, and with `atrium.search.classification.enabled` and laravel/ai installed only the `atrium.search.classification.sources` most likely sources run, chosen from those labels and descriptions
 - `authorize(Request $request)` hides the whole plugin when it returns false
 
-Atrium has no permission or feature-flag system of its own. `can()` asks Laravel's Gate unless the application calls `Atrium::resolvePermissionsUsing()`, and `feature()` is always on until something calls `Atrium::resolveFeaturesUsing()` (jayi/pennantplus does, with Pennant). Guard other routes with the `atrium.feature:{features}` middleware.
+Atrium has no permission or feature-flag system of its own. `can()` asks Laravel's Gate unless the application calls `Atrium::resolvePermissionsUsing()`, and `feature()` is always on until something calls `Atrium::resolveFeaturesUsing()` (refactor-circus/pennantplus does, with Pennant). Guard other routes with the `atrium.feature:{features}` middleware.
 
 Register it one of two ways. Packages declare the class in their `composer.json` under `extra.atrium.plugins` and Atrium discovers it. Applications call `Atrium::plugin(BillingPlugin::class)` in a service provider's `boot()` method.
 
 ### 4. Use the component library
 
-Screens follow one convention: actions are `<x-atrium::icon-button icon="…" :label="…" />` (icon only, labelled tooltip), statuses are `<x-atrium::status-dot variant="…" label="…" />` (`info` only for pending), navigation items get `->icon(\JayI\Atrium\Support\Icons::svg('…'))`, and controls are hidden unless their action would be allowed. Icons are Heroicons outline names; add more with `Icons::register()`. Atrium's stylesheet only has the utilities its own views use: add the rest with `Atrium::css($css, 'key')` or `Atrium::stylesheet($href)` from your provider's `boot()`.
+Screens follow one convention: actions are `<x-atrium::icon-button icon="…" :label="…" />` (icon only, labelled tooltip), statuses are `<x-atrium::status-dot variant="…" label="…" />` (`info` only for pending), navigation items get `->icon(\RefactorCircus\Atrium\Support\Icons::svg('…'))`, and controls are hidden unless their action would be allowed. Icons are Heroicons outline names; add more with `Icons::register()`. Atrium's stylesheet only has the utilities its own views use: add the rest with `Atrium::css($css, 'key')` or `Atrium::stylesheet($href)` from your provider's `boot()`.
 
 
 Components are namespaced Blade components that work anywhere, in the dashboard shell or in the application's own pages, with no Livewire dependency:
@@ -79,7 +79,7 @@ Atrium ships one compiled stylesheet whose values are all CSS custom properties.
 
 ### 6. Customize who may change dashboards
 
-The gate decides who reaches Atrium at all. Each dashboard request is then checked against the policy in `config('atrium.policies')`: `create` on `DashboardModel::class` to store, `update`/`delete` on the dashboard to rename or remove it, and for a layout save `update` on the dashboard, `delete` on each placement it replaces, and `create` on `DashboardWidgetModel::class` (both in `JayI\Atrium\Domains\Dashboard\Models`). By default the owner may do anything, everyone may view a shared dashboard, and `DashboardWidgetPolicy` defers to the dashboard. To change the rules, extend `JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy` and point `atrium.policies` at it:
+The gate decides who reaches Atrium at all. Each dashboard request is then checked against the policy in `config('atrium.policies')`: `create` on `DashboardModel::class` to store, `update`/`delete` on the dashboard to rename or remove it, and for a layout save `update` on the dashboard, `delete` on each placement it replaces, and `create` on `DashboardWidgetModel::class` (both in `RefactorCircus\Atrium\Domains\Dashboard\Models`). By default the owner may do anything, everyone may view a shared dashboard, and `DashboardWidgetPolicy` defers to the dashboard. To change the rules, extend `RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardPolicy` and point `atrium.policies` at it:
 
 ```php
 'policies' => [
@@ -90,9 +90,9 @@ The gate decides who reaches Atrium at all. Each dashboard request is then check
 
 ### 7. React to dashboard changes
 
-- Model events: `JayI\Atrium\Domains\Dashboard\Events\{Entity}{Hook}Event` (e.g. `DashboardCreatedEvent`, `DashboardWidgetDeletedEvent`), synchronous, with `$event->dashboard` / `$event->widget`, `model()` and `hook()`.
-- Action events: `JayI\Atrium\Domains\Dashboard\Events\*ActionEvent` pairs per action, a start event carrying the input (`DashboardLayoutSavingActionEvent`) and a finish event carrying the result (`DashboardLayoutSavedActionEvent`), which fires only after commit.
-- Listen to a whole family through `JayI\Foundation\Contracts\ModelLifecycleEvent`, `ActionStartingEvent` or `ActionFinishedEvent`.
+- Model events: `RefactorCircus\Atrium\Domains\Dashboard\Events\{Entity}{Hook}Event` (e.g. `DashboardCreatedEvent`, `DashboardWidgetDeletedEvent`), synchronous, with `$event->dashboard` / `$event->widget`, `model()` and `hook()`.
+- Action events: `RefactorCircus\Atrium\Domains\Dashboard\Events\*ActionEvent` pairs per action, a start event carrying the input (`DashboardLayoutSavingActionEvent`) and a finish event carrying the result (`DashboardLayoutSavedActionEvent`), which fires only after commit.
+- Listen to a whole family through `RefactorCircus\Foundation\Contracts\ModelLifecycleEvent`, `ActionStartingEvent` or `ActionFinishedEvent`.
 
 ```php
 Event::listen(DashboardCreatedActionEvent::class, fn ($event) => Log::info('Dashboard created', ['id' => $event->dashboard->id]));
@@ -128,4 +128,4 @@ Read before executing:
 - do not require a Tailwind build in the host app; the shipped stylesheet is self-contained
 - do not bypass the policies by writing dashboards directly in a controller; call the actions, and check `$user->can(...)` first
 - do not use the pre-release `Atrium\Atrium` namespace or its `Events\Dashboard\*`, `Events\DashboardWidget\*` and `Events\Actions\*` classes
-- do not use the pre-domain class names (`JayI\Atrium\Plugins\Plugin`, `JayI\Atrium\Navigation\NavItem`, `JayI\Atrium\Models\Dashboard`, `JayI\Atrium\Events\Model\*`, `JayI\Atrium\Events\Action\*` and so on); every class now lives in a domain module under `JayI\Atrium\Domains\{Access,Dashboard,Navigation,Plugins,Search,Settings,Widgets}`, with value objects in `Data\`, registries in `Services\` and models named `*Model`
+- do not use the pre-domain class names (`RefactorCircus\Atrium\Plugins\Plugin`, `RefactorCircus\Atrium\Navigation\NavItem`, `RefactorCircus\Atrium\Models\Dashboard`, `RefactorCircus\Atrium\Events\Model\*`, `RefactorCircus\Atrium\Events\Action\*` and so on); every class now lives in a domain module under `RefactorCircus\Atrium\Domains\{Access,Dashboard,Navigation,Plugins,Search,Settings,Widgets}`, with value objects in `Data\`, registries in `Services\` and models named `*Model`

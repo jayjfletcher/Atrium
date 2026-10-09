@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Atrium;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Atrium;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

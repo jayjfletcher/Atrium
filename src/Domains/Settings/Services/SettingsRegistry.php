@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Settings\Services;
+namespace RefactorCircus\Atrium\Domains\Settings\Services;
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
 
 class SettingsRegistry
 {

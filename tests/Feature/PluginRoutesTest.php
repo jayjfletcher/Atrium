@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Feature;
+namespace RefactorCircus\Atrium\Tests\Feature;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Tests\Fixtures\RoutedPlugin;
-use JayI\Atrium\Tests\TestCase;
+use RefactorCircus\Atrium\Tests\Fixtures\RoutedPlugin;
+use RefactorCircus\Atrium\Tests\TestCase;
 
 class PluginRoutesTest extends TestCase
 {

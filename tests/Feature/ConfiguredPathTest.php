@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Feature;
+namespace RefactorCircus\Atrium\Tests\Feature;
 
 use Illuminate\Contracts\Config\Repository;
-use JayI\Atrium\Tests\TestCase;
+use RefactorCircus\Atrium\Tests\TestCase;
 
 class ConfiguredPathTest extends TestCase
 {

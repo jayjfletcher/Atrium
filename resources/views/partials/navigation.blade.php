@@ -1,5 +1,5 @@
 @php
-    $sections ??= \JayI\Atrium\Facades\Atrium::navigationSections(request());
+    $sections ??= \RefactorCircus\Atrium\Facades\Atrium::navigationSections(request());
     $currentSection ??= null;
 
     $railButton = 'relative grid size-10 shrink-0 cursor-pointer place-items-center rounded-radius transition-colors [&_svg]:size-5';

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Support;
+namespace RefactorCircus\Atrium\Support;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Facades\Route;
-use JayI\Foundation\Support\ServiceProvider as BaseServiceProvider;
+use RefactorCircus\Foundation\Support\ServiceProvider as BaseServiceProvider;
 
 /**
  * Base class for Atrium's domain service providers.

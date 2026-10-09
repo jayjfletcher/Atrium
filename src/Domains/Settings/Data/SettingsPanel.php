@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Settings\Data;
+namespace RefactorCircus\Atrium\Domains\Settings\Data;
 
 use Closure;
 use Illuminate\Http\Request;

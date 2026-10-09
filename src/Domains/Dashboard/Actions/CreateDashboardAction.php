@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Actions;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Actions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Foundation\Actions\Action;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Foundation\Actions\Action;
 
 class CreateDashboardAction extends Action
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Themes;
+namespace RefactorCircus\Atrium\Domains\Themes;
 
 use Illuminate\Contracts\Config\Repository;
-use JayI\Atrium\Domains\Themes\Data\Theme;
-use JayI\Atrium\Domains\Themes\Services\ThemeRegistry;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Themes\Data\Theme;
+use RefactorCircus\Atrium\Domains\Themes\Services\ThemeRegistry;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 /**
  * Atrium's themes: the built-in six, those from `atrium.themes.available`,

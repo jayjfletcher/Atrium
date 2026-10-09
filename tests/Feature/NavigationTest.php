@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\BetaPlugin;
-use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Navigation\Services\NavigationRegistry;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\BetaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 function nav(): NavigationRegistry
 {

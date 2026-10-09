@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Events;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Events;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Foundation\Contracts\ModelLifecycleEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Foundation\Contracts\ModelLifecycleEvent;
 
 /**
  * The DashboardWidget `retrieved` Eloquent event.

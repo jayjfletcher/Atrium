@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures\Billing;
+namespace RefactorCircus\Atrium\Tests\Fixtures\Billing;
 
 use Illuminate\Foundation\Auth\User;
-use JayI\Atrium\Http\Controllers\Concerns\AuthorizesScreens;
+use RefactorCircus\Atrium\Http\Controllers\Concerns\AuthorizesScreens;
 
 /**
  * A package's screen controller, refusing as its package's API does.

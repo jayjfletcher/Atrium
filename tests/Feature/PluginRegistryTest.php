@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Plugins\Exceptions\InvalidPluginException;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\BetaPlugin;
-use JayI\Atrium\Tests\Fixtures\NotAPlugin;
-use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
+use RefactorCircus\Atrium\Domains\Plugins\Exceptions\InvalidPluginException;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\BetaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\NotAPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 function registry(): PluginRegistry
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures;
+namespace RefactorCircus\Atrium\Tests\Fixtures;
 
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
-use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
 
 class AlphaPlugin extends Plugin
 {

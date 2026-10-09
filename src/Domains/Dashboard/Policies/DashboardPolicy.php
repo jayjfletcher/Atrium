@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Policies;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Policies;
 
 use Illuminate\Database\Eloquent\Model;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
 
 /**
  * Answers `$user->can(...)` for dashboards.

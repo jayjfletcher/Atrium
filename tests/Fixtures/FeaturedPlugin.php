@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures;
+namespace RefactorCircus\Atrium\Tests\Fixtures;
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
 
 class FeaturedPlugin extends Plugin
 {

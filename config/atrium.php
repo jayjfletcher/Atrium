@@ -1,12 +1,12 @@
 <?php
 
 declare(strict_types=1);
-use JayI\Atrium\Domains\Access\Http\Middleware\Authorize;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
-use JayI\Atrium\Domains\Themes\Features\ThemeSwitcherFeature;
+use RefactorCircus\Atrium\Domains\Access\Http\Middleware\Authorize;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
+use RefactorCircus\Atrium\Domains\Themes\Features\ThemeSwitcherFeature;
 
 return [
 
@@ -185,7 +185,7 @@ return [
     | default:          The theme shown until someone picks another.
     | switcher_feature: A feature the switcher shows behind, checked through
     |                   Atrium's feature resolver. ThemeSwitcherFeature is a
-    |                   Pennant feature: with jayi/pennantplus it is on until
+    |                   Pennant feature: with refactor-circus/pennantplus it is on until
     |                   you turn it off, globally or for some users. With no
     |                   feature resolver every feature is on, so the switcher
     |                   always shows. Null always shows it too; a feature name

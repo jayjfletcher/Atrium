@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Navigation\Data;
+namespace RefactorCircus\Atrium\Domains\Navigation\Data;
 
-use JayI\Atrium\Domains\Access\Concerns\Gated;
+use RefactorCircus\Atrium\Domains\Access\Concerns\Gated;
 
 /**
  * A sidebar section: its icon in the rail, its place there, and visibility

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Support;
+namespace RefactorCircus\Atrium\Support;
 
 /**
  * Styles packages add to the dashboard, emitted in its <head> after Atrium's

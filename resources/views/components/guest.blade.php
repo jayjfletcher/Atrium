@@ -22,7 +22,7 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/atrium/atrium.css') }}">
 
-    @php($atriumStyles = app(\JayI\Atrium\Support\StyleRegistry::class))
+    @php($atriumStyles = app(\RefactorCircus\Atrium\Support\StyleRegistry::class))
     @foreach ($atriumStyles->stylesheets() as $href)
         <link rel="stylesheet" href="{{ $href }}">
     @endforeach

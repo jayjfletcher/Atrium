@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Http\Controllers;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
-use JayI\Atrium\Domains\Dashboard\Http\Requests\DeleteDashboardRequest;
-use JayI\Atrium\Domains\Dashboard\Http\Requests\StoreDashboardRequest;
-use JayI\Atrium\Domains\Dashboard\Http\Requests\UpdateDashboardRequest;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Requests\DeleteDashboardRequest;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Requests\StoreDashboardRequest;
+use RefactorCircus\Atrium\Domains\Dashboard\Http\Requests\UpdateDashboardRequest;
 
 class DashboardCrudController
 {

@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Actions\DeleteDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
-use JayI\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardCreatingEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardDeletedActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatedEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardUpdatingActionEvent;
-use JayI\Atrium\Domains\Dashboard\Events\DashboardWidgetCreatedEvent;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\Models\TeamDashboard;
-use JayI\Foundation\Contracts\ActionFinishedEvent;
-use JayI\Foundation\Contracts\ActionStartingEvent;
-use JayI\Foundation\Contracts\ModelLifecycleEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\DeleteDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\SaveDashboardLayoutAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\UpdateDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatingActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardCreatingEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardDeletedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardLayoutSavingActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardUpdatedActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardUpdatedEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardUpdatingActionEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Events\DashboardWidgetCreatedEvent;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\Models\TeamDashboard;
+use RefactorCircus\Foundation\Contracts\ActionFinishedEvent;
+use RefactorCircus\Foundation\Contracts\ActionStartingEvent;
+use RefactorCircus\Foundation\Contracts\ModelLifecycleEvent;
 use Workbench\App\Models\User;
 
 /**
@@ -159,7 +159,7 @@ it('gives every action exactly one start and one finish event', function (): voi
         preg_match_all('/([A-Za-z]+ActionEvent)::dispatch/', $source, $matches);
 
         $kinds = array_map(
-            fn (string $event): string => is_subclass_of('JayI\\Atrium\\Domains\\'.$domain.'\\Events\\'.$event, ActionStartingEvent::class) ? 'start' : 'finish',
+            fn (string $event): string => is_subclass_of('RefactorCircus\\Atrium\\Domains\\'.$domain.'\\Events\\'.$event, ActionStartingEvent::class) ? 'start' : 'finish',
             $matches[1],
         );
 

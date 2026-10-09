@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests;
+namespace RefactorCircus\Atrium\Tests;
 
 /**
  * Browser tests run against a real HTTP server, so Atrium's stylesheet and

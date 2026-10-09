@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Navigation\Services;
+namespace RefactorCircus\Atrium\Domains\Navigation\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Navigation\Data\NavSection;
-use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavSection;
+use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
 
 class NavigationRegistry
 {

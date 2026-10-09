@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins\Contracts;
+namespace RefactorCircus\Atrium\Domains\Plugins\Contracts;
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
-use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
-use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
+use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
 
 interface Plugin
 {

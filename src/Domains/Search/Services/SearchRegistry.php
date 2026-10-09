@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Search\Services;
+namespace RefactorCircus\Atrium\Domains\Search\Services;
 
 use Closure;
 use Illuminate\Console\Application;
@@ -16,13 +16,13 @@ use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Search\Data\SearchResult;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
 use Laravel\Ai\Classification;
 use Laravel\Ai\Classification\Choice;
 use Laravel\Ai\Responses\Data\ChoiceAnswer;
 use Laravel\SerializableClosure\SerializableClosure;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchResult;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
 use RuntimeException;
 use Throwable;
 

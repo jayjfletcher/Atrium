@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Gate;
-use JayI\Atrium\AtriumServiceProvider;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
-use JayI\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\Models\TeamDashboard;
-use JayI\Atrium\Tests\Fixtures\Policies\KeepWidgetsPolicy;
-use JayI\Atrium\Tests\Fixtures\Policies\ReadOnlyDashboardPolicy;
+use RefactorCircus\Atrium\AtriumServiceProvider;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardWidgetModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardPolicy;
+use RefactorCircus\Atrium\Domains\Dashboard\Policies\DashboardWidgetPolicy;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\Models\TeamDashboard;
+use RefactorCircus\Atrium\Tests\Fixtures\Policies\KeepWidgetsPolicy;
+use RefactorCircus\Atrium\Tests\Fixtures\Policies\ReadOnlyDashboardPolicy;
 use Workbench\App\Models\User;
 
 beforeEach(function (): void {

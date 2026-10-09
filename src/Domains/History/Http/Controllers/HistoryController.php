@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\History\Http\Controllers;
+namespace RefactorCircus\Atrium\Domains\History\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use JayI\Foundation\Audit\History;
-use JayI\Foundation\Packages\PackageRegistry;
+use RefactorCircus\Foundation\Audit\History;
+use RefactorCircus\Foundation\Packages\PackageRegistry;
 
 /**
  * One package's audit log: its entries, newest first, filtered by action or

@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium;
+namespace RefactorCircus\Atrium;
 
 use Closure;
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Navigation\Data\NavSection;
-use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
-use JayI\Atrium\Domains\Plugins\Contracts\Plugin;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Search\Data\SearchResult;
-use JayI\Atrium\Domains\Search\Data\SearchSource;
-use JayI\Atrium\Domains\Search\Services\SearchRegistry;
-use JayI\Atrium\Domains\Settings\Data\SettingsPanel;
-use JayI\Atrium\Domains\Settings\Services\SettingsRegistry;
-use JayI\Atrium\Domains\Themes\Data\Theme;
-use JayI\Atrium\Domains\Themes\Services\ThemeRegistry;
-use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
-use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
-use JayI\Atrium\Support\StyleRegistry;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavSection;
+use RefactorCircus\Atrium\Domains\Navigation\Services\NavigationRegistry;
+use RefactorCircus\Atrium\Domains\Plugins\Contracts\Plugin;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchResult;
+use RefactorCircus\Atrium\Domains\Search\Data\SearchSource;
+use RefactorCircus\Atrium\Domains\Search\Services\SearchRegistry;
+use RefactorCircus\Atrium\Domains\Settings\Data\SettingsPanel;
+use RefactorCircus\Atrium\Domains\Settings\Services\SettingsRegistry;
+use RefactorCircus\Atrium\Domains\Themes\Data\Theme;
+use RefactorCircus\Atrium\Domains\Themes\Services\ThemeRegistry;
+use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use RefactorCircus\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use RefactorCircus\Atrium\Support\StyleRegistry;
 
 class Atrium
 {

@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Domains\Plugins\Support\Plugin;
-use JayI\Atrium\Domains\Widgets\Data\WidgetDefinition;
-use JayI\Atrium\Domains\Widgets\Exceptions\DuplicateWidgetException;
-use JayI\Atrium\Domains\Widgets\Services\WidgetRegistry;
-use JayI\Atrium\Tests\Fixtures\AlphaPlugin;
-use JayI\Atrium\Tests\Fixtures\BetaPlugin;
-use JayI\Atrium\Tests\Fixtures\UnauthorizedPlugin;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Plugins\Support\Plugin;
+use RefactorCircus\Atrium\Domains\Widgets\Data\WidgetDefinition;
+use RefactorCircus\Atrium\Domains\Widgets\Exceptions\DuplicateWidgetException;
+use RefactorCircus\Atrium\Domains\Widgets\Services\WidgetRegistry;
+use RefactorCircus\Atrium\Tests\Fixtures\AlphaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\BetaPlugin;
+use RefactorCircus\Atrium\Tests\Fixtures\UnauthorizedPlugin;
 
 function widgets(): WidgetRegistry
 {

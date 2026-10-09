@@ -2,7 +2,7 @@
 
 ## Scope
 
-Turn `jayi/atrium` from a bare Laravel package skeleton into a plug-and-play admin dashboard platform in the spirit of Laravel Nova, without Nova's central constraint.
+Turn `refactor-circus/atrium` from a bare Laravel package skeleton into a plug-and-play admin dashboard platform in the spirit of Laravel Nova, without Nova's central constraint.
 
 Nova forces every screen through its resource/field abstraction and a single fixed layout. Atrium inverts that: it ships a dashboard **shell** (chrome, navigation, auth gate) plus a shared **Blade component library** developers can use anywhere, inside the shell or in their own pages. Third-party packages register an Atrium plugin and their nav items, pages, settings panels, widgets, and search sources appear automatically.
 

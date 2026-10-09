@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Testing\AtriumStyles;
+use RefactorCircus\Atrium\Testing\AtriumStyles;
 
 it('compiles every class atrium\'s own views use', function (): void {
     expect(AtriumStyles::missingClasses(dirname(__DIR__, 2).'/resources/views'))->toBe([]);

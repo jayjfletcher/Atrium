@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Access\Http\Middleware;
+namespace RefactorCircus\Atrium\Domains\Access\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Access\Services\Gatekeeper;
+use RefactorCircus\Atrium\Domains\Access\Services\Gatekeeper;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Http\Requests;
+namespace RefactorCircus\Atrium\Http\Requests;
 
-use JayI\Foundation\Http\Requests\Request as BaseRequest;
+use RefactorCircus\Foundation\Http\Requests\Request as BaseRequest;
 
 /**
  * Base class for Atrium's persistable requests.

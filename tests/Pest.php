@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use JayI\Atrium\Tests\BrowserTestCase;
-use JayI\Atrium\Tests\TestCase;
+use RefactorCircus\Atrium\Tests\BrowserTestCase;
+use RefactorCircus\Atrium\Tests\TestCase;
 
 // pest-plugin-browser removes its output directories with @rmdir() when it
 // boots. A missing directory raises a (suppressed) warning that failOnWarning

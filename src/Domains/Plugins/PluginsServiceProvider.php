@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Plugins;
+namespace RefactorCircus\Atrium\Domains\Plugins;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Plugins\Console\Commands\MakePluginCommand;
-use JayI\Atrium\Domains\Plugins\Console\Commands\PluginListCommand;
-use JayI\Atrium\Domains\Plugins\Services\ComposerPluginDiscovery;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Plugins\Console\Commands\MakePluginCommand;
+use RefactorCircus\Atrium\Domains\Plugins\Console\Commands\PluginListCommand;
+use RefactorCircus\Atrium\Domains\Plugins\Services\ComposerPluginDiscovery;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 class PluginsServiceProvider extends ServiceProvider
 {

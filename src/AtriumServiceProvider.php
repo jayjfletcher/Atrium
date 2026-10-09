@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium;
+namespace RefactorCircus\Atrium;
 
 use Illuminate\Support\Facades\Blade;
-use JayI\Atrium\Console\Commands\InstallCommand;
-use JayI\Atrium\Domains\DomainServiceProvider;
-use JayI\Atrium\Support\StyleRegistry;
-use JayI\Foundation\Packages\Package;
-use JayI\Foundation\Support\PackageServiceProvider;
+use RefactorCircus\Atrium\Console\Commands\InstallCommand;
+use RefactorCircus\Atrium\Domains\DomainServiceProvider;
+use RefactorCircus\Atrium\Support\StyleRegistry;
+use RefactorCircus\Foundation\Packages\Package;
+use RefactorCircus\Foundation\Support\PackageServiceProvider;
 
 class AtriumServiceProvider extends PackageServiceProvider
 {

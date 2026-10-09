@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Tests\Fixtures;
+namespace RefactorCircus\Atrium\Tests\Fixtures;
 
 class NotAPlugin
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Navigation\Data;
+namespace RefactorCircus\Atrium\Domains\Navigation\Data;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use JayI\Atrium\Domains\Access\Concerns\Gated;
+use RefactorCircus\Atrium\Domains\Access\Concerns\Gated;
 
 class NavItem
 {

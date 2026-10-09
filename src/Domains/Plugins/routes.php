@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use JayI\Atrium\Domains\Access\Http\Middleware\EnsureFeaturesAreEnabled;
-use JayI\Atrium\Domains\Plugins\Services\PluginRegistry;
+use RefactorCircus\Atrium\Domains\Access\Http\Middleware\EnsureFeaturesAreEnabled;
+use RefactorCircus\Atrium\Domains\Plugins\Services\PluginRegistry;
 
 foreach (app(PluginRegistry::class)->all() as $plugin) {
     // A plugin's routes go away with its features, as its links do.

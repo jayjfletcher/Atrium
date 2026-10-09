@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Request;
-use JayI\Atrium\Domains\Navigation\Data\NavGroup;
-use JayI\Atrium\Domains\Navigation\Data\NavItem;
-use JayI\Atrium\Domains\Navigation\Data\NavSection;
-use JayI\Atrium\Domains\Navigation\Services\NavigationRegistry;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavGroup;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavItem;
+use RefactorCircus\Atrium\Domains\Navigation\Data\NavSection;
+use RefactorCircus\Atrium\Domains\Navigation\Services\NavigationRegistry;
 
 beforeEach(function (): void {
     app()->detectEnvironment(fn (): string => 'local');

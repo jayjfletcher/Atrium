@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Dashboard\Http\Requests;
+namespace RefactorCircus\Atrium\Domains\Dashboard\Http\Requests;
 
 use Illuminate\Http\RedirectResponse;
-use JayI\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
-use JayI\Atrium\Domains\Dashboard\Models\DashboardModel;
-use JayI\Atrium\Domains\Dashboard\Services\DashboardManager;
-use JayI\Atrium\Http\Requests\Request;
+use RefactorCircus\Atrium\Domains\Dashboard\Actions\CreateDashboardAction;
+use RefactorCircus\Atrium\Domains\Dashboard\Models\DashboardModel;
+use RefactorCircus\Atrium\Domains\Dashboard\Services\DashboardManager;
+use RefactorCircus\Atrium\Http\Requests\Request;
 
 class StoreDashboardRequest extends Request
 {

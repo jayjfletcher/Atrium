@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JayI\Atrium\Domains\Search;
+namespace RefactorCircus\Atrium\Domains\Search;
 
-use JayI\Atrium\Domains\Search\Services\SearchRegistry;
-use JayI\Atrium\Support\ServiceProvider;
+use RefactorCircus\Atrium\Domains\Search\Services\SearchRegistry;
+use RefactorCircus\Atrium\Support\ServiceProvider;
 
 class SearchServiceProvider extends ServiceProvider
 {
