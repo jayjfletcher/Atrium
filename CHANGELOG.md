@@ -143,6 +143,6 @@
 - Requires `laravel/framework` instead of `illuminate/support`, since the package uses form requests, events, queues and views from the framework.
 
 
-## [v0.1.0](https://github.com/jayi/atrium/compare/...v0.1.0) - 202x-xx-xx
+## [v0.1.0](https://github.com/Refactor-Circus/Atrium/compare/...v0.1.0) - 202x-xx-xx
 
 Initial pre-release.

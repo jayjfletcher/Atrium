@@ -591,7 +591,7 @@ Every build reseeds the workbench with a demo shop through Atrium's own actions:
 
 ## Credits
 
-- [Jay Fletcher](https://github.com/jayi)
+- [Refactor Circus](https://github.com/Refactor-Circus)
 
 ## License
 
