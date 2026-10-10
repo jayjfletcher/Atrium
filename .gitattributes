@@ -20,3 +20,4 @@
 /package.json           export-ignore
 /package-lock.json      export-ignore
 /phpstan.windows.neon   export-ignore
+/art                export-ignore

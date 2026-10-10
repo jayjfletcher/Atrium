@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="art/icon.png" width="160" alt="Atrium icon">
+</p>
+
 # Atrium
 
 [![Tests](https://github.com/refactor-circus/atrium/actions/workflows/tests.yml/badge.svg)](https://github.com/refactor-circus/atrium/actions/workflows/tests.yml)
